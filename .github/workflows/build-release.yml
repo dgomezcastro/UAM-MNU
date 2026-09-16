@@ -1,0 +1,34 @@
+name: Build and Release PDF
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: mnu.tex
+          latexmk_use_lualatex: false
+          latexmk_use_xelatex: false
+
+      - name: Set release date variable
+        id: vars
+        run: echo "sha=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release and upload PDF
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: release-${{ steps.vars.outputs.sha }}
+          name: "MNU PDF – ${{ steps.vars.outputs.sha }}"
+          body: "Auto-generated release for ${{ steps.vars.outputs.sha }}"
+          files: mnu.pdf
