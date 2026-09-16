@@ -1,5 +1,9 @@
 # Numerical methods for PDEs II: finite elements and spectral methods
 
+### [Guía Docente 2026-2027](https://secretaria-virtual.uam.es/doa/consultaPublica/look%5bconpub%5dMostrarPubGuiaDocAs?entradaPublica=true&idiomaPais=es.ES&_anoAcademico=2026&_codAsignatura=30068)
+
+### [PDF of Lectures Notes](https://github.com/dgomezcastro/UAM-MNU/releases/latest/download/mnu.pdf)
+
 ## Structure of the course
 
 <table>
