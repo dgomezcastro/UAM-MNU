@@ -1,0 +1,70 @@
+\section{Legendre Polynomials}
+The Legendre polynomials are the eigenfunctions of the singular \eqref{eq:Sturm-Liouville} with $p(x) = (1-x^2)$, $q = 0$, and $w = 1$
+\begin{equation*}
+    -\frac{d}{dx} \left( (1-x^2) \frac{dL_k}{dx} \right) = k(k+1) L_k(x).
+\end{equation*}
+We have a unique solution if we set the condition $L_k(1) = 1$ and it is given by
+\begin{equation*}
+    L_{k}(x) = \frac 1 {2^k} \sum_{l=0}^{\lfloor k / 2 \rfloor} (-1)^l \binom{k}{l} \binom{2k-2l}{k} x^{k-2l} .
+\end{equation*}
+
+\begin{example}[Legendre-Gauss integration]
+    Due to \Cref{rem:Sturm-Liouville degenerate} we have that $L_k$ are orthogonal in $L^2(-1,1)$. Therefore, we can apply \Cref{thm:Gauss integration} with the precise value
+    \begin{equation*}
+        x_j \text{ zeros of } L_{N+1}, \qquad w_j = \frac{2}{(1-x_j^2)(\frac{dL_{N+1}}{dx}(x_j))^2}.
+    \end{equation*}
+\end{example}
+
+\begin{example}[Legendre-Gauss-Lobatto integration]
+    Instead of taking the extrema of $L_N$ we take
+    \begin{equation*}
+        x_0 = -1, x_N = 1, x_1, \cdots, x_{N-1} \text{ the zeros of } L_N'
+    \end{equation*}
+    The weights
+    \begin{equation*}
+        w_j = \frac{2}{N(N+1)} \frac{1}{(L_N(x_j))^2}
+    \end{equation*}
+    Based on these nodes we construct the characteristic Lagrange polynomials
+    \begin{equation*}
+        \psi_j (x) = \frac{1}{N(N+1)} \frac{1-x^2}{x_j - x} \frac{L_N'(x)}{L_N(x)}
+    \end{equation*}
+    which are discrete (shifted) delta functions, since they satisfy $\psi_j (x_j) = \delta_{jk}$. We will use them.
+\end{example}
+
+Again, we have the estimate for $k \le m$
+\begin{equation*}
+    \|u - P_N u\|_{H^k(-1,1)} \le C N^{k-m} \|u \|_{H^m (-1,1)}.
+\end{equation*}
+We also have that
+\begin{equation*}
+    \|u - I_N u \|_{L^2(-1,1)} \le C N^{-m} \|u \|_{H^m (-1,1)}.
+\end{equation*}
+
+\begin{example}[Galerkin method with Legendre polynomials]
+    Let us try to solve the problem
+    \begin{equation*}
+        -\frac{d}{dx}\left((1-x^2) \frac{du}{dx}\right) = f \text{ in } (-1,1).
+    \end{equation*}
+    Due to \Cref{rem:Sturm-Liouville degenerate} we do not impose any boundary conditions.
+    Notice that $L_k$ are orthogonal in $L^2(-1,1)$ and $\deg L_k = k$. Therefore, they generate $L^2(-1,1)$. Let us look for a solution
+    \begin{equation*}
+        u = \sum_{k=0}^\infty \hat u_n L_k
+    \end{equation*}
+    Multiplying the equation by $L_k$ and integrating by parts we deduce
+    \begin{equation*}
+        k(k+1) (u, L_k)_{L^2} = (f, L_k).
+    \end{equation*}
+    Therefore, we can write the solution as
+    \begin{equation*}
+        u = \sum_{k=0}^\infty \frac{(f, L_k)_{L^2}}{k(k+1) \|L_k\|_{L^2}^2} L_k.
+    \end{equation*}
+
+    Galerkin's method would suggest to look for an approximate solution in $V_N = \{ \sum_{k=0}^N a_k L_k : a_k \in \mathbb R\}$ by finding
+    \begin{equation*}
+        u_N \in V_N \text{ such that } \left( -\frac{d}{dx}\left((1-x^2) \frac{du_N}{dx}\right), v_N \right)_{L^2} = (f, v_N)_{L^2}, \qquad \forall v_N \in V_N.
+    \end{equation*}
+    But notice that then
+    \begin{equation*}
+        u_N = \sum_{k=0}^N \frac{(f, L_k)_{L^2}}{k(k+1) \|L_k\|_{L^2}^2} L_k = P_N u.
+    \end{equation*}
+\end{example}

@@ -1,0 +1,173 @@
+\subsection{Céa's Lemma: convergence via projection estimates}
+
+\begin{strongtheorem}[Céa's Lemma]
+    \label{lem:cea}
+    Consider the assumptions of \Cref{thm:Lax-Milgram},
+    let $u$ solve \eqref{eq:Galerkin elliptic variational} and $u_h$ solve \eqref{eq:Galerkin elliptic variational discrete}.
+    Then, it holds that
+    \begin{equation*}
+        \| u - u_h \|_V \le \frac{M}{\alpha^*} \inf_{v_h \in V_h} \|u - v_h\|_V.
+    \end{equation*}
+\end{strongtheorem}
+
+\begin{proof}
+    For any $v_h \in V_h$ we can write
+    \begin{equation*}
+        \alpha \|u - u_h\|_V^2 \le a(u-u_h, u - u_h) = a(u - u_h, u - v_h) + a(u-u_h, v_h - u_h)
+    \end{equation*}
+    Since $v_h - u_h \in V_h$ we have $a(u-u_h, v_h - u_h) = 0$. Using the continuity of $a$
+    \begin{equation*}
+        \alpha \|u - u_h\|_V^2 \le a(u - u_h, u - v_h) \le M \| u - u_h \|_V \|u - v_h \|_V.
+    \end{equation*}
+    We conclude the result.
+\end{proof}
+
+\begin{remark}
+    In fact, if we introduce the norm
+    \begin{equation}
+        \|u\|_a = a(u, u)^{\frac 1 2}
+    \end{equation}
+    we Céa's lemma can read, precisely as
+    \begin{equation}
+        \|u - u_h\|_a \le \inf_{v_h \in V_h} \|u - v_h\|_a.
+    \end{equation}
+\end{remark}
+
+\begin{example}
+    \label{ex:piece-wise linear in d=1 interpolation}
+    Consider \namedCref{ex:Galerkin Laplace d=1}.
+    We take $V = H_0^1 (0,1)$, and $a(u,v) = \int_{0}^1 \frac{du}{dx}\frac{dv}{dx}$.
+    Following the notation in \namedCref{ex:piece-wise linear in d=1}, for $u \in H^1_0 (0,1)$ we define
+    \begin{equation}
+        \mathcal I_h u (x) \defeq \sum_{i=0}^{N} u(x_i) \varphi_i(x).
+    \end{equation}
+    Clearly $\mathcal I_h u \in V_h$. Hence, a suitable upper bound for \namedCref{lem:cea} is $[u - \mathcal I_h u]_{H^1(0,1)}$.
+\end{example}
+
+\begin{lemma}[Naive estimate of the error of the linear interpolation in $d=1$]
+    \label{ex:Galerkin Laplace piecewise linear Cea naive}
+    In the notation of \Cref{ex:piece-wise linear in d=1 interpolation}, for all $u \in H^2(0,1)$ we have that
+    \begin{equation*}
+        \left\| \frac{du}{dx} (x) - \frac{d \mathcal I_h u}{dx} (x) \right\|_{L^2(0,1)} \le h \left\| \frac{d^2u}{dx^2} \right\|_{L^2(0,1)}.
+    \end{equation*}
+\end{lemma}
+
+\begin{proof}
+    Let us follow the notation in \Cref{ex:piece-wise linear in d=1 interpolation}.
+    Let $u \in C^1([x_k,x_{k+1}])$ function is the following. By the intermediate value theorem we have that, for some $\xi_0 \in [0,1]$ we have $\frac{du}{dx} (\xi_k) = \frac{u(x_{k+1}) - u(x_k)}{x_{k+1}-x_k} = \frac{d \mathcal I_h}{dx} (x)$ for $x \in (x_k,x_{k+1})$.
+    Therefore
+    \begin{equation*}
+        \left| \frac{du}{dx} (x) - \frac{d \mathcal I_h}{dx} (x) \right| \le \left| \int_{\xi_0}^x \frac{d^2u}{dx^2} (y) dy\right| \le |x-\xi_0|^{\frac 1 2} \left\| \frac{d^2u}{dx^2} \right\|_{L^2(x_k,x_{k+1})}.
+    \end{equation*}
+    Therefore
+    \begin{equation}
+        \label{eq:Galerkin linear interpolation error in one interval}
+        \begin{aligned}
+            \int_{x_k}^{x_{k+1}} \left| \frac{du}{dx} (x) - \frac{d \mathcal I_h u}{dx} (x) \right|^2
+             & \le \left\| \frac{d^2u}{dx^2} \right\|_{L^2(x_k,x_{k+1})}^2 \int_{x_k}^{x_{k+1}} |x-\xi_k| dx
+            \\
+             & = \left\| \frac{d^2u}{dx^2} \right\|_{L^2(x_k,x_{k+1})}^2 \frac{|x_k-\xi_k|^2 + |x_{k+1}-\xi_k|^2}{2}
+            \\
+             & \le \left\| \frac{d^2u}{dx^2} \right\|_{L^2(x_k,x_{k+1})}^2 |x_{k+1} - x_k|^2.
+        \end{aligned}
+    \end{equation}
+    Therefore, we can estimate
+    \begin{align*}
+        \left\| \frac{du}{dx} (x) - \frac{d \mathcal I_h u}{dx} (x) \right\|_{L^2(0,1)}^2
+         & = \sum_{k=0}^{N-1} \left\| \frac{du}{dx} (x) - \frac{d \mathcal I_h u}{dx} (x) \right\|_{L^2(x_k,x_{k+1})}^2
+        \\
+         & \le \sum_{k=0}^{N-1} |x_{k+1} - x_k|^2\left\| \frac{d^2u}{dx^2} \right\|_{L^2(x_k,x_{k+1})}^2.
+    \end{align*}
+    We conclude the estimate in the statement for all $u \in C^1([0,1])$.
+    Since the result holds for all $u \in C^1([0,1])$ it can be extended by density to all $u \in H^1(0,1)$.
+\end{proof}
+
+We have not been careful with the constants. A sharper result is the following.
+
+\begin{lemma}[Error of the piece-wise linear interpolation in $d=1$ from \cite{Suli}]
+    \label{ex:Galerkin Laplace piecewise linear Cea}
+    % Let $\Omega = (0,1)$ and consider for $-\Delta u = f$ with $u(-1) = u(1) = 0$.
+    In the notation of \Cref{ex:piece-wise linear in d=1 interpolation}, for all $u \in H^2(0,1)$ we have that
+    Then we have that
+    \begin{align*}
+        \| u - \mathcal I_h u \|_{L^2(0,1)}
+         & \le \frac{h^2}{\pi^2} \left\| \frac{d^2u}{dx^2}  \right\|_{L^2} \\
+        \left\| \frac{du}{dx} - \frac{d \mathcal I_h u}{dx} \right\|_{L^2(0,1)}
+         & \le \frac{h}{\pi} \left\| \frac{d^2u}{dx^2}  \right\|_{L^2}
+    \end{align*}
+\end{lemma}
+\begin{proof}
+    Consider a subinterval $[x_{i-1}, x_i]$, $1 \leq i \leq N$, and define $\zeta(x) = u(x) - I_h u(x)$ for $x \in [x_{i-1}, x_i]$. Then $\zeta \in H^2(x_{i-1}, x_i)$ and $\zeta(x_{i-1}) = \zeta(x_i) = 0$. Therefore, $\zeta$ can be expanded into a convergent Fourier sine series,
+    \[
+        \zeta(x) = \sum_{k=1}^\infty a_k \sin\left(\frac{k\pi(x - x_{i-1})}{h_i}\right), \quad x \in [x_{i-1}, x_i].
+    \]
+    Hence,
+    \[
+        \int_{x_{i-1}}^{x_i} [\zeta(x)]^2 dx = \frac{h_i}{2} \sum_{k=1}^\infty |a_k|^2.
+    \]
+    Differentiating the Fourier sine series for $\zeta$ twice, we deduce that the Fourier coefficients of $\zeta'$ are $\left(\frac{k\pi}{h_i}\right)a_k$, while those of $\zeta''$ are $-\left(\frac{k\pi}{h_i}\right)^2 a_k$. Thus,
+    \[
+        \int_{x_{i-1}}^{x_i} [\zeta'(x)]^2 dx = \frac{h_i}{2} \sum_{k=1}^\infty \left(\frac{k\pi}{h_i}\right)^2 |a_k|^2,
+    \]
+    \[
+        \int_{x_{i-1}}^{x_i} [\zeta''(x)]^2 dx = \frac{h_i}{2} \sum_{k=1}^\infty \left(\frac{k\pi}{h_i}\right)^4 |a_k|^2.
+    \]
+    Because $k^4 \geq k^2 \geq 1$, it follows that
+    \[
+        \int_{x_{i-1}}^{x_i} [\zeta(x)]^2 dx \leq \frac{h_i^4}{\pi^4} \int_{x_{i-1}}^{x_i} [\zeta''(x)]^2 dx,
+    \]
+    \[
+        \int_{x_{i-1}}^{x_i} [\zeta'(x)]^2 dx \leq \frac{h_i^2}{\pi^2} \int_{x_{i-1}}^{x_i} [\zeta''(x)]^2 dx.
+    \]
+    However, $\zeta''(x) = u''(x) - (I_h u)''(x) = u''(x)$ for $x \in (x_{i-1}, x_i)$ because $I_h u$ is a linear function on this interval. Therefore, upon summation over $i = 1, \ldots, N$ and letting $h = \max_i h_i$, we obtain
+    \[
+        \|\zeta\|^2_{L^2(0,1)} \leq \frac{h^4}{\pi^4} \|u''\|^2_{L^2(0,1)}, \qquad
+        \|\zeta'\|^2_{L^2(0,1)} \leq \frac{h^2}{\pi^2} \|u''\|^2_{L^2(0,1)}.
+    \]
+    After taking the square root and recalling that $\zeta = u - I_h u$, these yield the desired bounds on the interpolation error.
+    % 
+    % Now (2.33) follows directly from this theorem by noting that
+    % \[
+    %     \|u - I_h u\|^2_{H^1(0,1)} = \|u - I_h u\|^2_{L^2(0,1)} + \|(u - I_h u)'\|^2_{L^2(0,1)}
+    %     \leq \frac{h^2}{\pi^2} \left(1 + \frac{h^2}{\pi^2}\right) \|u''\|^2_{L^2(0,1)}.
+    % \]
+
+    % Having established the bound (2.33) on the interpolation error, we arrive at the following a priori error bound by inserting (2.33) into the inequality (2.32):
+    % \[
+    %     \|u - u_h\|_{H^1(0,1)} \leq \frac{h}{\pi} \left(1 + \frac{h^2}{\pi^2}\right)^{1/2} \|u''\|_{L^2(0,1)}. \tag{2.34}
+    % \]
+    % This shows that, provided $u'' \in L^2(0,1)$, the error in the finite element solution, measured in the $H^1(0,1)$ norm, converges to $0$ at the rate $O(h)$ as $h \to 0$.
+
+    % As a final note concerning this example, we remark that our hypothesis on $f$ (namely that $f \in L^2(0,1)$) implies that $u'' \in L^2(0,1)$. Indeed, choosing $v = u$ in the weak formulation of the boundary value problem gives
+    % \[
+    %     \int_0^1 |u'(x)|^2 dx + \int_0^1 |u(x)|^2 dx = \int_0^1 f(x)u(x) dx
+    %     \leq \left(\int_0^1 |f(x)|^2 dx\right)^{1/2} \left(\int_0^1 |u(x)|^2 dx\right)^{1/2}.
+    % \]
+    % Hence,
+    % \[
+    %     \left(\int_0^1 |u(x)|^2 dx\right)^{1/2} \leq \left(\int_0^1 |f(x)|^2 dx\right)^{1/2},
+    % \]
+    % i.e.
+    % \[
+    %     \|u\|_{L^2(0,1)} \leq \|f\|_{L^2(0,1)}.
+    % \]
+    % Thereby, from (2.35),
+    % \[
+    %     \|u'\|_{L^2(0,1)} \leq \|f\|_{L^2(0,1)}.
+    % \]
+    % Finally, as $u'' = u - f$ from the differential equation, we have that
+    % \[
+    %     \|u''\|_{L^2(0,1)} = \|u - f\|_{L^2(0,1)} \leq \|u\|_{L^2(0,1)} + \|f\|_{L^2(0,1)} \leq 2\|f\|_{L^2(0,1)}.
+    % \]
+    % Thus we have proved that $u'' \in L^2(0,1)$ (in fact, as we also know that $u$ and $u'$ belong to $L^2(0,1)$, we have proved more: $u \in H^2(0,1)$). Substituting this bound on $\|u''\|_{L^2(0,1)}$ into (2.34) gives
+    % \[
+    %     \|u - u_h\|_{H^1(0,1)} \leq \frac{2h}{\pi} \left(1 + \frac{h^2}{\pi^2}\right)^{1/2} \|f\|_{L^2(0,1)}.
+    % \]
+\end{proof}
+
+\begin{example}
+    For the Laplace equation \Cref{ex:Galerkin Laplace d=1} using piece-wise linear function given by \Cref{ex:piece-wise linear in d=1} we can use the estimate \Cref{ex:Galerkin Laplace piecewise linear Cea} to deduce the error estimate
+    \[
+        \|u - u_h\|_{H^1(0,1)} \leq \frac{2h}{\pi} \left(1 + \frac{h^2}{\pi^2}\right)^{1/2} \|f\|_{L^2(0,1)}.
+    \]
+\end{example}

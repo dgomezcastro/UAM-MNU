@@ -1,0 +1,71 @@
+\section{Chebyshev Polynomials}
+\label{sec:Chebyshev polynomials}
+The Chebyshev polynomials of first kind are the eigenfunctions of the singular \eqref{eq:Sturm-Liouville} with $p(x) = \sqrt{1-x^2}$, $q = 0$, and $w = (1-x^2)^{-\frac 1 2}$
+\begin{equation*}
+    \frac{d}{dx} \left( \sqrt{1-x^2} \frac{dT_k}{dx} \right) =  \frac{-k^2}{\sqrt{1-x^2}} T_k(x).
+\end{equation*}
+
+\begin{remark}
+    The reason of choosing $p$ degenerate at $x = \pm 1$ (i.e., $p(\pm 1) = 0$) is justified by \Cref{rem:Sturm-Liouville degenerate}.
+    The choice of a weight $w$ that is singular at $x = \pm 1$ can be explained by \Cref{sec:Runge's phenomenon}, although $P_N u$ is not the interpolation.
+    It is also common in this framework that most of the error happens near the boundary $x = \pm 1$.
+    We expect the $L^\infty$-error to improve if we work with $L^2_w$-error for $w$ singular on the boundary instead of $L^2$-error.
+\end{remark}
+
+
+The solution is precisely
+\begin{equation}
+    \label{eq:Chebyshev Tn}
+    T_k (x) = \cos \left( k \arccos x \right).
+\end{equation}
+We have the recurrence relation
+\begin{equation}
+    \label{eq:Chebyshev recursion}
+    T_0(x) = 1,
+    \qquad
+    T_1(x) = x,
+    \qquad
+    T_{n+1} (x) = 2x T_n(x) - T_{n-1}(x).
+\end{equation}
+
+\subsection{Quadrature rules}
+
+\begin{example}[Gauss integration for the Chebyshev weight $w = (1 - x^2)^{-\frac 1 2}$]
+    Due to \Cref{rem:Sturm-Liouville degenerate} we can apply \Cref{thm:Gauss integration} with
+    \begin{equation*}
+        x_j = \cos \frac{(2j+1)\pi}{2N+2} , \qquad w_j = \frac{\pi}{N+1}.
+    \end{equation*}
+\end{example}
+
+We have that
+\begin{equation*}
+    \|u - P_N u\|_{L^2_w (-1,1)} \le C N^{-m} \| u \|_{H^m_w (-1,1)}.
+\end{equation*}
+The same hols for $I_N$.
+
+\begin{example}[Gauss-Lobatto integration for the Chebyshev weight]
+    \label{ex:Chebyshev Gauss-Lobatto}
+    Let $w = (1 - x^2)^{-\frac 1 2}$.
+    We to apply in \Cref{thm:Gauss-Lobatto integration Jacobi weights} we get precisely
+    \begin{equation*}
+        x_k = \cos \frac{k \pi}{N} \text{ for } k \in \{0, \cdots, N \},
+    \end{equation*}
+    and
+    \begin{equation*}
+        w_0 = w_N = \frac{\pi}{2N}, \qquad w_k = \frac{\pi}N \text{ for } k \in \{1, \cdots, N-1\}.
+    \end{equation*}
+\end{example}
+
+The Chebyschev polynomials of second kind are given by
+\begin{equation*}
+    U_n (x) = \frac{\sin (n+1) \arccos x}{\sin n \arccos x }
+\end{equation*}
+We have that
+\begin{equation}
+    \label{eq:Chebyshev derivatives}
+    \frac{dT_n}{dx} = n U_{n-1}, \qquad \frac{d U_n}{dx} = \frac{(n+1) T_{n+1} - x U_n}{x^2 - 1}, \qquad \frac{d^2T_n}{dx^2} = n \frac{n T_n - x U_{n-1}}{x^2 - 1}.
+\end{equation}
+
+\subsection{Differentiation}
+
+When $x_j$ the Gauss-Lobatto points \namedCref{ex:Chebyshev Gauss-Lobatto} the coefficients of these matrices can be found in \cite[Section 2.4]{CanutoHussainiQuarteroniZang2011}.

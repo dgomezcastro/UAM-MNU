@@ -1,0 +1,145 @@
+\subsection{Linear coercive problems on a Hilbert space}
+\label{sec:Galerkin linear problems Hilbert space}
+
+As a model problem we will use Laplace's equation
+\begin{equation*}
+    -\Delta u = f.
+\end{equation*}
+If we see $-\Delta$ an operator we have many interpretations: $C^2 \to C$, $H^2 \to L^2$, or even $\distrib \to \distrib$. In the theory of weak solutions we already it is advantageous see it as a bilinear form.
+If $u, v \in C^1(\overline \Omega)$ and $\Omega$ is piece-wise Lipschitz we have that
+\begin{equation*}
+    \int_\Omega (-\Delta u) v = \int_\Omega ( \diver(- v \nabla u ) + \nabla u \cdot \nabla v ) = -\int_{\partial \Omega} v \nabla u \cdot n + \int_\Omega \nabla u \cdot \nabla v.
+\end{equation*}
+If either $v = 0$ or $\nabla u \cdot n = 0 $ on $\partial \Omega$ then the integral on $\partial \Omega$ vanishes.
+We introduce the bi-linear form
+\begin{equation*}
+    a_{L}(u,v) \defeq \int_\Omega \nabla u \cdot \nabla v.
+\end{equation*}
+\begin{example}[Laplace's equation in $(0,1)$ with Dirichlet boundary condition]
+    \label{ex:Galerkin Laplace d=1}
+    Let $\Omega = (0,1), f \in C(\overline \Omega)$, and consider the problem
+    \begin{equation*}
+        -\frac{\diff^2 u}{\diff x^2} = f \text{ in } (0,1), \qquad u(0) = u(1) = 0.
+    \end{equation*}
+    If $f \in C(\overline \Omega)$ this problem has a unique classical solution.
+    It satisfies the following \emph{weak formulation}: find $u \in H_0^1 (\Omega)$ such that
+    \begin{equation*}
+        \int_{0}^1 \frac{\diff u}{\diff x} \frac{\diff v}{\diff x} = \int_0^1 f v, \qquad \forall v \in H_0^1 (0,1).
+    \end{equation*}
+\end{example}
+
+\begin{example}[Hemholz's equation in $(0,1)$ with Neumann boundary conditions]
+    \label{ex:Galerkin Hemholz d=1}
+    Let $\Omega = (0,1), f \in C(\overline \Omega)$, and consider the problem
+    \begin{equation*}
+        -\frac{\diff^2 u}{\diff x^2} + u = f \text{ in } (0,1), \qquad \frac{du}{dx}(0) = \frac{du}{dx}(1) = 0.
+    \end{equation*}
+    The classical solutions of this problem satisfy the \emph{weak formulation}: find $u \in H_0^1 (\Omega)$ such that
+    \begin{equation*}
+        \int_{0}^1 \frac{\diff u}{\diff x} \frac{\diff v}{\diff x} + \int_0^1 u v = \int_0^1 f v, \qquad \forall v \in H^1 (0,1).
+    \end{equation*}
+\end{example}
+In general, we will deal with $a:V\times V \to \mathbb R$ and $l:V \to \mathbb R$ and the equation
+\begin{equation}
+    \tag{E}
+    \label{eq:Galerkin elliptic variational}
+    \text{Find }u \in V \text{ such that } a(u,v) = l (v) , \qquad \forall v \in V.
+\end{equation}
+
+\subsection{Existence and uniqueness: Lax--Milgram theorem}
+
+We recall that
+\begin{strongtheorem}[Lax-Milgram]
+    \label{thm:Lax-Milgram}
+    Let $V$ be a Hilbert space, $a: V \times V \to \mathbb R$ be bilinear, $\ell \in V^*$, and assume
+    \begin{enumerate}
+        \item Continuity in the bilinear sense: $|a(u,v)| \le M \|u\|_V \|v\|_V$
+        \item Coercivity: $a(u,u) \ge \alpha^* \|u\|_V^2$ with $\alpha^*\ge 0$
+    \end{enumerate}
+    Then, \eqref{eq:Galerkin elliptic variational} has a unique solution.
+\end{strongtheorem}
+For a proof see \cite[Corollary 5.8]{Brezis2010}.
+
+\subsection*{Exercises}
+
+\begin{exercises}
+\ex Verify in \namedCref{thm:Lax-Milgram} to \namedCref{ex:Galerkin Laplace d=1} and \namedCref{ex:Galerkin Hemholz d=1} that if a weak solution $u$ is $C^2 (\overline \Omega)$, then it is classical solution. Do not use the uniqueness result.
+
+\ex[] Apply \namedCref{thm:Lax-Milgram} to \namedCref{ex:Galerkin Laplace d=1} and \namedCref{ex:Galerkin Hemholz d=1}.
+
+\ex[] Consider Laplace's equation with Neumann boundary conditions
+\begin{equation*}
+    -\frac{\diff^2 u}{\diff x^2} = f \text{ in } (0,1), \qquad \frac{du}{dx}(0) = \frac{du}{dx}(1) = 0.
+\end{equation*}
+Notice that this problem does not have unique solutions since $u$ is a solution then $u + c$ is also a solution for any constant $c > 0$.
+Luckily, if $u, v$ are two solutions, then $u - v$ is constant.
+Apply Lax-Milgram's theorem to find a unique weak solution in
+\begin{equation*}
+    V = \left\{ u \in H^1 (0,1) : \int_0^1 u = 0 \right\}.
+\end{equation*}
+
+\ex[Neumann boundary conditions]
+We have developed above the situation for Laplace's equation with Dirichlet boundary condition. The other natural condition are the Neumann boundary conditions, written in $d = 1$ as $\frac{\diff u}{\diff x} (-1) = \frac{\diff u}{\diff x} (1) = 0$. Write the corresponding linear algebra problem with piece-wise linear functions. Compute the first eigenvalue and eigenvector the matrix. Explain the result.
+
+\ex[Non-homogeneous Dirichlet conditions]
+\Cref{sec:Galerkin linear problems Hilbert space} was devoted problems set on a Hilbert space $V$. This is case, for example, of \emph{homogeneous} Dirichlet conditions $u = 0$ on $\partial \Omega$ which yields the Hilbert space $H^1_0 (\Omega)$. If we take $g \in C(\overline \Omega) \setminus \{0\}$, then
+\begin{equation*}
+    H_g^1 (\Omega) = \{u \in H^1(\Omega) : \trace_{\partial \Omega} u = g \}
+\end{equation*}
+is clearly not a linear subspace of $H^1$, only an affine subspace. If we take $\tilde g \in H_g^1 (\Omega)$ then $H^1_g = \tilde g + H_0^1$. Or equivalently, $u \in H^1_g$ if $u - \tilde g \in H_0^1$.
+
+We need to adapt the notion of distributional solution \eqref{eq:Galerkin elliptic variational} to this affine setting.
+A suitable weak formulation is
+\begin{equation*}
+    \emph{Find }u \in H^1_g(\Omega) \text{ such that } a(u, v-u) \ge \ell(v - u) \qquad \forall u \in H^1_g(\Omega).
+\end{equation*}
+This is the so-called \emph{Stampacchia formulation}\footnote{This type of problem can be solved in general non-empty closed convex subsets.} (see \cite[Section 5.3]{Brezis2010}).
+Prove that for strong solution the weak and strong formulations coincide.
+Write the corresponding linear-algebra formulation.
+\end{exercises}
+
+\subsection{Functional equations: from bilinear forms to operators}
+If $a: V \times V \to \mathbb R$ and $H \supset V$ is another Hilbert space.
+For $u$ fixed the map $\varphi_u : v \mapsto a(u,v)$ is in $V'$.
+By embedding $H' \subset V'$. We define it domain with respect to $H$ the set
+\begin{equation*}
+    D_H(A) = \left\{ u \in V : \sup_{V \in V \setminus \{0\}} \frac{|a(u,v)|}{\|v\|_H} < \infty  \right\}.
+\end{equation*}
+With this construction it is clear that $D(A) \subset V \subset H$.
+
+This means that $\varphi_u \in H^*$.\footnote{To be precise, it means that $\varphi_u : V \to \mathbb R$ can be uniquely extended to $ \widetilde \varphi_u : H \to \mathbb R$ with $\widetilde \varphi_u \in H^*$. Since the extension is unique, we simply write $\varphi_u \in H^*$.}
+For $u \in D_H(A)$, by isometry between $H$ and $H^*$ we can find an element $Au \in H$ such that $a(u,v) = \widetilde \varphi_u(v) = \prodH {Au} v$ for all $v \in V$. Hence, we have constructed
+\begin{equation*}
+    A : D(A) \to H \text{ such that } \prodH {Au}{v} = a(u,v).
+\end{equation*}
+We can write \eqref{eq:Galerkin elliptic variational} as a functional equation using the following lemma
+\begin{lemma}
+    Assume that $V$ is dense in $H$ and
+    $\ell \in H'$.
+    Let $f \in H$ be such that $\ell(v) = \prodH f v$ for all $v \in H$.
+    Then $u \in V$ satisfies \eqref{eq:Galerkin elliptic variational} if and only if $u \in D_H (A)$ and
+    \begin{equation}
+        A u = f \text{ in } H.
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    Since $a(u,v) = \prodH fv$ for all $v$. Therefore $|a(u,v)| \le \|f\|_H \|v\|_H$. So $u \in D_H(A)$. For any $v \in V$ we have that
+    \begin{equation*}
+        \prodH {Au} v = a(u,v) = \prodH{f}{v}.
+    \end{equation*}
+    Now let $w \in H$. By density we can find $V \ni v_n \to w$ in $H$. Since $Au \in H$ and $f \in H$ we can pass to the limit of either end of the computation above to prove that
+    \begin{equation*}
+        \prodH{Au} w = \prodH{f}{w},\qquad \forall w \in H.
+    \end{equation*}
+    This concludes the proof.
+\end{proof}
+
+\begin{example}[The Dirichlet Laplacian in $(0,1)$]
+    \label{example:Dirichlet Laplacian}
+    We go back to \Cref{ex:Galerkin Laplace d=1}.
+    We have shown that a reasonable choice is $V = H_0^1 (\Omega)$
+    and the bilinear form $a(u,v) = \int_0^1 \frac{du}{dx} \frac{dv}{dx}$.
+    We can take $H = L^2 (0,1)$.
+    Since we have already include the Dirichlet condition, we call $-\Delta_D$ the corresponding operator $A$.
+    With this choices $D_{L^2}(-\Delta_D) = H^2 (0,1) \cap H_0^1 (\Omega)$.
+\end{example}

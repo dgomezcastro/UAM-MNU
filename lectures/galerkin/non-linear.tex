@@ -1,0 +1,266 @@
+\section{Nonlinear Elliptic Problems}
+
+\subsection{Semi-linear problems}
+
+Some problems in the applications present ``lower-order'' non-linearities. For example the absortion equation
+\begin{equation*}
+    -\Delta u + u^q = f
+\end{equation*}
+is common in Chemistry. It is sometime possible to extend the techniques above to this framework.
+
+\subsection{Quasi-linear problems}
+
+Galerkin approximation is used as an analytical tool to prove existence in some problems. For example, the $p$-Laplacian is defined by
+\begin{equation*}
+    -\Delta_p u = - \diver \left( |\nabla u|^{p-2} \nabla u \right).
+\end{equation*}
+Due to the divergence form we have the integration by parts
+\begin{equation*}
+    \int (-\Delta_p u) \varphi = \int |\nabla u|^{p-2} \nabla u \cdot \nabla \varphi, \qquad \forall u \in C^2(\overline \Omega) \varphi \in C_c^2 (\Omega).
+\end{equation*}
+This operator is coercive a non-linear sense.
+More generally we can write the quasi-linear elliptic problem
+\begin{equation}
+    \label{eq:cuasilinear}
+    \begin{dcases}
+        -\diver a(\nabla u) = f, & \text{in } \Omega           \\
+        u = 0,                   & \text{on } \partial \Omega.
+    \end{dcases}
+\end{equation}
+For the $p$-Laplacian the reader can find in the literature suitable versions of Céa's lemma for this operator (slightly different for $p \in (1,2)$ and $p\in(2,\infty)$).
+However, we want to highlight a common technique known as \emph{convergence by compactness}.
+It is a broadly more applicable than Céa-type estimate, but it does not guarantee any rate of convergence.
+For the following example we follow the presentation in \cite[Section 9.14]{Ciarlet2013}.
+\begin{example}[Convergence by compactness \eqref{eq:cuasilinear} ]
+    Suppose that $a : {\mathbb R^d} \to {\mathbb R^d}$ is continuous,
+    monotone in the sense that
+    \begin{equation*}
+        (a(\xi) - a(\eta) ) \cdot (\xi - \eta) \ge 0, \qquad \forall \xi, \eta \in {\mathbb R^d},
+    \end{equation*}
+    coercive in $W^{1,p}$ for $p > 1$ in the sense that
+    \begin{equation*}
+        a(\xi) \cdot \xi \ge A |\xi|^p - B , \qquad \text{for some }A > 0, B \in \R ,
+    \end{equation*}
+    and has controlled growth, that is,
+    \begin{equation}
+        \label{eq:quasilinear crecimiento a}
+        |a(\xi)| \le C(1+|\xi|^{p-1}).
+    \end{equation}
+    Finally, let $f \in L^{p'}(\Omega)$ with $p'= \frac{p}{p-1}$.
+    Under these hypotheses, we will apply compactness techniques.
+
+    Let $e_i \in W^{1,p}_0 (\Omega)$ be a sequence of vectors such that the finite-dimensional spaces
+    \begin{equation*}
+        V_N = \mathrm{span}\{e_1, \cdots, e_N\}
+    \end{equation*}
+    have the following property: if $f \in W^{1,p}_0$, there exist $f_N \in V_N$ such that $f_N \to f$ in $W^{1,p}_0(\Omega)$.
+    \begin{enumerate}
+        \item Show that if $v \in W_0^{1,p}(\Omega)$, then $a(\nabla v) \in L^{p'}$, so the integral
+              $$
+                  \int_\Omega a(\nabla v) \nabla \varphi
+              $$
+              is finite for all $\varphi \in W_0^{1,p} (\Omega)$.
+
+        \item 	Show that there exists a solution of the weak formulation in $V_N$:
+              \begin{equation}
+                  \label{eq:Galerkin weak}
+                  u_N \in V_N \text{ such that } \qquad \int_\Omega a(\nabla u_N) \nabla v = \int_\Omega f v, \qquad 	\forall v \in V_N.
+              \end{equation}
+              To do this, write $u_N = \sum_{i=1}^N  \alpha_i e_i$, and study the function $F: \mathbb R^N \to \mathbb R^N$ given by
+              \begin{equation*}
+                  F_k (\alpha) = \int_\Omega a\left(\sum_{i=1}^N \alpha_i \nabla e_i\right) \nabla e_k - \int_\Omega f e_k
+              \end{equation*}
+              \begin{enumerate}
+                  \item Show that $F$ is monotone, that is,
+                        \begin{equation*}
+                            (F(\alpha) - F(\beta)) \cdot (\alpha - \beta) \ge 0, \qquad \
+                        \end{equation*}
+                        and coercive, that is,
+                        $$
+                            \lim_{R\to \infty} \inf_{|\alpha| \ge R}\frac{ F(\alpha) \cdot \alpha }{ | \alpha | } = \infty.
+                        $$
+
+                  \item Apply Brouwer's theorem to deduce that $F$ has at least one zero in the ball $\overline{B(0,R)}$.
+
+                        (Hint: choose $R$ large enough so that $F(\alpha) \cdot \alpha \ge 0$ for $|\alpha| = R$, and study the map $H (\alpha) = - R \frac{F(\alpha)}{|F(\alpha)|}$).
+
+
+              \end{enumerate}
+
+        \item 	Show that
+              \begin{equation*}
+                  \| u_N \|_{W_0^{1,p}}  \le C (1 + \| f \|_{L^{p'}})
+              \end{equation*}
+              and show that a subsequence of $u_N$ converges weakly in $W_0^{1,p}(\Omega)$ and strongly in $L^2 (\Omega)$.
+
+        \item  Prove that if $v_n$ is a sequence in $W_0^{1,p}(\Omega)$, $v \in W_0^{1,p}(\Omega)$ and $\xi \in L^{p'} (\Omega)$ are such that
+              $$
+                  v_n \rightharpoonup v \text{ in } W_0^{1,p} (\Omega), \qquad a(\nabla v_n) \rightharpoonup \xi \text{ in } L^{p'} (\Omega)^d, \qquad \int_\Omega a(\nabla v_n) \nabla v_n \to \int_\Omega \xi v
+              $$
+              then $\diver a(\nabla v) = \diver \xi$ in the sense of $W^{-1,p} (\Omega)$, that is
+              $$
+                  \int_\Omega a(\nabla v) \nabla \varphi = \int_\Omega \xi \nabla \varphi, \qquad \forall \varphi \in W_0^{1,p} (\Omega).
+              $$
+
+        \item Construct a weak solution of \eqref{eq:cuasilinear}.
+
+        \item Show that if $a$ is strictly monotone, that is for some $\theta > 0$
+              $$	(a(\xi) - a(\eta) ) \cdot (\xi - \eta) \ge \theta |\xi - \eta|^p , \qquad \forall \xi, \eta \in {\mathbb R^d}, $$
+              then the solution is unique. Moreover, show that the map $f \in L^{p'} (\Omega) \to u \in W_0^{1,p}(\Omega)$ is Lipschitz continuous.
+
+        \item In the case  $a(\nabla u) = \tilde a(|\nabla u|) \nabla u$, observe that the solution can be obtained by the direct method of the Calculus of Variations.
+    \end{enumerate}
+\end{example}
+
+\begin{proof}
+    \begin{enumerate}
+        \item We have that $|a( \nabla v) |^{\frac p {p-1}} \le C(1 + |\nabla v| ^{p-1}  )^{\frac p {p-1}} \le C_p (1  + |\nabla v|^{p} ) \in L^1 (\Omega)$
+
+        \item We split the proof into two items
+              \begin{enumerate}
+                  \item
+                        Define
+                        $$
+                            u_\alpha (x) = \sum_i \alpha_i e_i (x).
+                        $$
+                        Note that
+                        $$
+                            F_k(\alpha) - F_k(\beta) = \int_\Omega \Big ( a \left(  \nabla u_\alpha   \right)  - a( \nabla u_\beta) \Big) \nabla e_k
+                        $$
+                        Then
+                        $$
+                            (F_k(\alpha) - F_k(\beta)) (\alpha_k - \beta_k ) = \int_\Omega \Big ( a \left(  \nabla u_\alpha   \right)  - a( \nabla u_\beta) \Big) \nabla (\alpha_k - \beta_k )e_k
+                        $$
+                        Therefore
+                        $$
+                            \begin{aligned}
+                                (F(\alpha) - F(\beta)) \cdot (\alpha - \beta ) & = \int_\Omega \Big ( a \left(  \nabla u_\alpha   \right)  - a( \nabla u_\beta) \Big) \nabla u_{\alpha - \beta}       \\
+                                                                               & = \int_\Omega \Big ( a \left(  \nabla u_\alpha   \right)  - a( \nabla u_\beta) \Big) \nabla (u_{\alpha} - u_{\beta}) \\
+                                                                               & \ge 0.
+                                %				&\ge \alpha \| \nabla (u_\alpha - u_\beta) \|_{L^p}^2 - \beta 
+                            \end{aligned}
+                        $$
+
+                        Similarly,
+                        $$
+                            \begin{aligned}
+                                F(\alpha) \cdot \alpha & = \int_\Omega a \left(  \nabla u_\alpha   \right)  \nabla u_\alpha - \int_\Omega f u_\alpha \\
+                                                       & \ge A \| \nabla u_\alpha \|_{L^p} - B - \| f \|_{L^{p'}} \|u_\alpha\|_{L^p}                 \\
+                                                       & \ge A C_P \| u_\alpha \|_{L^p}^2 - B - C\| u_\alpha \|_{L^p}
+                            \end{aligned}
+                        $$
+                        Since all norms in $\R^N$ are equivalent, $\| u_\alpha \|_{L^p} \sim |\alpha|$. And the dominant term has a positive constant.
+
+
+                  \item
+                        For $R > 0$ sufficiently large, $F(\alpha) \cdot \alpha \ge 0$ if $|\alpha| = R$.
+
+                        If $F$ does not vanish in $\overline B(0,R)$,  $H: \overline B(0,R) \to \overline B(0,R)$ is well defined. It has a fixed point $\alpha_0$ by Brouwer's fixed point theorem. At such a fixed point, $|\alpha_0| = |H(\alpha_0)| = R$. But, on the other hand,
+                        $$
+                            R^2 = |\alpha_0|^2 = H(\alpha_0) \cdot \alpha_0 = -R \frac{F(\alpha_0) \cdot \alpha_0}{|F(\alpha_0)|} \le 0
+                        $$
+
+              \end{enumerate}
+
+
+        \item We have
+              $$
+                  \begin{aligned}
+                      A \| \nabla u_N\|_{L^p}^p  - B \le \int_\Omega a(\nabla u_N) \cdot \nabla u_N = \int_\Omega f u_N \le \| f \|_{L^{p'}} \| u_N \|_{L^p}
+                  \end{aligned}
+              $$
+              Thus $\| \nabla u_N \|_{L^p} \le C$.
+
+        \item We prove the lemma. For $\varphi \in W_0^{1,p}(\Omega)$ we have
+              $$
+                  \int_\Omega (\xi - a(\nabla \varphi)) (v - \varphi) = \lim_n \int_\Omega (a(\nabla v_n) - a(\nabla \varphi)) (v_n - \varphi) \ge 0
+              $$
+              Taking $t > 0$ and $\varphi = v - t \psi$ we have
+              $$
+                  t \int_\Omega (\xi - a(\nabla v + t \nabla \psi)) \nabla \psi  \ge 0
+              $$
+              Therefore
+              $$
+                  \int_\Omega (\xi - a(\nabla v + t \nabla \psi)) \nabla \psi  \ge 0
+              $$
+              Using \eqref{eq:quasilinear crecimiento a} and the dominated convergence theorem, we can pass to the limit $t \to 0$ to deduce
+              $$
+                  \int_\Omega (\xi - a(\nabla v )) \nabla \psi  \ge 0
+              $$
+              Since this is also true for $-\psi$, we deduce the statement.
+
+        \item Take a subsequence of $u_N$ that converges weakly in $W^{1,p}_0(\Omega)$ and strongly in $L^p(\Omega)$, and let $v$ be its limit. Let $v_m$ be this subsequence that converges. Also, $a(\nabla v_m)$ is bounded in $L^{p'} (\Omega)^d$. Take a new subsequence $v_{M(m)}$ such that $a(\nabla v_{M(m)}) \rightharpoonup \xi$ in $L^{p'}(\Omega)^d$.
+
+              Now, for each $\varphi_N \in V_N$
+              $$
+                  \int_\Omega a(\nabla v_{M(m)}) \nabla \varphi_N = \int_\Omega f \varphi_N
+              $$
+              Passing to the limit $m \to \infty$
+              $$
+                  \int_\Omega \xi \nabla \varphi_N = \int_\Omega f \varphi_N , \qquad \forall \varphi_N \in V_N
+              $$
+              Since $\varphi  \in W_0^{1,p}(\Omega)$ we can take a sequence $\varphi_N$ that approximates it strongly. Since $|\xi|, f \in L^p (\Omega)$ we have
+              $$
+                  \int_\Omega \xi \nabla \varphi  = \int_\Omega f \varphi, \qquad \forall \varphi \in W_0^{1,p}( \Omega)
+              $$
+              In particular, $v \in W_0^{1,p} (\Omega)$
+              $$
+                  \int_\Omega a(\nabla v_{M(m)}) \nabla v_{M(m)} = \int_\Omega f v_{M(m)} \to \int_\Omega f v = \int_\Omega \xi \nabla v.
+              $$
+
+              We apply the previous point to deduce that
+              $$
+                  \int_\Omega f \varphi  = \int_\Omega \xi \nabla \varphi = \int_\Omega a(\nabla v) \nabla \varphi, \qquad \forall \varphi \in W_0^{1,p}(\Omega).
+              $$
+
+        \item In this case, if $u$ and $v$ are solutions then
+              $$
+                  \theta \| \nabla u - \nabla v \|_{L^p}^2 \le \int_\Omega f (u - v) \le \| f \|_{L^{p'}} \| u - v \|_{L^p}
+              $$
+              So
+              $$
+                  \| \nabla u - \nabla v \|_{L^p} \le \frac{C}{\theta}  \| f \|_{L^{p'}}
+              $$
+              The solution map is Lipschitz $L^p (\Omega) \to W_0^{1,p}(\Omega)$.
+
+        \item The energy of the form
+              $$
+                  \mathcal I (u) = \int_\Omega A(  |\nabla u|  ) - \int_\Omega fu
+              $$
+              has Euler-Lagrange equation $L(p,s,x) = A(|p|) - f(x) s$
+              $$
+                  \frac{\partial L}{\partial p_i} = A'(|p|) \frac{p_i}{|p|}
+              $$
+              Thus we have the equation
+              $$
+                  f = -\sum \frac{\partial}{\partial x_i} \left(   \frac{A'(|\nabla u|)}{|\nabla u|} \frac{\partial u}{\partial x_i}   \right)  = - \diver \left( \frac{A'(\nabla u|)}{|\nabla u|} \nabla u \right)
+              $$
+              It suffices that $A'(r) = r \widetilde a(r)$.
+
+    \end{enumerate}
+\end{proof}
+
+The scheme of the proof of the previous result allows us to prove, in general, the extension to the nonlinear framework of the Lax-Milgram theorem:
+\begin{theorem}[Browder-Minty]
+    \label{eq:Browder-Minty}
+    Let $X$ be a real and reflexive Banach space, and  $T : X \to X^*$ a bounded, continuous, monotone and coercive operator in the sense that
+    \begin{equation*}
+        \lim_{R \to \infty} \inf_{\|x \|_X = R }  \frac{\langle Tx , x \rangle }{\| x \|} = \infty .
+    \end{equation*}
+    Then $T$ is surjective. That is, for every $g \in X^*$ there exists $u \in X$ such that $T(u) = g$.
+\end{theorem}
+
+
+\begin{remark}
+    In general, this construction can be done with any spaces $V_N$ that are useful. The only requirement is to be able to construct the whole space $V$ as $n \to \infty$. This type of argument is similar to those used to prove the convergence of the Finite Element Method in Numerical Analysis.
+\end{remark}
+
+
+\begin{remark}
+    When $a$ does not have natural coercivity on the space $W^{1,p}$, one can work in other spaces, for example $W^{1,p}$. This is the case of the $p$-Laplacian operator, where $a(\nabla u) = |\nabla u|^{p-2} \nabla u$. If the situation is even more general, sometimes one can work in the so-called Orlicz spaces, where the norm is defined by $\int_\Omega \Phi(|\nabla u|)$.
+\end{remark}
+
+\subsection*{Exercises}
+\begin{exercises}
+\ex Solve the $p$-Laplace equation with Dirichlet boundary conditions and piece-wise linear basis functions.
+\end{exercises}

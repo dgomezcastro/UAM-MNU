@@ -1,0 +1,167 @@
+% LTeX: language=en-EN
+
+\section{Linear Parabolic Problems}
+
+\footnotetext{For this section we loosely follow \cite[Chapter 11]{QuarteroniValli1994}.}
+Parabolic problems like the heat equation can be written as
+\begin{equation*}
+    \frac{du}{dt} + A u(t) = f(t), \qquad \forall t \in (0,T)
+\end{equation*}
+If $\prodH{Au}{v} = a(u,v)$ for $u,v$ in $H$ we arrive at the weak formulation
+\begin{equation}
+    \tag{C}
+    \label{eq:Galerkin parabolic variational}
+    \text{Find }u \in C([0,T]; V) \cap C^1([0,T]; H)\text{ such that }
+    \begin{dcases}
+        \prodH{\frac{du}{dt} (t)}{v(t)} + a(u(t),v(t)) = \prodH{f(t)}{v(t)} , \\
+        \qquad   \forall t \in (0,T), v \in C([0,T];V)                        \\
+        u(0) = u_0.
+    \end{dcases}
+\end{equation}
+
+A good presentation of results on existence, uniqueness, and properties for this problem can be found in \cite{Brezis2010}.
+
+\subsection{Energy estimates for \eqref{eq:Galerkin parabolic variational}}
+
+\begin{lemma}[Parabolic a priori estimates]
+    \label{lem:Galerkin parabolic a priori estimate}
+    Let $a: V \times V \to \mathbb R$ be coercive and $u$ be a solution to \eqref{eq:Galerkin parabolic variational}, then we have the estimate
+    \begin{equation*}
+        \|u(t)\|_H^2 + \int_0^t \|u(s)\|_a^2 ds \le \|u(0)\|_H^2 +  \frac{1}{\alpha^*} \int_0^t \|f(s)\|_H^2 ds, \qquad \forall t > 0
+    \end{equation*}
+    Furthermore, letting we have that
+    \begin{equation*}
+        \|u(t)\|_H^2 \le e^{-\alpha^* t} \|u_0\|_H^2 + \int_0^t e^{-\alpha^*(t-s)} \|f(s)\|_H^2 ds.
+    \end{equation*}
+    If $\frac{du}{dt} \in C([0,T]; V)$, then we also have the a priori estimate
+    \begin{equation*}
+        \frac 1 2 \int_0^t \left\| \frac{du}{dt} (s)\right\|_H^2 ds + \|u(t)\|_a^2 \le \|u_0\|_a^2 + \frac 1 2 \int_0^T \|f(s)\|_H^2 ds.
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    Taking $v(t) = u(t)$ we have that applying Cauchy-Schwarz, Young we recover that
+    \begin{equation*}
+        \frac 1 2 \frac{d}{dt} \|u(t)\|_H^2 + a(u(t), u(t)) \le \frac 1 {2\alpha^*} \|f(t)\|_H^2 + \frac {\alpha^*} 2 \|u(t)\|_H^2.
+    \end{equation*}
+    The first estimate from applying coercivity and integrating in time directly.
+    The second estimate follows from using coercivity and using the integrating factor $e^{\alpha^* t}$.
+    The third estimate from using as test function $v(t) = \frac{du}{dt}(t)$ and arguing similarly.
+\end{proof}
+
+\subsection{Space semi-discretisation}
+The corresponding discretisation in ``space'' can be written as
+\begin{equation}
+    \tag{C$_h$}
+    \label{eq:Galerkin parabolic variational space-discrete}
+    \text{Find }u_h \in C^1([0,T]; V_h) \text{ such that }
+    \begin{dcases}
+        \prodH{\frac{du_h}{dt} (t)}{v_h} + a(u_h(t),v_h)  = \prodH{f(t)}{v_h} \\
+        \qquad  \forall t \in (0,T), v_h \in V_h                              \\
+        u(0) = u_{0,h}
+    \end{dcases}
+\end{equation}
+
+\begin{strongtheorem}[Parabolic version of Céa's lemma]
+    \label{thm:Galerkin parabolic Cea}
+    \footnotetext{This result is a small generalisation of the type of result in \cite[Chapter 11]{QuarteroniValli1994}}%
+    Let $u$ be the solution to \eqref{eq:Galerkin parabolic variational} and \eqref{eq:Galerkin parabolic variational space-discrete}. Then, we have that
+    \begin{equation}
+        \begin{aligned}
+             & \| u(t) - u_h(t) \|_H^2  + \int_0^t \|u(s) - u_h(s)\|_a^2 ds                                                                                \\
+             & \qquad \le \|u_0 - u_{0,h}\|_H^2 + \inf_{v_h \in L^2(0,T;V_h)} \int_0^t \Big( C_h(s) \| u(s) - v_h \|_{H} + \| u(s) - v_h \|_{a}^2 \Big) ds
+        \end{aligned}
+    \end{equation}
+    where
+    \begin{equation*}
+        C_h(t) = 2 \sup_{s \in (0,t)} \left( \left\| \frac{\partial u}{\partial t} (s) \right\|_H + \left\| \frac{\partial u_h}{\partial t} (s) \right\|_H \right)
+    \end{equation*}
+    can be estimated using \Cref{lem:Galerkin parabolic a priori estimate}.
+\end{strongtheorem}
+
+\begin{proof}
+    Let $e_h = u - u_h$ and let $v_h \in C([0,T] , V_h)$. Then we, adding and subtracting, that
+    \begin{align*}
+        \frac 1 2 \frac{d}{dt} \prodH{e_h}{e_h} + a(e_h, e_h)
+         & = \prodH{\frac{\partial e_h}{\partial t}}{u - v_h} + a(e_h, u - v_h)                                                      \\
+         & \le \left\| \frac{\partial e_h}{\partial t} \right\|_H \|u - v_h\|_H + \frac 1 2 \|e_h\|_a^2 + \frac 1 2 \|u - v_h\|_a^2.
+    \end{align*}
+    Hence
+    \begin{equation*}
+        \frac{d}{dt} \prodH{e_h}{e_h} + a(e_h, e_h) \le 2 C(t) \|u - v_h\|_H + \|u - v_h\|_a^2.
+    \end{equation*}
+    We can now integrate in time, and then take infimum in $v_h$ in $C([0,T]; V)$. The infimum coincides with the infimum over $L^2(0,T; V)$ by density.
+\end{proof}
+
+\subsubsection{On the choice of $u_{h}(0)$}
+
+There are many possible choices of $u_h(0)$. The most theoretical is to pick it as function of $u_0$ by selecting by solving
+\begin{equation*}
+    u_h(0) \in V_h \text{ such that} \quad a(u_h(0), v_h) = a(u_0, v_h) \quad \forall v_h \in V_h.
+\end{equation*}
+Then we have that
+\begin{equation*}
+    \prodH {\frac{du_h}{dt}(0)}{v_h} = -a(u_0, v_h) + \prodH{f(0)}{v_h} \le \left( \| Au_0 \|_H  + \|f(0) \|_H \right) \|v_h\|_H.
+\end{equation*}
+Hence, we recover that
+\begin{equation}
+    \label{eq:Galerkin parabolic estimate duhdt(0)}
+    \left\| \frac{du_h}{dt}(0) \right\|_H \le \| Au_0 \|_H + \|f(0)\|_H.
+\end{equation}
+
+
+\subsubsection{System of linear ODEs for the coefficients}
+\label{sec:Galerkin parabolic linear ODEs}
+We now look for solutions of the form
+\begin{equation*}
+    u_h(t) = \sum_{j=1}^{N} U_j(t) \varphi_j
+\end{equation*}
+with $U_i \in C^1([0,T];\mathbb R)$.
+This leads to the linear system of ODEs for some basis coefficients
+\begin{equation}
+    \label{eq:Galerkin parabolic linear algebra}
+    \mat M \frac{d \vec u}{dt} (t) + \mat K \vec u (t) = \vec b (t), \qquad
+    \text{where } \mat M = \Big( (\varphi_j, \varphi_i)_H \Big)_{ij},
+    \vec u (t) = \left(U_i(t)\right)_i,
+    \vec b = \left(\prodH{f(t)}{\varphi_i}\right)_i.
+\end{equation}
+Here $\mat K$ is the stiffness matrix introduced in \Cref{sec:Galerkin elliptic linear algebra}.
+Matrix $\mat M$ is known as the \emph{mass matrix}.
+
+\subsection{Fully discrete problem}
+Then we must pick a suitable time discretisation, in order to be able to numerically solve our problem. For example, if we pick the implicit Euler method: given $u_h^n$ (an approximation of $u_h(n \tau)$) we take $u_h^{n+1} $( an approximation of $u_h ((n+1)\tau)$) as the solution to the $\theta$-method with $\theta \in (0,1)$
+\begin{equation*}
+    \prodH{\frac{u_h^{n+1} - u_h^n}{\tau}}{v_h} + a\Big(\theta u_h^{n+1} + (1-\theta) u_h^n ,v_h\Big)
+    = \BigprodH{\theta f((n+1)\tau) + (1-\theta) f(n\tau)}{v_h}, \qquad \forall v_h \in V_h
+\end{equation*}
+that can be written as the elliptic problem
+\begin{equation*}
+    \prodH{u_h^{n+1}} {v_h} + \tau \theta a(u_h^{n+1},v_h)
+    = \BigprodH{u_h^n + \tau \theta f((n+1)\tau) + \tau (1-\theta) f(n\tau)}{v_h} + (1-\theta) a(u_h^n , v_h) , \qquad \forall v_h \in V_h.
+\end{equation*}
+Equivalently, in terms of coefficients
+\begin{equation*}
+    ( \mat M + \tau \theta \mat K ) \vec u^{n+1} = (\mat M + \tau (1-\theta) \mat K) \vec u^n + \tau \vec b^{n+1}.
+\end{equation*}
+Using an stability and consistency argument in \cite[Theorem 11.3.2]{QuarteroniValli1994} the authors prove that
+\begin{theorem}
+    \label{thm:Galerkin parabolic convergence in tau}
+    Assume that $a: V \times V \to \mathbb R$ is bilinear and coercive, and $f \in L^2 (0,T; H)$.
+
+    \noindent If $\theta \in [0,\frac 1 2)$ assume also the CFL-type condition
+    $$
+        \tau ( 1 + C(h) ) < \frac{2 \alpha^\star}{(1-2 \theta)}
+        \qquad \text{where }C(h) = \sup_{v_h \in V_h \setminus \{0\}} \frac{\| v_h \|_V^2 }{ \|v_h\|_H^2 } .
+    $$
+    Then, we have the linear convergence in $\tau$
+    \begin{equation*}
+        \sup_{n \tau \le T} \|u_h^n - u_h(n\tau) \|_H \le C_\theta \tau \left( \left\| \frac{d u_h}{d t} (0) \right\|_H^2 + \int_0^T \left\| \frac{df}{dt} \right\|_H^2  \right)^{\frac 1 2}.
+    \end{equation*}
+    If $\theta = \frac 1 2$ then we have the quadratic convergence
+    \begin{equation*}
+        \sup_{n \tau \le T} \|u_h^n - u_h(n\tau) \|_H \le C_\theta \tau^2 \left( \left\| \frac{d^2 u_h}{d t^2} (0) \right\|_H^2 + \int_0^T \left\| \frac{d^2f}{dt^2} \right\|_H^2  \right)^{\frac 1 2}.
+    \end{equation*}
+\end{theorem}
+
+\begin{remark}
+    Using \Cref{thm:Galerkin parabolic Cea,thm:Galerkin parabolic convergence in tau} and \eqref{eq:Galerkin parabolic estimate duhdt(0)} we can estimate $\| u (n \tau) - u_h^n \|_H$.
+\end{remark}

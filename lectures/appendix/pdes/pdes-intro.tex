@@ -1,0 +1,149 @@
+\chapter{Brief Review of Partial Differential Equations}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{First Order Equations}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Semi-explicit Solutions via the Method of Characteristics}
+
+\paragraph{Advection Equation}
+The solutions of the equation
+\begin{equation}
+    \label{eq:adveccion}
+    \frac{\partial u}{\partial t} (t,x) + \bm v(t,x) \cdot \nabla u  = 0
+\end{equation}
+can be sought in the form of characteristics, that is, looking for curves $X_t$ such that $u(t,X_t) = u_0(X_0)$. Thus,
+\begin{equation*}
+    \frac{\partial u}{\partial t} (t,X_t) + \nabla u(t,X_t) \cdot \frac{dX_t}{dt} = 0.
+\end{equation*}
+It suffices to require that $X_t$ satisfy
+\begin{equation}
+    \label{eq:caracteristicas}
+    \frac{dX_t}{dt} = \bm v(t, X_t).
+\end{equation}
+The Picard-Lindelöf theorem tells us that if $\bm v$ is globally Lipschitz in $x$ and continuous in $t$, then there exists a unique solution of \eqref{eq:caracteristicas} for a given $X_0$.
+
+\medskip
+
+For fixed $x$ we have curves $t \mapsto X_t(x)$ where $X_0(x) = x$. For fixed $t$, think of the transformation $X_t : x \mapsto X_t(x)$.
+If the field $X_t$ is invertible for each time $t$ in a certain domain, the solution is of the form $u_t(t,x) = u_0 (X_t^{-1} (x))$.
+
+\paragraph{Advection Equation with Zero Order Term}
+In the equation
+\begin{equation}
+    \label{eq:adveccion con termino de orden cero}
+    \frac{\partial u}{\partial t} (t,x) + \bm v(t,x) \cdot \nabla u + c(t,x) u = 0
+\end{equation}
+one can look for solutions of the form $A_t u(t,X_t) = u_0 (X_0)$. Using the chain rule again, we see that it is sufficient that $X_t$ satisfy \eqref{eq:caracteristicas} and that
+\begin{equation*}
+    \frac{dA_t}{dt} = A_t c(t, X_t), \qquad A_0 = 1.
+\end{equation*}
+
+\paragraph{Transport Equation}
+The equation
+\begin{equation}
+    \frac{\partial u}{\partial t} (t,x) + \diver( \bm v(t,x) u) = 0
+\end{equation}
+can be written as \eqref{eq:adveccion con termino de orden cero} where $c = \diver \bm v$. This case is particularly important.
+
+\paragraph{Burgers' Equation}
+
+Nonlinear problems are more difficult. In $d=1$ we have Burgers' equation
+\begin{equation}
+    \label{eq:Burgers}
+    \frac{\partial u}{\partial t} + u \frac{\partial u}{\partial x} = 0.
+\end{equation}
+In this equation $v = u$. But we observe that $v(t,X_t) = u(t,X_t) = u_0(X_0)$. Then the solution of \eqref{eq:caracteristicas} is precisely
+\begin{equation*}
+    X_t (x) = x + t u_0(x).
+\end{equation*}
+Another way to see this is that for classical solutions $u(t,y) = u_0(x)$ if the relation $y = x + t u_0(x)$ holds.
+Let us see two extreme cases:
+\begin{enumerate}
+    \item If $u_0$ is non-decreasing, then $X_t : x \mapsto X_t (x)$ is strictly increasing in $x$, and therefore invertible for all $t > 0$. Given $y$ there exists a unique $x$ such that $y = x + t u_0(x)$. If $u_0$ is regular, then there exists a unique classical solution $u$ of \eqref{eq:Burgers}.
+
+    \item Let $u_0(x) = -x$.
+          For time $t \in (0,1)$ we have $X_t(x) = (t-1)x$ so $u(t,x) = u_0( \frac{x}{t-1} ) = \frac{x}{1-t}$. Clearly this solution blows up at $t = 1$.
+          Let's see this through the characteristics.
+          For time $t=1$ we have $X_1(x) = 0$ for any $x$. All characteristics passing through points of the form $(t,x) = (0,x)$ intersect at the point $(t,x) = (1,0)$. At this point, for any $x$
+          \[
+              u(1,0) = u_0(x) = -x.
+          \]
+          This is clearly a contradiction. Therefore, there is no classical solution defined at time $t = 1$.
+\end{enumerate}
+
+The method of characteristics admits a very general presentation for nonlinear problems. See [EVANS, ...] \todo{Add citation}
+
+\subsection{Boundary Conditions}
+
+\section{Solution semi-group}
+
+
+\section{Elliptic Equations}
+
+\begin{equation}
+    \label{eq:Laplace}
+    -\Delta u + a u = f.
+\end{equation}
+
+\subsection{Problems in Bounded Domains}
+
+\subsubsection{Fourier Series on an Interval}
+
+\subsubsection{Fourier Series on a Domain}
+
+\subsubsection{Weak Solutions in a Domain. Sobolev Spaces}
+
+\subsubsection{Maximum Principle. Accretivity of the Laplacian in $L^\infty$}
+
+\subsubsection{Accretivity of the Laplacian in $L^1$}
+
+
+
+\subsection{Problem in the Whole Space. Fourier Transform}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Parabolic Equations}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{The Heat Equation}
+The canonical example of a linear parabolic equation is the heat equation
+\begin{equation}
+    \label{eq:calor}
+    \frac{\partial u}{\partial t} -\Delta u = 0.
+\end{equation}
+
+\paragraph{The Viscous Burgers' Equation}
+Usually, adding a Laplacian-type term makes the equations more regular. For example, one way to understand \eqref{eq:Burgers} is the Burgers' equation with a viscous term
+\begin{equation}
+    \label{eq:Burgers viscosa}
+    \frac{\partial u}{\partial t} + u\frac{\partial u}{\partial x} = \varepsilon \frac{\partial^2 u}{\partial x^2}
+\end{equation}
+
+\subsubsection{Fourier Series in Domains}
+
+\subsubsection{Semigroup Theory}
+
+\subsubsection{$L^p$ Contractivity}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Hyperbolic Equations}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{equation}
+    \tag{W}
+    \label{eq:wave}
+    \frac{\partial^2 u}{\partial t^2} - c^2\Delta u = 0.
+\end{equation}
+
+\subsubsection{Case $d=1$. d'Alembert's Formula}
+
+If $u(x,0) = u_0(x)$ and $\frac{\partial u}{\partial t} (x,0) = v_0(x)$ then
+\begin{equation*}
+    \tag{W-d'A}
+    \label{eq:wave 1d D'Alambert}
+    u(x,t) = \frac{u_0(x-ct) + u_0(x+ct)}{2} + \frac 1 {2c} \int_{x-ct}^{x+ct} v_0(s) ds
+\end{equation*}
+
+\subsubsection{Difficulties in $d>1$}

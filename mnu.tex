@@ -1,0 +1,51 @@
+
+\documentclass[oneside,a4paper]{book}
+
+\usepackage{import}
+\subimport{header}{header.tex}
+
+\addbibresource{lectures/finite-diff/bibliography.bib}
+\addbibresource{lectures/finite-elements/bibliography.bib}
+\addbibresource{lectures/spectral/bibliography.bib}
+
+\title{Numerical Methods for \\ Partial Differential Equations}
+\author{F. del Teso \and D. Gómez-Castro}
+\date{Universidad Autónoma de Madrid \\ 2026-2027}
+
+
+\begin{document}
+
+\maketitle
+
+\listoftodos
+
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+%%%
+
+% \part{Finite Differences}
+
+% \subimport{lectures/finite-diff/}{finite-diff.tex}
+
+% \part{Galerkin's Method}
+
+\subimport{lectures/galerkin/}{galerkin.tex}
+
+%%%
+\part{The Finite-Elements Method}
+
+\subimport{lectures/finite-elements/}{finite-elements.tex}
+
+%%%
+\subimport{lectures/spectral/}{spectral.tex}
+
+\appendix
+\part*{Appendixes}
+\addcontentsline{toc}{part}{Appendix}
+
+% \subimport{lectures/appendix/pdes/}{pdes-intro.tex}
+
+\subimport{lectures/appendix}{functional-analysis.tex}
+
+\end{document}

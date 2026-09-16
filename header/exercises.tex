@@ -1,0 +1,22 @@
+\newlist{exercises}{enumerate}{1}
+\setlist[exercises]{
+    label=\thechapter.\arabic*,
+    ref=\thechapter.\arabic*,
+    align=left,
+    resume
+    % leftmargin=0pt, labelindent=!,
+    % listparindent=\parindent, labelwidth=0pt, itemindent=!
+}
+
+\newcommand{\ex}[1][]{%
+    \if\relax\detokenize{#1}\relax
+        \def\thisex{.}%
+    \else
+        \def\thisex{: \protect #1.}%
+    \fi
+    \item}
+
+\usepackage{etoolbox}
+\preto\chapter{%
+  \restartlist{exercises}%
+ }

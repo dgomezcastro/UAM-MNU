@@ -1,0 +1,15 @@
+mnu.pdf
+*.aux
+*.bbl
+*.bbl-SAVE-ERROR
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.run.xml
+*.synctex.*
+*.toc
+*.out
+*.tdo
+.DS_Store

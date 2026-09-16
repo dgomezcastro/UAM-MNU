@@ -1,0 +1,143 @@
+%LTeX: language=es
+\section{Ecuación de advección}
+
+Volvemos sobre la ecuación de advección a velocidad constante \eqref{eq:adveccion}. Para más simplicidad supongamos que $d=1$ y $\bm v(t,x) = a$. Legamos a la ecuación
+\begin{equation}
+    \tag{A}
+    \label{eq:adveccion 1d}
+    \begin{dcases}
+        \frac{\partial u}{\partial t}(t,x) + a \frac{\partial u}{\partial x}(t,x) = 0
+         & \text{para todo }t > 0, x \in \R \\
+        u(0,x) = u_0(x)
+         & \text{para todo } x \in \R.
+    \end{dcases}
+\end{equation}
+Usando desarrollos de Taylor de primer orden tenemos cuatro formas de discretizar la ecuación
+\begin{example}[Algunos esquemas numéricos para \eqref{eq:adveccion}]
+    \begin{align}
+        \label{eq:adveccion 1d EE forward}
+        \tag{A-EE$_+$}
+         & \frac{U_i^{n+1} - U_i^n}{\tau} + a \frac{U_{i+1}^{n} - U_i^n}{h} = 0
+        \\
+        \tag{A-EE$_-$}
+        \label{eq:adveccion 1d EE backward}
+         & \frac{U_i^{n+1} - U_i^n}{\tau} + a \frac{U_{i}^{n} - U_{i-1}^n}{h} = 0
+        \\
+        \tag{A-EI$_+$}
+         & \frac{U_i^{n+1} - U_i^n}{\tau} + a \frac{U_{i+1}^{n+1} - U_i^{n+1}}{h} = 0
+        \\
+        \tag{A-EI$_-$}
+         & \frac{U_i^{n+1} - U_i^n}{\tau} + a \frac{U_{i}^{n+1} - U_{i-1}^{n+1}}{h} = 0.
+    \end{align}
+\end{example}
+Las dos primeras discretizaciones son explícitas, y las dos segundas son implícitas. Vamos a centrarnos primero en las explícitas.
+
+
+Observamos algunas propiedades de la solución exacta
+\begin{enumerate}
+    \item $\sup_x u(\cdot,t) = \sup u_0$ y lo mismo para el ínfimo. En particular, si $u_0 \ge 0$ entonces $u \ge 0$.
+    \item Se preserva la integral porque
+          \begin{equation*}
+              \int_\R u(t,x) dx = \int_\R u_0 (t-ax) dx = \int_\R u_0(y) dy.
+          \end{equation*}
+\end{enumerate}
+
+Vamos a estudiar el caso $a > 0$, y el otro se sigue por simetría.
+
+La solución explícita claramente cumple . Veamos qué pasa con los diferentes métodos
+\paragraph{Esquema \eqref{eq:adveccion 1d EE forward}.} Escribimos
+\begin{align*}
+    U_i^{n+1}
+     & = U_i^n - a \tfrac{\tau}{h} (U_{i+1}^n - U_i^n)               \\
+     & = (1 + a\tfrac{\tau}{h}) U_i^n - a \tfrac{\tau}{h} U_{i+1}^n.
+\end{align*}
+Si $a > 0$, $U_1^0 = 0$ y $U_2^0 = 1$, entonces $U_1^1 < 0$. Este método no preserva propiedades básicas.
+
+\paragraph{Esquema \eqref{eq:adveccion 1d EE backward}.}
+Escribimos
+\begin{align*}
+    U_i^{n+1}
+     & = U_i^n - a \tfrac{\tau}{h} (U_{i}^n - U_{i-1}^n)             \\
+     & = (1 - a\tfrac{\tau}{h}) U_i^n + a \tfrac{\tau}{h} U_{i-1}^n.
+\end{align*}
+Si $a > 0$ y $U_\bullet^0 \ge 0$ entonces el segundo término no es problemático. El primer término preserva la positividad si
+\begin{equation}
+    \tag{A-CFL}
+    \label{eq:adveccion 1d CFL}
+    a\tau \le h.
+\end{equation}
+Con esta condición tan inocente, resulta que el supremo está controlado, pues
+\begin{equation*}
+    \sup_i U_i^{n+1} \le (1 - a \tfrac{\tau}{h}) \sup_i U_i^n + a \tfrac{\tau}{h} \sup_i U_{i-1}^n = \sup_i U_i^{n}.
+\end{equation*}
+Lo mismo ocurre con el ínfimo. Es más, esto mismo se puede hacer con valores absolutos
+\begin{equation*}
+    \sup_i |U_i^{n+1}| \le \sup_i |U_i^{n}|.
+\end{equation*}
+Como el problema es lineal, si tenemos dos soluciones $U$ y $V$ tenemos que
+\begin{equation*}
+    \sup_i |U_i^{n} - V_i^n| \le \sup_i |U_i^0 - V_i^0|.
+\end{equation*}
+
+\paragraph{Soluciones aproximadas de \eqref{eq:adveccion 1d EE backward}.}
+Si $V$ no satisface exactamente la ecuación, si no que tiene un ``resto'' $R$ en el sentido que
+\begin{equation}
+    \label{eq:adveccion 1d EE V con F}
+    \frac{V_i^{n+1} - V_i^n}{\tau} + a \frac{V_{i}^{n} - V_{i-1}^n}{h} = R_i^n
+\end{equation}
+entonces la cuenta nos dice que
+\begin{equation*}
+    \sup_i |U_i^{n+1} - V_i^{n+1}| \le \sup_i |U_i^n - V_i^n| + \tau \sup_i |R_i^{n}|.
+\end{equation*}
+Iterando deducimos que
+\begin{equation}
+    \tag{A-S}
+    \label{eq:adveccion 1d dependencia continua}
+    \sup_i |U_i^{n+1} - V_i^{n+1}| \le \sup_i |U_i^0 - V_i^0| + \tau \sum_{k=0}^n \sup_i |R_i^{k}|.
+\end{equation}
+Esta ecuación nos dice que si tomamos
+
+\paragraph{Consistencia de \eqref{eq:adveccion 1d EE backward}}
+
+Definimos $V_i^n = u(t_n, x_i) = u_0(t_n - ax_i)$.
+Tenemos \eqref{eq:adveccion 1d EE V con F} con
+\begin{align*}
+    R_i^{n} & \defeq \frac{V_i^{n+1} - V_i^n}{\tau} + a \frac{V_i^{n} - V_{i-1}^n}{\tau}
+    \\
+            & = \frac{V_i^{n+1} - V_i^n}{\tau} + a \frac{V_i^{n} - V_{i-1}^n}{\tau} - \left( \frac{\partial u}{\partial t}(t_n, x_i) + a\frac{\partial u}{\partial x}(t_n, x_i)   \right)
+    \\
+            & = \frac{V_i^{n+1} - V_i^n}{\tau} - \frac{\partial u}{\partial t}(t_n, x_i) + a \left( \frac{V_i^{n} - V_{i-1}^n}{\tau} - \frac{\partial u}{\partial x}(t_n, x_i) \right).
+\end{align*}
+Si $u_0 \in C^2_c$ entonces
+\begin{align*}
+    \left|\frac{V_i^{n+1} - V_i^n}{\tau} - \frac{\partial u}{\partial t}(t_n, x_i) \right|
+     & \le
+    \frac 1 2 \left|\frac{\partial^2 u }{\partial t^2} (\xi, x)\right| \tau \\
+    \left|\frac{V_i^{n} - V_{i-1}^n}{\tau} - \frac{\partial u}{\partial x}(t_n, x_i) \right|
+     & \le
+    \frac 1 2 \left|\frac{\partial^2 u }{\partial x^2} (t_n, \eta)\right| h .
+\end{align*}
+Es decir que $|F_{i}^n| \le C(\tau + h)$. Aplicando \eqref{eq:adveccion 1d CFL} tenemos
+\begin{equation}
+    \tag{A-C}
+    \label{eq:adveccion 1d consistencia}
+    |R_i^n| \le C h.
+\end{equation}
+
+\paragraph{Convergencia de \eqref{eq:adveccion 1d EE backward}}
+
+Así, aplicando \eqref{eq:adveccion 1d dependencia continua} tenemos, dado que $U_i^0 = u_0(x_i) = u(0, x_i) = V_i^0$ tenemos que sobre los puntos de la malla la solución numérica se parece a la exacta.
+\begin{equation}
+    \tag{A-E}
+    \label{eq:adveccion 1d convergencia}
+    \sup_i |U_i^{n+1} - u(t_{n+1}, x_i)| \le  C \tau n h.
+\end{equation}
+
+Nótese que $\tau n = t_n$. Hemos demostrado el siguiente teorema
+\begin{teorema}
+    Si $a > 0$, $u_0 \in C^2_c(\mathbb R)$, y supongamos \eqref{eq:adveccion 1d CFL}. Entonces la solución de \eqref{eq:adveccion 1d EE backward} con $U_i^0 = u_0 (ih)$ aproxima uniformemente la solución del problema \eqref{eq:adveccion 1d} con estimación \eqref{eq:adveccion 1d convergencia}.
+\end{teorema}
+
+
+
+

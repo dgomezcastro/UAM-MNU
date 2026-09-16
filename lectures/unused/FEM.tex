@@ -1,0 +1,644 @@
+\section{Weak formulation}\label{weak-formulation}
+
+\subsection{Integration by parts}\label{integration-by-parts}
+
+\newcommand{\diff}{\mathrm{d}}
+
+Recall that \[
+    \frac{\partial}{\partial x} \left( v \frac{\partial u}{\partial x} \right)  =   \frac{\partial v}{\partial x} \frac{\partial u}{\partial x} + v \frac{\partial^2 u}{\partial x^2}
+\]
+Integrating \[
+    v(1) \frac{\partial u}{\partial x}(t,1) -  v(-1) \frac{\partial u}{\partial x}(t,-1) =  \int_{-1}^1 \frac{\partial v}{\partial x} (x) \frac{\partial u}{\partial x}(t,x) \diff x + \int_{-1}^1 v(x) \frac{\partial^2 u}{\partial x^2} (t,x) \diff x
+\]
+
+\subsection{A bit of theory}\label{a-bit-of-theory}
+
+If \(v\) is a Lipschitz function, then it is differentiable almost everywhere. And we denote \(\frac{\diff v}{\diff x}\).
+
+This derivative (sometimes called "weak") still has the property of integration by parts: if \(u\) is of class \(C^2\) then \[
+    v(1) \frac{\partial u}{\partial x}(t,1) -  v(-1) \frac{\partial u}{\partial x}(t,-1) =  \int_{-1}^1 \frac{\partial v}{\partial x} (x) \frac{\partial u}{\partial x}(t,x) \diff x + \int_{-1}^1 v(x) \frac{\partial^2 u}{\partial x^2} (t,x) \diff x
+\]
+
+The space of
+\[
+    v(1) \frac{\partial u}{\partial x}(t,1) -  v(-1) \frac{\partial u}{\partial x}(t,-1) =  \int_{-1}^1 \frac{\partial v}{\partial x} (x) \frac{\partial u}{\partial x}(t,x) \diff x + \int_{-1}^1 v(x) \frac{\partial^2 u}{\partial x^2} (t,x) \diff x
+\]
+
+
+
+El espacio de funciones Lipschitz es un ejemplo de los llamados
+\emph{espacios de Sobolev}. Denotaremos \[
+    W^{1,\infty}_0 (-1,1) = \{ v \in C([-1,1])  \text{ Lipschitz tal que } v(-1) = v(1) = 0 \}.
+\]
+
+\subsection{Ejemplo. Ecuación de calor con condiciones
+    Dirichlet}\label{ejemplo-ecuaciuxf3n-de-calor-con-condiciones-dirichlet}
+
+Volvemos sobre la ecuación de calor \[
+    \tag{C}
+    \label{eq:calor}
+    \frac{\partial u}{\partial t} = \Delta u + f(t,x)
+\]
+
+Tomemos \textbackslash eqref\{eq:calor\} en \((-1,1)\) con condiciones
+de Dirichlet homogéneas \(u(t,-1) = u(t,1) = 0\). La solución exacta de
+la ecuación satisface que para toda \(v\) Lipscthitz se tiene
+
+\[
+    \int_{-1}^1 \frac{\partial u}{\partial t} v = \int_{-1}^1 (\Delta u) v + \int_{-1}^1 f v
+\]
+
+
+
+Si \(v(\pm 1) = 0\) podemos integrar por partes llegamos a la llamada
+llamada formulación débil \[
+    \int_{-1}^1 \frac{\partial u}{\partial t} v = - \int_{-1}^1 \frac{\partial u}{\partial x} \frac{\partial v}{\partial x} + \int_{-1}^1 f v , \qquad \forall v \in W_0^{1,\infty} (\Omega).
+\]
+
+\subsection{Ejemplo. Ecuación de calor con condiciones
+    Neumann}\label{ejemplo-ecuaciuxf3n-de-calor-con-condiciones-neumann}
+
+Tomemos \textbackslash eqref\{eq:calor\} en \((-1,1)\) con condiciones
+de Neumann homogéneas
+\(\frac{\partial u}{\partial x}(t,-1) = \frac{\partial u}{\partial x}(t,1) = 0\).
+La solución exacta de la ecuación satisface que para toda \(v\)
+Lipscthitz se tiene
+
+\[
+    \int_{-1}^1 \frac{\partial u}{\partial t} v = \int_{-1}^1 (\Delta u) v + \int_{-1}^1 f v
+\]
+
+
+
+Podemos integrar por partes incluso si \(v(\pm 1) \ne 0\) a la llamada
+llamada formulación débil \[
+    \int_{-1}^1 \frac{\partial u}{\partial t} v = - \int_{-1}^1 \frac{\partial u}{\partial x} \frac{\partial v}{\partial x} + \int_{-1}^1 f v , \qquad \forall v \in W^{1,\infty} (\Omega).
+\]
+
+\section{Método de Galerkin}\label{muxe9todo-de-galerkin}
+
+\subsection{Un problema en dimensión
+    finita}\label{un-problema-en-dimensiuxf3n-finita}
+
+Elegimos funciones de ``base\textquotesingle\textquotesingle{} \[
+    \varphi^h_1, \cdots, \varphi^h_N
+\]
+
+
+
+y queremos buscar una aproximación \(u(t,x) \sim u^{h} (t,x)\) donde \[
+    \tag{U}
+    \label{eq:uh}
+    u^{h} (t,x)= \sum_{j=1}^N u_j^h (t) \varphi^h_j (x).
+\]
+
+
+
+Estas funciones \(\varphi^h_i\) generan un sub-espacio vectorial en el
+espacio de funciones, que llamamos \(V^h\). Se busca \[
+    u^h (t) \in V^h = \mathrm{span} \{ \varphi^h_1, \cdots, \varphi^h_N \}.
+\]
+
+
+
+Sin pérdida de generalidad consideramos que son linealmente
+independiente, eliminando en las que sean necesario para construir un
+base, y cambiándolo los índices.
+
+\subsection{Ejemplo. Ecuación de calor con condiciones
+    Dirichlet}\label{ejemplo-ecuaciuxf3n-de-calor-con-condiciones-dirichlet-1}
+
+Volvemos sobre \textbackslash eqref\{eq:calor\} en \(t > 0\) y
+\(x \in (-1,1)\) con condiciones de Dirichlet homogéneas
+\(u(t,-1) = u(t,1) = 0\).
+
+La solución exacta es la única curva
+\(t \mapsto u(t) \in C^2([-1,1] ) \cap C_0([-1,1])\) tal que \[
+    \int_{-1}^1 \frac{\partial u}{\partial t} v = - \int_{-1}^1 \frac{\partial u}{\partial x} \frac{\partial v}{\partial x} + \int_{-1}^1 f v , \qquad \forall v \in
+    W_0^{1,\infty}([-1,1])
+\]
+
+
+
+Como aproximación numérica buscamos un espacio
+\(V^h \subset W_0^{1,\infty} (-1,1)\) y la única curva
+\(t \mapsto u^h(t) \in V^h\) tal que \[
+    \int_{-1}^1 \frac{\partial u^h}{\partial t} v
+    = - \int_{-1}^1 \frac{\partial u^h}{\partial x} \frac{\partial v}{\partial x}
+    + \int_{-1}^1 f v \diff x
+    , \qquad  \forall v \in V^h.
+\]
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Como \(V^h\) es un espacio de dimensión finita, esto es equivalente a
+que
+
+\[
+    \int_{-1}^1 \frac{\partial u^h}{\partial t} \varphi_i^h
+    = - \int_{-1}^1 \frac{\partial u^h}{\partial x} \frac{\partial \varphi_i^h}{\partial x}
+    + \int_{-1}^1 f \varphi_i^h \diff x
+    , \qquad  \forall i = 1, \cdots, N.
+\]
+
+
+
+Volviendo sobre \textbackslash eqref\{eq:uh\} tenemos \[
+    \sum_{j=1}^N \frac{\diff u_j^h}{\diff t} (t) \int_{-1}^1 \varphi_j^h \varphi_i^h
+    = - \sum_{j=1}^N u_j^h(t) \int_{-1}^1 \frac{\partial \varphi_j^h}{\partial x} \frac{\partial \varphi_i^h}{\partial x}
+    + \int_{-1}^1 f(t,x) \varphi_i^h (x) \diff x.
+\]
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Llegamos a un sistema de la forma \[
+    M^h
+    \frac{\diff }{\diff t}
+    \begin{pmatrix} u_1^h \\ \vdots \\ u^N_h \end{pmatrix}
+    = -
+    A^h
+    \begin{pmatrix} u_1^h \\ \vdots \\ u^N_h \end{pmatrix}
+    +
+    b^h (t)
+\]
+
+
+
+donde \[
+    M^h_{ij} = \int_{-1}^1 \varphi_j^h \varphi_i^h ,
+    \qquad A_{ij}^h = \int_{-1}^1 \frac{\diff \varphi_j^h}{\diff x} \frac{\diff \varphi_i^h}{\diff x},
+    \qquad b_i^h (t) = \int_{-1}^1 f(t,x) \varphi_i^h (x) \diff x .
+\]
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Dado que los elementos de la base son linealmente independiente, la
+matriz \(M^h\) es no singular. Por tanto, podemos escribir \[
+    \frac{\diff }{\diff t}
+    \begin{pmatrix} u_1^h \\ \vdots \\ u^N_h \end{pmatrix}
+    = -
+    (M^h)^{-1} A^h
+    \begin{pmatrix} u_1^h \\ \vdots \\ u^N_h \end{pmatrix}
+    +
+    (M^h)^{-1} b^h(t)
+\] Este problema evolutivo tiene siempre solución.
+
+
+
+Concluímos así la semi-discretización espacial. Vamos a estudiar las
+buenas propiedades que tiene este método, empezando por el problema
+estacionario asociado.
+
+\subsection{Ejemplo: ecuación de Laplace con condiciones
+    Dirichlet}\label{ejemplo-ecuaciuxf3n-de-laplace-con-condiciones-dirichlet}
+
+Consiste en encontrar soluciones estacionarias (e.d. independientes del
+tiempo) de la ecuación de calor, es decir buscamos un único vector
+\(u^h \in \mathbb R^N\) tal que \[
+    A^h
+    \begin{pmatrix} u_1^h \\ \vdots \\ u^N_h \end{pmatrix}
+    =
+    b^h
+\]
+
+\subsection{Marco abstracto
+}\label{marco-abstracto-scrollable}
+
+Sea \(A: H \to H\) un operador lineal, donde \(H\) tiene un producto
+escalar \((\cdot, \cdot)_H\).
+
+
+
+Para estudiar el problema evolutivo
+
+\[
+    \frac{\diff}{\diff t} u = - A u
+\]
+
+
+
+Siempre podemos escoger una base y escribir
+\textbackslash eqref\{eq:uh\}.
+
+
+
+Repitiendo el razonamiento anterior, donde \(Au = - \Delta u - f\),
+tenemos \[
+    M^h
+    \frac{\diff }{\diff t}
+    \begin{pmatrix} u_1^h \\ \vdots \\ u^N_h \end{pmatrix}
+    = -
+    A^h
+    \begin{pmatrix} u_1^h \\ \vdots \\ u^N_h \end{pmatrix}
+\]
+
+
+
+La matriz \(M^h\) se suele llamar matriz de masa, y \(A^h\) se llama
+matriz de rigidez. Esto tiene que ver con los problemas de cuarto orden
+que aparecen en elasticidad.
+
+
+
+donde \[
+    M^h_{ij} = (\varphi_j^h, \varphi_i^h)_H , \qquad A_{ij}^h = - (A \varphi_j, \varphi_i)_H.
+\]
+
+
+
+\textbf{\emph{Observación}} Se puede extender esta formulación a un
+problema no-lineal.
+
+\section{Método de elementos
+  finitos}\label{muxe9todo-de-elementos-finitos}
+
+El método de elementos finitos consiste en:
+
+\begin{itemize}
+    \item
+          Dividir el dominio en poliedros (es decir, crear una malla)
+    \item
+          Tomar como funciones de base funciones que son polinomios de un grado
+          \(g\) dado en cada elemento
+\end{itemize}
+
+
+
+Para esta sección recomendamos la bibliografía: @Ramos, @suli2012lecture
+
+\subsection{En dimensión 1}\label{en-dimensiuxf3n-1}
+
+En dimensión 1, esto significa tomar puntos \[
+    a = x_0^h < x_1^h < \dots < x_{M+1}^h = b.
+\]
+
+
+
+Sobre esta malla se toma el espacio de las funciones de polinomios de
+grado \(g\) a trozos.
+
+
+
+Si introducimos condiciones de tipo Dirichlet, entonces añadimos esta
+condiciones al espacio: \[
+    V^h = \{  v^h \in C_0 ([-1,1]) :  v^h|_{[x_i, x_{i+1}]} \text{ es polinomio de grado } g  \}
+\] Este espacio se denota, a veces, como \(V_g^h\).
+
+\subsection{La base de funciones de funciones lineales a
+    trozos}\label{la-base-de-funciones-de-funciones-lineales-a-trozos}
+
+Es muy habitual tomar \(g = 1\), es decir funciones continuas y lineales
+a trozos.
+
+Como las funciones son lineales, para determinar una de ellas nos basta
+con determinar los valores \(v^h(x_i)\).
+
+
+
+Elegimos la base de funciones tales que
+\(\varphi_i(x_j) = \delta_{ij}\).
+
+
+
+En tal caso, se cogen las funciones de base lineales a trozos \[
+    \varphi_i (x)
+    =
+    \begin{dcases}
+        \left( \frac{x-x_{i-1}}{x_i - x_{i-1}} \right)_+ & x \le x_i , \\
+        \left( \frac{x_{i+1}-x}{x_{i+1} - x_i} \right)_+ & x > x_i ,   \\
+    \end{dcases},
+\]
+
+\subsection{Matriz de rigidez para el Laplaciano con condiciones
+    Dirichlet
+}\label{matriz-de-rigidez-para-el-laplaciano-con-condiciones-dirichlet-scrollable}
+
+Como las condiciones son Dirichlet podemos tomar el espacio \[
+    V^h = \mathrm{span} \{ \varphi_1, \cdots, \varphi_M \}.
+\]
+
+Si la malla es uniforme \(x_{i+1} - x_i = \Delta x\) y tomamos
+condiciones Dichlet \[
+    \int_{-1}^1 \frac{\partial \varphi_i^h}{\partial x} \frac{\partial \varphi_j^h}{\partial x}
+    =
+    \frac 1 {\Delta x}
+    \begin{cases}
+        2    & i = j      \\
+        {-1} & |i-j| = 1, \\
+        0    & |i-j| > 1.
+    \end{cases}
+\]
+
+
+
+Acabamos con la famosa matriz para el problema de Dichilet \[
+    A^h = \frac{1}{\Delta x}
+    \begin{pmatrix}
+        2  & - 1 &            \\
+        -1 & 2   & -1         \\
+           &     & \ddots     \\
+           &     & -1     & 2
+    \end{pmatrix}
+\]
+
+
+
+No calcularemos analíticamente la matriz \(M^h\) ahora.
+
+
+
+\textbf{\emph{Observación.}} En el método de diferencias finitas la
+matriz tiene factor \((\Delta x)^2\). Pero el vector \[
+    b_i^h(t) = \int_{-1}^1 f(t,x) \varphi_i^h(x) \diff x \sim \Delta x
+\]
+
+\subsection{Matriz de rigidez para el Laplaciano con condiciones Neumann
+}\label{matriz-de-rigidez-para-el-laplaciano-con-condiciones-neumann-scrollable}
+
+Como las condiciones son Neumann podemos tomar el espacio \[
+    V^h = \mathrm{span} \{ \varphi_0, \varphi_1, \cdots, \varphi_M, \varphi_{M+1} \}.
+\]
+
+
+
+Para los puntos interiores los la integrales son iguales. Para los
+puntos de borde \[
+    \int_{-1}^1 \frac{\partial \varphi_0}{\partial x}\frac{\partial \varphi_0}{\partial x} = \frac 1 {\Delta x} \qquad \int_{-1}^1 \frac{\partial \varphi_0}{\partial x}\frac{\partial \varphi_1}{\partial x} = \frac {-1} {\Delta x}
+\]
+
+
+
+Se tiene la matriz \[
+    A^h = \frac{1}{\Delta x}
+    \begin{pmatrix}
+        1  & - 1 &            \\
+        -1 & 2   & -1         \\
+           &     & \ddots     \\
+           &     & -1     & 1
+    \end{pmatrix}
+\]
+
+\section{Problema con condiciones
+  Dirichlet}\label{problema-con-condiciones-dirichlet}
+
+\subsection{Funciones de base lineales a trozos con condiciones de
+    Dirichlet}\label{funciones-de-base-lineales-a-trozos-con-condiciones-de-dirichlet}
+
+Tomamos la malla \[
+    x_0 = -1 < x_1 = -1+\Delta x < \cdots < x_{M+1} = 1
+\] Las condiciones de Dirichlet homogéneas nos dicen que los valores
+\(u^h(t,\pm 1)=0\), luego las incógnitas son \(u_1^h, \cdots, u_N^h\).
+
+
+
+Construímos las funciones de base lineales a trozos en los puntos que
+son incógnitas
+
+\subsection{Matriz de masa con condiciones de
+    Dirichlet}\label{matriz-de-masa-con-condiciones-de-dirichlet}
+
+Con esta elección, el cálculo de las matrices \[
+    M_{ij} = \int_a^b \varphi_j \varphi_i , \qquad A_{ij} =  \int_a^b \frac{\diff \varphi_j}{\diff x}  \frac{\diff \varphi_i}{\diff x}
+\] puede hacerse de forma analítica.
+
+
+
+Primero la matriz de masa
+
+\subsection{Matriz de rigidez con condiciones de
+    Dirichlet}\label{matriz-de-rigidez-con-condiciones-de-dirichlet}
+
+Para construir la matriz de rigidez calculamos primero las derivadas
+simbólicas
+
+
+Calculamos la matriz de rigidez
+
+
+\section{Resolución de la ecuación de Laplace con condición
+  Dirichlet}\label{resoluciuxf3n-de-la-ecuaciuxf3n-de-laplace-con-condiciuxf3n-dirichlet}
+
+Resolvemos la ecuación de Laplace \[
+    \begin{cases}
+        -\frac{\partial^2 u}{\partial x^2} = 12 x^2 & \text{en } (-1,1) \\
+        u(1) = u(-1) = 0
+    \end{cases}
+\] que tiene solución exacta \(u(x) = 1-x^4\).
+
+
+\section{Problemas con condición
+  Neumann}\label{problemas-con-condiciuxf3n-neumann}
+
+\subsection{Funciones de base lineales a trozos en el caso
+    Neumann}\label{funciones-de-base-lineales-a-trozos-en-el-caso-neumannscrollable}
+
+Con la malla \[
+    x_0 = -1 < x_1 = -1+\Delta x < \cdots < x_{M+1} = 1
+\]
+
+
+
+Ahora debemos tomar el espacio \[
+    V^h = \mathrm{span} \{ \varphi_0, \cdots, \varphi_{M+1}   \}
+\]
+
+
+
+Es decir
+
+
+\subsection{Matriz de rigidez
+}\label{matriz-de-rigidez-scrollabel}
+
+La matriz queda como la que hemos calculado simbólicamente
+
+
+\subsection{Problema elíptico
+}\label{problema-eluxedptico-scrollable}
+
+Pero esta matriz es singular
+
+
+
+
+Recordamos que la ecuación de Laplace con condiciones de Neumann \[
+    \tag{L$_\textrm{N}$}
+    \label{eq:Laplace Neumann}
+    \begin{cases}
+        -\frac{\diff^2 u}{\diff x^2} = f \text{ en } (-1,1) , \\
+        \frac{\diff u}{\diff x}(\pm 1) = 0.
+    \end{cases}
+\] Tiene solución si y sólo si \(\int_{-1}^1 f(x) \diff x = 0\)
+
+y, en tal caso, es única salvo una constante (podemos fijar
+\(\int_{-1}^1 u(x) \diff x\)).
+
+\subsection{Resolución numérica}\label{resoluciuxf3n-numuxe9rica}
+
+Resolvemos numéricamente \textbackslash eqref\{eq:Laplace Neumann\}
+usando el método de elementos finitos
+
+
+
+
+
+\textbf{\emph{Observación.}} La solución numérica no "parece satisfacer"
+la condición de Neumann
+
+
+
+\textbf{\emph{Observación.}} En el problema parabólico no hay problema
+con que \(\det A = 0\).
+
+\section{Ejercicios.}\label{ejercicios}
+
+\subsection{Ejercicio. Ecuación de calor con condiciones
+    Dirichlet}\label{ejercicio-ecuaciuxf3n-de-calor-con-condiciones-dirichlet}
+
+Para el problema \[
+    \begin{cases}
+        \dfrac{\partial u}{\partial t} = \dfrac{\partial^2 u}{\partial x^2} \quad  \text{para } t > 0, x \in (-1,1) \\ u (t, -1) = u (t, 1) = 0 \\
+        u(0,x) = \cos \pi x.
+    \end{cases}
+\] Tomaremos funciones de base lineales a trozos, y una malla uniforme.
+Se pide
+
+\begin{itemize}
+    \item
+          Escribir la semi-discretización espacial calculando las matrices de
+          masa bien de manera analítica o simbólica
+    \item
+          Resolver el sistema de EDOs planteado utilizando: Euler explícito,
+          Euler implícito, y Runge-Kutta 4.
+\end{itemize}
+
+\subsection{Ejercicio. Ecuación de calor con condiciones
+    Neumann}\label{ejercicio-ecuaciuxf3n-de-calor-con-condiciones-neumann}
+
+Análogamente al ejercicio anterior, pero para el problema \[
+    \begin{cases}
+        \dfrac{\partial u}{\partial t} = \dfrac{\partial^2 u}{\partial x^2} \quad  \text{para } t > 0, x \in (-1,1) \\
+        \frac{\partial u}{\partial x} (t, -1) = \frac{\partial u}{\partial x} (t, 1) = 0                            \\
+        u(0,x) = \sin \pi x.
+    \end{cases}
+\]
+
+\subsection{Ejercicio. Ecuación de calor con condiciones
+    periódicas}\label{ejercicio-ecuaciuxf3n-de-calor-con-condiciones-periuxf3dicas}
+
+Análogamente al ejercicio anterior, pero para el problema \[
+    \begin{cases}
+        \dfrac{\partial u}{\partial t} = \dfrac{\partial^2 u}{\partial x^2} \quad  \text{para } t > 0, x \in (-1,1) \\
+        u(t, \cdot) \text{ periódica}                                                                               \\
+        u(0,x) = \sin \pi x.
+    \end{cases}
+\]
+
+\section{Apéndice. Convergencia para problemas
+  elípticos}\label{apuxe9ndice-convergencia-para-problemas-eluxedpticos}
+
+\subsection{Formulación débil discreta
+}\label{formulaciuxf3n-duxe9bil-discreta-scrollable}
+
+Presentamos primero un resultado de aproximación que funciona para
+métodos de Galerkin en general, llamado lema de Céa, y después su
+aplicación a elementos finitos.
+
+Pasamos de resolver el problema lineal en la forma \(A u = f\) donde
+\(H\) es un espacio de Hilbert, \(A : D(A) \to H\) es una aplicación
+lineal y existe un espacio \(V \subset H\) que satisface que
+\(a: V \times V \to \mathbb R\) extiende la idea de que \[
+    a(u,v) =  ( A u , v )_H
+\]
+
+El problema \(Au = f\) es escribe en "formulación débil" como: encontrar
+\(u \in V\) tal que \[
+    \tag{P}
+    \label{eq:Laplace ecuacion}
+    a(u,v) = ( f , v )_H, \qquad \forall v \in V
+\]
+
+Y estudiamos el problema "discreto" \[
+    \tag{P$_h$}
+    \label{eq:Galerkin ecuacion}
+    a(u^h, v^h) = (f , v^h)_H, \qquad \forall v^h \in V^h.
+\]
+
+\subsection{Solución de la formulación débil
+}\label{soluciuxf3n-de-la-formulaciuxf3n-duxe9bil-scrollable}
+
+Definimos la forma bilineal de \(V^h \times V^h\)
+
+:::\{.theorem\} \textbf{Teorema} Sea \(a\) coerciva, es decir existe
+\(\alpha  > 0\) tal que \[
+    a(v^h, v^h) \ge \alpha \|v^h\|_V^2 , \qquad \forall v^h \in V^h.
+\] Entonces, existe una única \(u^h \in V^h\) tal que
+\textbackslash eqref\{eq:Galerkin ecuacion\} :::
+
+:::\{.proof\} Basta probar que la matriz \(A^h\) es no singular. Si
+\(A \xi = 0\), tomando \(v^h = \sum_i \xi_i \varphi^h_i\) tenemos que \[
+    0 = \xi \cdot  A \xi = a(v^h, v^h ) \ge \alpha \|v^h \|_V^2.
+\] Luego \(v^h = 0\) y \(\xi = 0\) por independencia de las
+\(\varphi_i^h\). Así existence unos únicos coeficientes \(u^h_i\) que
+resuelven \textbackslash eqref\{eq:Galerkin ecuacion\}. :::
+
+\subsection{Lema de Céa
+}\label{lema-de-cuxe9a-scrollable}
+
+Para la convergencia, es muy útil utilizar el siguiente resultado, que
+dice que \(u^h\) es la mejor proyección de \(u\) en \(V^h\).
+
+:::\{.theorem\} \textbf{Teorema} Sea \(V^h \subset V\), \(u \in V\) tal
+que \textbackslash eqref\{eq:Laplace ecuacion\}, y \(u^h\) tal que
+\textbackslash eqref\{eq:Galerkin ecuacion\}. Sea \(\| \cdot \|_V\) una
+norma en \(V\) tal que para todo \(v, w \in V\) se tiene \[
+    a(v, v) \ge \alpha \|v \|^2_V,
+    \qquad
+    |a(v,w) | \le \gamma \|v\|_V \|w \|_V.
+\] Entonces \[
+    \| u - u^h \|_V \le \frac{\gamma}{\alpha} \inf_{v^h \in V^h} \|u - v^h\|_V
+\] :::
+
+:::\{.proof\} Utilizando \(V^h \subset V\) tenemos que para todo
+\(w^h \in V^h\) \[
+    a(u, w_h) = L(w^h) = a(u^h,w^h) .
+\] Así, tomando \(v^h \in V^h\) y \(w^h = v^h - u^h\) que
+\[\begin{aligned}
+        \alpha \|u - u^h\|^2 & \le a(u-u^h, u-u^h) = a(u-u^h, u - v^h) + a(u-u^h , w^h ) = a(u-u^h, u - v^h) \\
+                             & \le \gamma \|u - u^h\| \| u - v^h\|.
+    \end{aligned}
+\] O bien \(u = u^h\), en cuyo caso el resultado es cierto; o podemos
+dividir por \(\|u - u^h\|\) y tomar ínfimo en \(v^h\). :::
+
+\subsection{Ejemplo. El problema de Laplace con condición Dirichlet en
+    un intervalo
+}\label{ejemplo-el-problema-de-laplace-con-condiciuxf3n-dirichlet-en-un-intervalo-scrollable}
+
+De este modo, si \[
+    a(u,v) = \int_{-1}^1 \frac{\diff u}{\diff x} \frac{\diff v}{\diff x}.
+\] En este marco \(H = L^2 (-1,1)\), \(V = H_0^1(-1,1)\) y
+\(D(A) = H^2 (-1,1) \cap H_0^1 (-1,1)\).
+
+Se puede tomar
+\(\| u \|_V = \left( \int_\Omega |\frac{\diff u}{\diff x}|^2 \right)^{\frac 1 2}\),
+que es precisamente \(a(u,u)\).
+
+Para utilizar el lema de Céa, \[
+    \| u - u^h \|_{H^1_0 } = \inf_{v^h \in V^h} \| u - v^h \|_{H_0^1 (\Omega)}.
+\]
+
+Sea \(V^h\) es el espacio de funciones lineales a trozos en una malla
+\(x_i = -1 + i h\) con \(h = \frac 2 {N+1}\) con condición de Dirichlet.
+Si \(u\) es \(C^2\), una elección es \[
+    v^h (x) = \sum_{i=1}^N u(x_i) \varphi_i^h (x).
+\] Así, como \(v^h\) es continua a trozos \[
+    \frac{\diff v^h}{\diff x} (x) = \frac{u(x_{i+1}) - u(x_i)}{x_{i+1} - x_i } = \frac{\diff u}{\diff x} (x_i) + O(h), \qquad x \in [x_i, x_{i+1}].
+\] Haciendo un desarrollo de Taylor de integral \[
+    \int_{x_i}^{x_{i+1}} \left| \frac{\diff u}{\diff x} (x) - \frac{\diff v^h}{\diff x} (x)   \right|^2 \diff x = O( h^3 )
+\] Así, la integral en total, que tiene \(O(h^{ -1})\) elementos resulta
+\[
+    \| u - u^h \|_{H^1_0} \le \left( \int_{-1}^{1} \left| \frac{\diff u}{\diff x} (x) - \frac{\diff v^h}{\diff x} (x)   \right|^2 \diff x \right)^{\frac 1 2} = O( h ).
+\] Es facíl calcular que
+\(O(h) = C \| \frac{\diff^2 u}{\diff x^2} \|_{L^\infty} h\). Otras
+estimaciones más hábiles son posibles.
+

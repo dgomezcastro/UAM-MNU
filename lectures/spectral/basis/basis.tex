@@ -1,0 +1,28 @@
+\chapter{Spectral bases}
+
+\subimport{.}{Fourier.tex}
+
+\subimport{.}{orthogonal.tex}
+\subimport{.}{Legendre.tex}
+\subimport{.}{Chebyshev.tex}
+\subimport{.}{otherpolys.tex}
+
+
+
+
+
+
+% \begin{example}[Heat equation in $(-1,1)$ with Dirichlet conditions]
+%     When $u_0(x) = \sin \pi x$ the exact solution is $u(x,t) = e^{-\pi^2 t} \sin \pi x$, which can be expand in Chebyshev expansion as
+%     \begin{equation*}
+%         u(x,t) = \sum_{k=0}^\infty b_k (t) T_k (x),
+%         \qquad
+%         b_k(t) = \frac{2}{c_k} \sin \frac{k\pi}2 J_k (\pi) e^{-\phi^2 t},
+%         \qquad
+%         c_k = \begin{dcases}
+%             2, & k = 0,   \\
+%             1, & k \ge 1.
+%         \end{dcases}
+%     \end{equation*}
+%     Since $J_k(\pi)$ decays very rapidly, it can be proven that the convergence between $u^N$ and $u$ is exponential.
+% \end{example}

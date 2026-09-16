@@ -1,0 +1,96 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Brushstrokes of Functional Analysis}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \section{Fixed-Point Theorems}
+
+\section{Function Spaces}
+
+\subsection{Spaces of Continuous Functions}
+
+\begin{definition}
+    A function $u : \Omega \to \mathbb R$ is continuous if, for every $x \in \Omega$, we have
+    \begin{equation*}
+        \lim_{y \to x} |  u(y) - u(x) | = 0.
+    \end{equation*}
+\end{definition}
+
+\begin{definition}[Modulus of Continuity]
+    A modulus of continuity is a non-decreasing function $\omega : (0,\infty) \to (0,\infty)$ with $\omega(0^+) = 0$.
+\end{definition}
+
+\begin{definition}
+    A function $u:\Omega \to \mathbb R$ is absolutely continuous if there exists a modulus of continuity $\omega$ such that
+    \begin{equation*}
+        |u(x) - u(y)| \le \omega(|x-y|) \quad \forall x,y \in \Omega.
+    \end{equation*}
+\end{definition}
+
+\begin{definition}[Hölder Continuous Functions]
+    We say that $u:\Omega \to \mathbb R$ is Hölder continuous of parameter $\alpha$ if there exists $C$ such that
+    \begin{equation*}
+        |u(x) - u(y)| \le C |x-y|^\alpha \quad \forall x,y \in \Omega.
+    \end{equation*}
+\end{definition}
+
+\subsection{Sobolev Spaces}
+
+\begin{definition}[Sobolev Space $W^{1,p}$]
+    For $p \in [1,\infty)$ we say that $u \in W^{1,p} (\Omega)$ if $u \in L^p (\Omega)$ and there exist $g_1, \cdots, g_n \in L^p(\Omega)$ such that
+    \begin{equation*}
+        \int_\Omega u \frac{\partial \varphi}{\partial x_i} = - \int_\Omega g_i \varphi .
+    \end{equation*}
+    In this case, we call $g_i$ the weak derivative of $u$ in the direction $x_i$, denote $\frac{\partial u}{\partial x_i} = g_i$, and introduce
+    \begin{equation*}
+        [u]_{W^{1,p}(\Omega)} \defeq \sum_{i=1}^n \| g_i \|_{L^p (\Omega)}, \qquad
+        \|u\|_{W^{1,p}(\Omega)} \defeq \|u\|_{L^p (\Omega)} + [u]_{W^{1,p} (\Omega)}.
+    \end{equation*}
+\end{definition}
+
+\begin{strongtheorem}[Glueing theorem]
+    \label{thm:H1 glueing}
+    Let $\omega_1, \omega_2, \Omega$ be bounded open set of $\mathbb R^n$ such that $\overline \Omega = \overline \omega_1 \cup \overline\omega_2$ and $\omega_1 \cap \omega_2 = \emptyset$.
+    Assume $\partial \omega_1, \partial \omega_2, \partial \Omega$ are Lipschitz continuous. Let $u_i \in C^1 (\overline {\omega_i})$ and define
+    \begin{equation*}
+        u = \begin{dcases}
+            u_1 & \text{in } \Omega_1  \\
+            u_2 & \text{in } \Omega_2.
+        \end{dcases}
+        \qquad
+        g_k =
+        \begin{dcases}
+            \frac{\partial u_1}{\partial x_k} & \text{in } \Omega_1  \\
+            \frac{\partial u_2}{\partial x_k} & \text{in } \Omega_2.
+        \end{dcases}
+    \end{equation*}
+    For $\varphi \in C_c^\infty(\Omega)$ we have that
+    \begin{equation*}
+        \int_\Omega u \frac{\partial \varphi}{\partial x_k} = - \int_\Omega g_k \varphi + \int_{\partial \omega_1 \cap \partial \omega_2} (u_1 - u_2) \varphi n_{\omega_1} \cdot e_k .
+    \end{equation*}
+    where $n_{\omega_1}$ is the exterior unit normal to $\omega_1$.
+    In particular, $u \in H^1 (\Omega)$ if and only if $u_1 = u_2$ in $\partial \omega_1 \cap \partial \omega_2$.
+\end{strongtheorem}
+
+% \section{Compactness Theorems}
+
+% \subsection{Ascoli-Arzelà Theorem}
+
+% \subsection{Riesz-Frechet-Kolmogorov Theorem}
+
+% \subsection{Aubin-Lions / Aubin-Simons Theorem}
+
+\section{The Bramble-Hilbert lemma}
+
+\begin{lemma}[Bramble-Hilbert]
+    \label{lem:Bramble-Hilbert}
+    Suppose that $\Omega$ is a bounded open set of $\mathbb R^d$, star-shaped with respect to every point on a set $B \subset \Omega$ of positive measure.
+    Let $m \ge 1$, $p \in (1,\infty)$, and $F: W^{m,p} (\Omega) \to \mathbb R$ be linear and continuous. Assume that it vanishes for polynomials of degree up to $m-1$, i.e.,
+    \begin{equation*}
+        F(P) = 0, \qquad \forall P \in \mathbb R_{m-1}[x].
+    \end{equation*}
+    Then, we have that
+    \begin{equation*}
+        |F(v)| \le C \|D^m v\|_{L^p (\Omega)} \qquad \forall v \in W^{m,p}(\Omega).
+    \end{equation*}
+\end{lemma}
+The proof is available in \cite[Lemma 12]{Suli}.

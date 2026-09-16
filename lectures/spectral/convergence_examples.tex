@@ -1,0 +1,162 @@
+\chapter{Convergence of spectral methods in some examples}
+\section{Chebyshev colocation for Laplace's equation}
+We now complete the details on \Cref{ex:colocation Laplace Chebyshev}. Convergence can be proven through consistency.
+The proof of consistency is, however, quite unpleasant.
+Let us now prove stability.
+Consider the Chebyshev weight $w(x) = (1-x^2)^{-\frac 1 2}$ and the weights in \namedCref{ex:Chebyshev Gauss-Lobatto}.
+Multiplying each equation by $u^N (x_k) w_k$ (notice that $u^N(x_0) = u^N(x_N) = 0$) and adding we have that
+\begin{equation*}
+    -\sum_{k=0}^N \frac{d^2 u^N}{dx^2} (x_k) u^N (x_k) w_k = \sum_{k=0}^N f(x_k) u^N(x_k) w_k.
+\end{equation*}
+We point out that $\frac{d^2u^N}{dx^2} u^N \in \mathbb R_{2N - 2}$. Therefore, \Cref{thm:Gauss-Lobatto integration Jacobi weights} we have that
+\begin{equation*}
+    -\int_{-1}^1 \frac{d^2u^N}{dx^2} (x) u^N(x) w(x) dx = \sum_{k=0}^N f(x_k) u^N(x_k) w_k.
+\end{equation*}
+It can be proven that
+\begin{equation*}
+    -\int_{-1}^1 \frac{d^2u^N}{dx^2} (x) u^N(x) w(x) dx \ge \frac 1 4 \int_{-1}^1 \left| \frac{du^N}{dx} (x) \right|^2 dx.
+\end{equation*}
+Since the weights are non-negative we have that
+\begin{align*}
+    \frac 1 4 \int_{-1}^1 \left| \frac{du^N}{dx} (x) \right|^2 dx
+     & \le \sum_{k=0}^N f(x_k) u^N(x_k) w_k                        \\
+     & \le \| f \|_{L^\infty(-1,1)} \sum_{k=0}^N  |u^N(x_k)| w_k   \\
+     & \le \| f \|_{L^\infty(-1,1)} \int_{-1}^1  |u^N(x)| w(x) dx.
+\end{align*}
+Since $u^N \in H^1_0(-1,1) \subset C([-1,1])$ and $w$ is $L^1(-1,1)$, it is not difficult to prove that
+\begin{equation*}
+    \| u^N \|_{H^1(-1,1)} \le C \| f \|_{L^\infty}.
+\end{equation*}
+
+\section{Spectral approximation of Burgers' Equation}
+We follow \cite[Section 3.3]{CanutoHussainiQuarteroniZang2011}.
+Consider the viscous Burger's equation with periodic boundary conditions
+\begin{equation}
+    \frac{\partial u}{\partial t} + u \frac{\partial u}{\partial x} = \nu \frac{\partial^2 u }{\partial x^2}.
+\end{equation}
+
+\subsection{Fourier-Galerkin in $(0,2\pi)$ with periodic boundary conditions}
+
+Let us look for solutions
+\begin{equation}
+    \label{eq:Fourier discrete solution}
+    u^N(x,t) = \sum_{k=-N/2}^{N/2-1} \widehat u_k(t) e^{ikx}
+\end{equation}
+The periodic boundary conditions are already imposed in the choice of basis.
+We enforce the weak formulation
+\begin{equation*}
+    \int_0^{2\pi} \left( \frac{\partial u^N}{\partial t} + u^N \frac{\partial u^N}{\partial x} - \nu \frac{\partial^2 u^N}{\partial x^2} \right) e^{-ikx} = 0,
+    \qquad \text{for }k = -\frac N 2, \cdots, \frac N 2 - 1.
+\end{equation*}
+Due to orthogonality we have that
+\begin{equation*}
+    \frac{d \hat u_k}{dt} + \widehat {\left( u^N \frac{\partial u^N}{\partial x} \right)}_k+ k^2 \nu \hat u_k = 0
+    \qquad \text{for }k = -\frac N 2, \cdots, \frac N 2 - 1
+\end{equation*}
+where
+\begin{equation*}
+    \widehat {\left( u^N \frac{\partial u^N}{\partial x} \right)}_k = \frac 1 {2\pi} \int_0^{2\pi} u^N \frac{\partial u^N}{\partial x} e^{-ikx} dx.
+\end{equation*}
+We observe that
+\begin{equation*}
+    \widehat {\left( uv \right)}_k = \frac 1 {2\pi} \int_0^{2\pi} uv e^{-ikx} dx = \sum_{\substack{p+q = k \\ -\frac{N}{2} \le p,q \le \frac{N}{2} - 1}} \hat u_p \hat v_q.
+\end{equation*}
+Therefore we can write the closed (but unpleasant) formula for the drift term
+\begin{equation*}
+    \widehat {\left( u^N \frac{\partial u^N}{\partial x} \right)}_k = \sum_{p + q = k} i p \hat u_p(t) \hat u_q(t).
+\end{equation*}
+This kind of sums can be computed reasonably effectively (see \cite[Section 3.4]{CanutoHussainiQuarteroniZang2011}).
+
+\subsection{Fourier-colocation in $(0,2\pi)$ with periodic boundary conditions}
+Now we set the colocation formulation on $x_j = 2 \pi j / N$ for $j = 0, \cdots, N-1$, $u^N$ given in Fourier expansion \eqref{eq:Fourier discrete solution}
+and set the conditions
+\begin{equation*}
+    \left( \frac{\partial u^N}{\partial t} + u^N \frac{\partial u^N}{\partial x} - \nu \frac{\partial^2 u^N}{\partial x^2} \right)\Bigg|_{x = x_j} = 0 , \qquad \forall t > 0, j \in \{0,\cdots, N-1\}.
+\end{equation*}
+\begin{remark}
+    \label{rem:colocation solve in point-values}
+    In previous examples like \namedCref{ex:colocation Laplace Chebyshev} it was easier to write the algebraic system the colocation problem directly in the coefficients with respect to the basis, $\widehat u_k(t)$.
+    However, due to the multiplication $u^N \frac{\partial u^N}{\partial x}$ this is now not easy. In this case it is therefore better to pass to a system in terms of $u^N(t, x_k)$.
+\end{remark}
+We take advantage of the notation in \Cref{sec:spectral colocation linear algebra}\footnote{Notice that the Fourier system has $N$ coefficients, whereas in \Cref{sec:spectral colocation linear algebra} we worked $N+1$}
+to write
+\begin{equation*}
+    \begin{pmatrix}
+        \frac{\partial u_N}{\partial x}(t,x_0) \\ \vdots \\ \frac{\partial u_N}{\partial x} (t, x_{N-1}).
+    \end{pmatrix}
+    =
+    \mat D_{N-1}
+    \begin{pmatrix}
+        u_N(t,x_0) \\ \vdots \\ u_N(t,x_{N-1})
+    \end{pmatrix},
+    \qquad
+    \begin{pmatrix}
+        \frac{\partial^2 u_N}{\partial x^2}(t,x_0) \\ \vdots \\ \frac{\partial u_N}{\partial x^2} (t, x_{N-1}).
+    \end{pmatrix}
+    =
+    \mat D_{N-1}^2
+    \begin{pmatrix}
+        u_N(t,x_0) \\ \vdots \\ u_N(t,x_{N-1})
+    \end{pmatrix}.
+\end{equation*}
+Recall that the periodic boundary conditions is already set on the basis functions.
+Notice by periodicity that, in this case $u_N(t, x_N) = u_N(t, x_0)$.
+Then letting $\vec u(t) = (u_N(t,x_0), \cdots, u_N(t,x_{N-1}))$ we recover the system of ODEs
+\begin{equation*}
+    \frac{d \vec u}{d t} + \vec u \boxtimes  {\mat D}_{N-1} \vec u - \nu^2  {\mat D}^2_{N-1} \vec u = 0,
+\end{equation*}
+where $\boxtimes$ denotes the entry-wise product of vectors
+\begin{equation*}
+    \begin{pmatrix}
+        u_1 \\ \vdots \\ u_N
+    \end{pmatrix}
+    \boxtimes
+    \begin{pmatrix}
+        v_1 \\ \vdots \\ v_N
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+        u_1v_1 \\ \vdots \\ u_Nv_N
+    \end{pmatrix}.
+\end{equation*}
+We recall \Cref{rem:pointwise evaluation plotting}.
+
+
+\subsection{Chebyshev-colocation in $(-1,1)$ with Dirichlet boundary conditions}
+We can use the Chebyshev-Lobatto nodes $x_j = \cos \pi j / N$ for $j = 0, \cdots, N$. Then we set
+\begin{equation*}
+    \left( \frac{\partial u^N}{\partial t} + u^N \frac{\partial u^N}{\partial x} - \nu \frac{\partial^2 u^N}{\partial x^2} \right)\Bigg|_{x = x_j} = 0 , \qquad \forall t > 0, j \in \{1,\cdots, N-1\},
+\end{equation*}
+and
+\begin{equation*}
+    u_N(x_0,t) = u_L(t), \qquad u_N(x_N, t) = u_R(t),
+\end{equation*}
+where $u_L$ and $u_R$ are known functions.
+Again we have to point out \Cref{rem:colocation solve in point-values}.
+For convenience and consistency with \Cref{sec:spectral colocation linear algebra} we write the whole vector $\vec u (t) = (u_L(t), u(t, x_1), \cdots, u(t, x_{N-1}), u_R(t))^t$.
+We only have ODEs for nodes with $j \in 1, \cdots, N-1$ so can we write the system like
+\begin{equation*}
+    \mat Z_N
+    \left(     \frac{d \vec u}{d t} + \vec u \boxtimes  {\mat D}_N \vec u - \nu^2  {\mat D}^2_N \vec u
+    \right) = 0, \qquad \text{where } \mat Z_N = \begin{pmatrix}
+        \mat 0_{N-1} \mid \mat I_{N-1, N-1} \mid \mat 0_{N-1}
+    \end{pmatrix}
+\end{equation*}
+is the matrix that extracts the central $N-1$ equations.
+Writing is a the system we actually want to discuss
+\begin{equation}
+    \begin{pmatrix}
+        \frac{d}{dt} u(t,x_1)     \\
+        \vdots                    \\
+        \frac{d}{dt} u(t,x_{N-1}) \\
+    \end{pmatrix}
+    = - \mat Z_N
+    \left( \vec u \boxtimes  {\mat D}_N \vec u - \nu^2  {\mat D}^2_N \vec u \right).
+\end{equation}
+As usual, the natural way to initialize is $\vec u = (u_0 (x_0), \cdots, u_0 (x_N))$.
+We recall \Cref{rem:pointwise evaluation plotting}.
+
+\subsection*{Exercises}
+\begin{exercises}
+\ex[] Solve some previous systems numerically.
+\end{exercises}

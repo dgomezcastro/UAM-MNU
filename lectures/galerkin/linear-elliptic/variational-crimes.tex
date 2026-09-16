@@ -1,0 +1,32 @@
+\subsection{Variational crimes: Strang's Lemmas}
+
+Problems of the form $-\diver(A\nabla u)= f$ produce FEM formulations that are well-posed, but not computable.
+When we perform quadrature of the integrals, we arrive at similar formulations
+\begin{equation}
+    \label{eq:Galerkin quadrature}
+    a_h(u_h,v_h) = l_h(v_h), \qquad \forall v_h \in V_h.
+\end{equation}
+
+There are two well-known approximation estimates
+\begin{lemma}[Strang's First Lemma]
+    \label{lem:Strang first lemma}
+    Assume that $a, a_h$ are coercive of constant $\alpha^*$ and let $u$ be the solution to \Cref{eq:Galerkin elliptic variational} and $u_h$ be the solution to \Cref{eq:Galerkin quadrature}. Then, we have that
+    \begin{align*}
+        \| u - u_h \|_V
+         & \le \inf_{w_h \in V_h} \left[
+            \left( 1 + \frac{M}{\alpha^*}\right) \|u - w_h \|_V + \frac 1 {\alpha^*} \sup_{v_h \in V_h} \frac{|a(w_h, v_h) - a_h(w_h,v_h)}{\|v_h\|_V}
+        \right]                                                                                      \\
+         & \qquad + \frac 1 {\alpha^*} \sup_{v_h \in V_h} \frac{|\ell(v_h) - \ell_h(v_h)|}{\|v_h\|}.
+    \end{align*}
+\end{lemma}
+The proof is not difficult. We refer to \cite[Theorem 5.5.1]{QuarteroniValli1994}.
+\begin{lemma}[Strang's Second Lemma]
+    \label{lem:Strang second lemma}
+    In the hypothesis of \Cref{lem:Strang first lemma}
+    assume also that $a_h$ is continuous of constant $M$.
+    Then, we have that
+    \begin{equation}
+        \|u - u_h\|_V \le \left( 1 + \frac{M}{\alpha^*} \right) \inf_{w_h \in V_h} \|u - w_h\|_V + \frac{1}{\alpha^*} \sup_{v_h \in V_h} \frac{|a_h(u, v_h) - l_h (v_h)|}{\|v_h\|_V}.
+    \end{equation}
+\end{lemma}
+The proof can be found in \cite[p.212-213]{ciarletHandbookNumericalAnalysis1990}.

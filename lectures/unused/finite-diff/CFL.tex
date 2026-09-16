@@ -1,0 +1,28 @@
+\section{Dominio de dependencia numérico. Condición CFL}
+
+Recordamos que la ecuación \eqref{eq:adveccion 1d} tiene por solución $u(x,t) = u_0(x - at)$. Esto quiere decir que para conocer $u$ en el punto $(x,t)$, me basta con conocer el valor de $u$ en el punto $(x-at, 0)$. O en cualquier punto de la forma $(x-a(t-s),s)$.
+Llamamos \emph{dominio de dependencia} a esta región espacial.
+\begin{example}[Dominio de dependencia de \eqref{eq:adveccion 1d}]
+    \begin{equation*}
+        \Big\{ (x - a(t-s) , s) : s \in (0,t) \Big\}.
+    \end{equation*}
+\end{example}
+
+\begin{example}[Dominio de dependencia de \eqref{eq:wave} en $d=1$]
+    La solución explícita es \eqref{eq:wave 1d D'Alambert}, de donde deducimos que
+    el dominio de dependencia del punto $(x,t)$ es el triángulo
+    $$
+        \Big\{ (y,s) : s \in (0,t), x-c (t-s) \le y \le x + c(t-s) \Big\} .
+    $$
+\end{example}
+\todo{Elegir definiciones rigurosas}
+En el caso de \eqref{eq:adveccion 1d} y \eqref{eq:adveccion 1d EE backward}, vemos que \eqref{eq:adveccion 1d CFL} dice precisamente esto. Además, hemos comprobado que es condición suficiente para la estabilidad del método.
+\todo{figura}
+
+\begin{remark}[Condición Courant-Friedrichs-Lewy o CFL]
+    Un método numérico sólo puede ser convergente si el dominio de dependencia numérico contiene al dominio de dependencia la EDP, al menos cuando $\tau$ y $h$ tienden a $0$.
+\end{remark}
+
+
+
+

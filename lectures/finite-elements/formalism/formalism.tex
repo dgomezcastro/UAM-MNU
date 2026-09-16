@@ -1,0 +1,375 @@
+\chapter{The finite-element formalism}
+
+\section{Finite element}
+For this section we follow \cite[Section 2.3]{ciarletFiniteElementMethod2002}, \cite[Chapter 3]{Suli}.
+\begin{definition}[The finite element]
+    A finite element is a triplet $(K, \mathcal P, \mathcal N)$ where
+    \begin{enumerate}
+        \item $K \subset \mathbb R^d$ is a simply connected bounded open set with piece-wise smooth boundary. We call them \emph{element domain}.
+        \item $\mathcal P$ is a finite-dimensional space of functions defined on $K$. We call them \emph{shape functions}.
+        \item $\mathcal N$ is a set of linearly independent functions defined on $\mathcal P$ (and possible for more general functions).
+              We assume that $\mathcal N$ is a basis of $\mathcal P'$.
+              Some authors say that the set $\mathcal N$ is $\mathcal P$-unisolvent.
+              We call them \emph{degrees of freedom} of the finite element.
+              In some cases they are called \emph{nodal functions}
+    \end{enumerate}
+\end{definition}
+We usually expect that the nodal functions in $\mathcal N$ are defined on some infinite-dimension space $X \supset \mathcal P$, typically $X = C^k(\overline K)$.
+
+\begin{definition}[Basis functions of a finite element]
+    Let $(K, \mathcal P, \mathcal N)$ be a finite element. Let $N = \# \mathcal N$.
+    The nodal basis is the unique basis $\{\varphi_1, \cdots, \varphi_N\}$ of $\mathcal P$ such that
+    \begin{equation*}
+        N_i (\psi_j) = \delta_{ij}, \quad \forall i, j \in \{1, \cdots, N\}.
+    \end{equation*}
+    Sometimes these functions are called also \emph{nodal basis}.
+\end{definition}
+
+\begin{definition}[Local interpolant]
+    Let $(K, \mathcal P, \mathcal N)$ be a finite element,
+    and let $\psi_i$ be the basis functions. We define the \emph{local interpolation} as the map
+    \begin{equation*}
+        \mathcal I_K v = \sum_{i=1}^k N_i (v) \psi_i.
+    \end{equation*}
+\end{definition}
+Notice that the interpolant is can be extended to any functional space $X$ such that $N_i : X \to \mathbb R$ for all $i$.
+
+\begin{remark}
+    \label{rem:FEM formalism local interpolator at boundary}
+    Even though $K$ is open, it is common some nodal functions are $N_i(v) = \frac{d^\alpha v}{d x^\alpha}(x_i)$ with $x_i \in \partial K$. When $\mathcal P \in C^{|\alpha|}(\overline K)$ the evaluation is done in the sense of limits.
+    This is specially relevant in the definition of the global interpolator.
+\end{remark}
+
+\begin{example}[The one-dimensional Lagrange element in $(x_1,x_2)$]
+    \label{ex:Lagrange element in an interval}
+    \Cref{ex:piece-wise linear in d=1} correspond to the element $K = (x_1,x_2)$, $\mathcal P = \mathbb R_1[x]$ (linear functions), and  $N_1(v) = v(x_1)$ and $N_2(v) = v(x_2)$. The nodal basis is precisely $\psi_1(x) = \frac{x_2 - x}{x_2-x_1}$ and $\psi_2(x) = \frac{x-x_1}{x_2-x_1}$.
+    Then, we have the local interpolant
+    \begin{equation*}
+        \mathcal I_K v (x) = v(x_1) \frac{x_2-x}{x_2-x_1} + v(x_2) \frac{x - x_1}{x_2-x_1}.
+    \end{equation*}
+    This is the piece-wise linear linear approximation.
+    We made the one-interval estimate in \eqref{eq:Galerkin linear interpolation error in one interval}.
+\end{example}
+
+\section{Affine equivalence}
+
+For convenience, we will typically work finite element in $d=1$ with the element of domain $K = (0,1)$; and in $d=2$ we usually take $K$ a triangle of vertices $(0,0), (1,0), (0,1)$; or a square of vertices $(0,0),(1,0),(0,1), (1,1)$.
+In order to convert the information on this \emph{reference} finite elements, we make affine transformation of this elements
+\begin{definition}[Affine equivalence]
+    Let $(K, \mathcal P, \mathcal N)$ and $(\widehat K, \widehat{\mathcal P}, \widehat{\mathcal N})$ be finite elements.
+    We say they are affine equivalent if there exists an affine map  $F(x) = \mat Ax + \vec b$ where $\mat A$ is a non-singular $d \times d$-matrix and $\vec b$ is a $d$-dimensional vector and
+    \begin{enumerate}
+        \item $F(K) = \widehat K$,
+        \item $F^* \widehat {\mathcal P} = \mathcal P$, in the pull-back notation $F^* : \widehat v \mapsto \widehat v \circ F$
+        \item $F_* \mathcal N = \widehat {\mathcal N}$, in the push-forward notation $(F_* N) \widehat v = N (F^* \widehat v) = N(\widehat v \circ F)$.
+    \end{enumerate}
+\end{definition}
+
+
+\begin{example}[Piece-wise linear elements in $d=1$]
+    Consider $(K, \mathcal P, \mathcal N)$ given in \Cref{ex:Lagrange element in an interval} in $(x_1,x_2)$ and $(\widehat K, \widehat {\mathcal P}, \widehat {\mathcal N})$ given in \Cref{ex:Lagrange element in an interval} in $(\widehat x_1,\widehat x_2)$.
+    The natural affine map is $F: (x_1,x_2) \to (\widehat x_i, \widehat x_2)$ given by
+    \begin{equation*}
+        F(x) = (\widehat x_2 - \widehat x_1) \frac{x - x_1}{x_2 - x_1} + \widehat x_1
+    \end{equation*}
+    gives the affine equivalence between the elements. In particular, it is natural to do all computations in $(x_1,x_2) = (0,1)$.
+\end{example}
+
+We can estimate the effect of affine transformations on the $H^m$ norms
+
+\begin{lemma}[{\cite[Proposition 3.4.1 and 3.4.2]{QuarteroniValli1994}}]
+    \label{lem:FEM affine equivalence Hm norm}
+    Let $(K, \mathcal P, \mathcal N)$ and $(\widehat K, \widehat{\mathcal P}, \widehat{\mathcal N})$ be affine-equivalent finite elements with map $F: K \to \widehat K$ given by $F(x) = \mat A x + \vec b$. Then, we have that
+    \begin{equation*}
+        [\widehat v ]_{H^m (\widehat K)} \le C \|\mat A^{-1}\|^m |\det \mat A|^{\frac 1 2} [v]_{H^m (K)} \qquad \forall v \in H^m (K)
+    \end{equation*}
+    where $\| \mat A \|$ is the matrix norm associated to the Euclidean norm in $\mathbb R^d$.
+    Furthermore, let
+    \begin{equation*}
+        h_K = \operatorname{diam}(K) , \qquad \rho_K = \sup \{\operatorname{diam}(B) :  B \text{ is a ball contained in } K \}.
+    \end{equation*}
+    Then
+    \begin{equation*}
+        \| \mat A^{-1} \| \le \frac{h_{K}}{\rho_{\widehat K}}.
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    The first part follows from the change of variable formula
+    \begin{equation*}
+        \int_{F(K)} \widehat w (\widehat x) d\widehat x = \int_K \widehat w \circ F (x) |\det DF (x)| dx = |\det \mat A| \int_K \widehat w \circ F (x)  dx
+    \end{equation*}
+    and the chain rule. For the second part let us write the norm as
+    \begin{equation*}
+        \| \mat A^{-1} \| = \frac 1 {\rho_{\widehat K}} \sup_{|\vec \xi| = \rho_{\widehat K}} |\mat A^{-1} \vec \xi|.
+    \end{equation*}
+    For each $\vec \xi$ there exists $\widehat x, \widehat y \in \widehat K$ such that $x - y = \bm \xi$. Thus $\mat A^{-1} \vec \xi = F\widehat x - F\widehat y$, we deduce $|\mat A^{-1} \vec \xi| \le h_K$.
+\end{proof}
+\begin{remark}
+    There is a similar formula in terms of $W^{k,p}$ norms. But the proof is slightly more involved, see \cite[Section 3.3]{Suli}.
+\end{remark}
+
+We can use this result to convert the interpolation error from an \emph{reference element} (for example the one given in \Cref{thm:FEM bound interpolation error}) to a general element.
+
+\begin{strongtheorem}[Affine equivalence and interpolation estimates]
+    \label{thm:FEM affine equivalence and interpolation estimate}
+    Let $(K, \mathcal P, \mathcal N)$ and $(\widehat K, \widehat{\mathcal P}, \widehat{\mathcal N})$ be affine-equivalent finite elements and assume that
+    \begin{equation*}
+        \left[ v - \mathcal I_{K} v \right]_{H^k(K)} \le C_1(K) [\widehat v]_{H^m (K)}.
+    \end{equation*}
+    Then we have that
+    \begin{equation*}
+        \left[\widehat v - \mathcal I_{\widehat K} \widehat v \right]_{H^k(\widehat K)} \le C_2(K) \frac{h_{\widehat K}^{m}}{\rho_{\widehat K}^k} [\widehat v]_{H^m (\widehat K)}.
+    \end{equation*}
+    where $C_2$ does not depend on $\widehat K$.
+\end{strongtheorem}
+
+\begin{proof}
+    Let $v = \widehat v \circ F$. It is easy to see that $(\mathcal I_{\widehat K} \widehat v) \circ F = \mathcal I_K v$.
+    We apply \Cref{thm:FEM bound interpolation error} and \Cref{lem:FEM affine equivalence Hm norm} to show that
+    \begin{align*}
+        \left[\widehat v - \mathcal I_{\widehat K} \widehat v \right]_{H^k(\widehat K)}
+         & \le C \left( \frac{h_{ K}}{\rho_{\widehat K}} \right)^k |\det \mat A|^{\frac 1 2} \left[v - \mathcal I_{ K} v \right]_{H^k(\widehat K)}
+        \\
+         & \le C(K) \left( \frac{h_{ K}}{\rho_{\widehat K}} \right)^k |\det \mat A|^{\frac 1 2} [v]_{H^m}
+        \\
+         & \le C(K) \left( \frac{h_{ K}}{\rho_{\widehat K}} \right)^k |\det \mat A|^{\frac 1 2} \left( \frac{h_{\widehat K}}{\rho_{K}} \right)^m |\det \mat A^{-1}|^{\frac 1 2}  [\widehat v]_{H^m}.
+    \end{align*}
+    We conclude the proof by pointing out that $\det (\mat A^{-1}) = (\det \mat A)^{-1}$.
+\end{proof}
+
+This kind of affine-equivalence results work well when the nodal functions $N_i(v)$ are evaluations of $v$ in different points. We construct an example showing difficulties with affine equivalence in other cases
+\begin{example}[Affine equivalence for Hermite cubics]
+    \label{ex:FEM affine equivalence Hermite cubics}
+    Let $K = (0,1)$, $\mathcal P = \mathbb R_3[x]$ and the nodal functions
+    \begin{equation*}
+        N_1(v) = v(0),
+        \quad N_2(v) = v(1),
+        \quad N_3(v) = \frac{dv}{dx}(0),
+        \quad N_4(v) = \frac{dv}{dx}(1).
+    \end{equation*}
+    This is the Hermite cubic element which we will discuss in \Cref{sec:Hermite cubics}.
+
+    Let us consider an affine map $F: (0,1) \to (a,b)$
+    and let $\hat K = (a,b)$.
+    There are only two possible $F$, one increasing and one decreasing. For simplicity let us take the increasing.
+    We have that $\hat{\mathcal P} = F^* \mathcal P = \mathbb R_3[x]$. Lastly, notice $b-a = \frac{dF}{dx}(a) = \frac{dF}{dx} (b)$ so
+    \begin{equation*}
+        \hat N_1(\hat v) = \hat v(a),
+        \quad \hat N_2(\hat v) = \hat v(b),
+        \quad \hat N_3(\hat v) = (b-a)\frac{d\hat v}{dx}(a) ,
+        \quad \hat N_4(\hat v) = (b-a)\frac{d\hat v}{dx}(b).
+    \end{equation*}
+    The case of $F$ decreasing is similar.
+\end{example}
+\begin{remark}
+    \label{rem:FEM affine equivalence element with derivatives}
+    The appearance of additional coefficients in the affine equivalence (similar to \Cref{ex:FEM affine equivalence Hermite cubics}), make it very difficult to use \Cref{thm:FEM affine equivalence and interpolation estimate} in elements that involve derivatives.
+\end{remark}
+
+This difficulty can be overcome with some additional work.
+We provide a result based \namedCref{lem:Bramble-Hilbert} thatcan be found in \cite[Section 3.2]{Suli}.
+
+\begin{strongtheorem}[Bound on the interpolation error ]
+    \label{thm:FEM bound interpolation error}
+    Let $(K, \mathcal P, \mathcal N)$ be a finite element satisfying
+    \begin{enumerate}
+        \item $K$ is star-shaped with respect to some ball contained in $K$
+        \item $\mathbb R_{m-1}[x] \subset \mathcal P \subset W^{m,\infty} (K)$
+        \item Each $N_i \in \mathcal N $ satisfies $|N_i(v)| \le C_i \| v \|_{C^\ell(K)}$.
+    \end{enumerate}
+    where $1< p <\infty$ and $m - \ell - \frac{n}{p} > 0$. Then, for all $j \in \{0, \cdots, m\}$ we have that
+    \begin{equation*}
+        [v - \mathcal I_K v ]_{W^{j,p} (K)} \le C\left(d,m,p,\frac{h_K}{\rho_K}\right) h_K^{m-j} [v]_{W^{m,p}}.
+    \end{equation*}
+\end{strongtheorem}
+
+
+
+
+\section{Sub-divisions}
+
+To make a mesh, our aim is to ``glue together'' many finite elements
+The usual procedure for build finite element meshes of a domain $\Omega$
+\begin{definition}[Sub-division of the computational domain]
+    A finite collection $\mathcal T$ of open sets $K_i$ such that
+    \begin{enumerate}
+        \item $\bigcup_i \overline K_i = \overline \Omega$
+        \item $K_i \cap K_j = \emptyset$ if $i \ne j$.
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}[Global interpolant]
+    Let $\mathcal T$ be a sub-division of a domain $\Omega$ such that and for every $K \in \mathcal T$ we have a suitable finite element $(K,\mathcal P_K, \mathcal N_K)$.
+    The finite-element space of the sub-division is given by
+    \begin{equation*}
+        \mathcal P_{\mathcal T} = \{ u \in L^0 (\Omega) : u|_K \in \mathcal P_K \}.
+    \end{equation*}
+    We define the global interpolant piece-wise over each $K_i$ as
+    \begin{equation*}
+        (\mathcal I_{\mathcal T} v)\Big|_{K} = \mathcal I_K v, \qquad \forall K \in \mathcal T.
+    \end{equation*}
+\end{definition}
+\begin{remark}
+    When $v$ are in Sobolev spaces, it is important to recall \Cref{rem:FEM formalism local interpolator at boundary}.
+\end{remark}
+
+As it was the case with $\mathcal I_K$, we will not pay too much attention at this stage at the domain of definition of $\mathcal I_{\mathcal T}$.
+
+Notice that $K$ is open we have not defined the interpolant over $\partial K$, and it may be discontinuous between two elements of $\mathcal K$.
+
+\begin{example}
+    In $d=1$ we can take $\Omega = (0,1)$, a partitition $x_0 = 0, \cdots, x_N = 1$ and the finite elements $K_i = (x_{i-1},x_i)$ for $i = 1, \cdots, N$.
+    In each $K_i$ set the finite element \Cref{ex:Lagrange element in an interval}.
+    Then $\mathcal I_h$ is the piece-wise linear interpolation from \Cref{ex:Galerkin Laplace piecewise linear Cea}. It is defined on the space of continuous functions.
+\end{example}
+
+
+% \begin{definition}[$C^r$-finite element space]
+%     Let $\mathcal T$ be a sub-division such that and for every $K \in \mathcal T$ we have a suitable finite element $(K,\mathcal P, \mathcal N)$.
+%     We say that the interpolant has continuity of order $r$ (or is $C^r$) if for some $m \ge r$
+%     \begin{equation*}
+%         \mathcal I_{\mathcal T} : v \in C^m (\overline \Omega) \to C^r(\overline \Omega).
+%     \end{equation*}
+%     In that case, the space
+%     \begin{equation}
+%         \label{eq:FEM formalismo finite-element space}
+%         V_{\mathcal T} = \{ \mathcal I_{\mathcal T} v : v \in C^m (\overline \Omega) \}
+%     \end{equation}
+%     is called a $C^r$ finite-element space.
+% \end{definition}
+
+% \begin{example}
+%     The piece-wise linear interpolant is $C^0$.
+% \end{example}
+
+An important particular case of sub-division in $d=2$ is
+\begin{definition}[Triangulation]
+    Let $\Omega \subset \mathbb R^2$ be a polygonal domain. A \emph{triangulation} is a subdivision $\mathcal T$ such that every $K \in \mathcal T$ is a triangle and
+    \begin{quote}
+        No vertex of any triangle lies in the interior of an edge of another triangle.
+    \end{quote}
+    This means that $\overline K_i \cap \overline K_j$ is either empty or the complete shared edge.
+\end{definition}
+
+\section{Interpolation error on a sub-division}
+
+Using affine equivalence we can prove the following theorem
+\begin{theorem}
+    \label{thm:FEM interpolation error subdivision affine equivalence}
+    Let $\mathcal T$ be a sub-division of $\Omega$ such that and for every $K \in \mathcal T$ we have a suitable finite element $(K,\mathcal P, \mathcal N)$. Let
+    \begin{equation*}
+        \mu_{K} \defeq \frac{\rho_K}{h_K}.
+    \end{equation*}
+    Assume that
+    \begin{enumerate}
+        \item The global interpolation $\mathcal I_{\mathcal T} : H^m (\Omega) \to H^k (\Omega) \cap \mathcal P_{\mathcal T}$.
+        \item
+              Each finite element is affine-equivalent to the same reference finite element $(K_0,\mathcal P_0, \mathcal N_0)$
+        \item
+              A bound of the interpolant error in $K_0$
+              \begin{equation*}
+                  \left[ v - \mathcal I_{K_0} v \right]_{H^k(K_0)} \le C_0 [ v]_{H^m (K_0)}, \qquad \forall v \in H^m (K_0).
+              \end{equation*}
+    \end{enumerate}
+    Then, we have that
+    \begin{equation*}
+        \left[v - \mathcal I_{\mathcal T} v \right]_{H^k(\Omega)} \le C(\Omega, K_0)  \sup_{K \in \mathcal T} \frac{h_{K}^{m-k}}{\mu_K^k} [ v]_{H^m (\Omega)}, \qquad \forall v \in H^m(\Omega).
+    \end{equation*}
+\end{theorem}
+
+\begin{proof}
+    We take the decomposition
+    \begin{align*}
+        \left[ v - \mathcal I_{\mathcal T} v \right]_{H^k(\Omega)}^2
+         & = \sum_{K \in \mathcal T} \left[ v - \mathcal I_{K} v \right]_{H^k(K)}  ^2
+        \le \sum_{K \in \mathcal T} C_0 \frac{h_{K}^m}{\rho_K^k}\left[v \right]_{H^m(K)}    ^2.
+    \end{align*}
+    This completes the proof.
+\end{proof}
+
+This very modest result can be extended to sub-division which are not affine equivalent by using \Cref{thm:FEM bound interpolation error} that can be found in \cite{Suli}.
+\begin{strongtheorem}
+    \label{thm:FEM interpolation error subdivision}
+    Let $\mathcal T$ be a sub-division of $\Omega$ such that
+    \begin{enumerate}
+        \item for every $K \in \mathcal T$ we have a suitable finite element $(K,\mathcal P, \mathcal N)$ in the hypothesis of \Cref{thm:FEM bound interpolation error}
+        \item The global interpolant is continuous $\mathcal I_{\mathcal T} : H^m (\Omega) \to H^k (\Omega)$.
+    \end{enumerate}
+    Then, we have that for $k \in \{0, \cdots, m\}$
+    \begin{equation*}
+        \left[v - \mathcal I_{\mathcal T} v \right]_{H^k(\Omega)} \le C\left(\Omega, \inf_K \mu_ K\right)  \sup_K{h_{K}^{m-k}}[ v]_{H^m (\Omega)}, \qquad \forall v \in H^m(\Omega).
+    \end{equation*}
+\end{strongtheorem}
+
+\begin{remark}
+    Again, this result holds between more general $W^{k,p}$ and $W^{m,p}$, and can be found in \cite{Suli}.
+\end{remark}
+
+\subsection{Assembling a basis of $V_h$}
+
+When the true solution $u \in C^r$ then the natural space to consider is $V_h = V \cap I_h C^r$ for some $r \ge 0$ since this will allow us to use \namedCref{lem:cea}. 
+We point out that
+\begin{equation*}
+    \dim \mathcal P_{\mathcal T} = \sum_{K \in \mathcal T} \dim P_{K}
+\end{equation*}
+If we consider $V_h = V \cap \mathcal P_{\mathcal T}$ we may get odd behaviours.
+\begin{example}
+    If we take $\Omega = (0,2)$, $K_1 = (0,1)$, $K_2 = (1, 2)$, and piece-wise linear elements, then $\mathcal P_{\mathcal T}$ is generated by the all possible combinations of the nodal basis
+    \begin{gather*}
+        \varphi_1(x) = \begin{dcases}
+            1-x & x \in (0,1), \\
+            0   & x \in (1,2)
+        \end{dcases}
+        \qquad
+        \varphi_2(x) = \begin{dcases}
+            x   & x \in (0,1), \\
+            2-x & x \in (1,2)
+        \end{dcases}
+        \qquad
+        \varphi_3(x) = \begin{dcases}
+            0   & x \in (0,1), \\
+            x-1 & x \in (1,2)
+        \end{dcases}
+        \\
+        \varphi_4(x) = \begin{dcases}
+            1-x & x \in (0,1), \\
+            x   & x \in (1,2)
+        \end{dcases}
+        \qquad
+        \varphi_5(x) = \begin{dcases}
+            x   & x \in (0,1), \\
+            x-1 & x \in (1,2)
+        \end{dcases}
+    \end{gather*}
+    Clearly $\varphi_4$ and $\varphi_5$ are not continuous.
+    When we request more regularity, we must drop some basis functions
+    \begin{equation*}
+        \mathcal P_{\mathcal T} \cap H^1 (0,2) = \spannedby\{ \varphi_1, \varphi_2, \varphi_3 \}.
+    \end{equation*}
+    If we add some extra conditions, we drop even more basis functions
+    \begin{equation*}
+        \mathcal P_{\mathcal T} \cap H^1_0 (0,2) = \spannedby\{\varphi_2\}.
+    \end{equation*}
+    If we require too much regularity, we are left with only the trivial element $\mathcal P_{\mathcal T} \cap H^2 (0,2) = \{0\}$.
+
+    \bigskip
+
+    The correct $V_h$ for \namedCref{example:Dirichlet Laplacian} is $V_h = H_0^1(\Omega) \cap I_h C(\Omega) = V \cap \mathcal P_{\mathcal T}$. Notice that $I_h C(a,b) = I_h C^r(a,b)$ for any $r \ge 0$. For \namedCref{ex:Galerkin Hemholz d=1} the space would be $V_h = H^1(\Omega) \cap I_h C^r(\Omega) = V \cap \mathcal P_{\mathcal T}$.
+\end{example}
+
+We will see this effect clearly in some bases in dimension $d=1$, and then again for some examples in dimension $d = 2$.
+
+\begin{remark}
+    The computational implementation of the finite element method requires careful labelling of the finite elements $K$ and the nodal bases $\psi_i$ within each element, in order to assemble a suitable basis $\varphi_i$ for $V_h$, and furthermore compute the linear algebra representation by computing $a(\varphi_j,\varphi_i)$ and $\prodH{\varphi_j}{\varphi_i}$.
+    We will not discuss this difficulty in dimension $d > 1$.
+\end{remark}
+
+
+\begin{remark}[On triangulations]
+    Given a grid of points in the plane $x_i$, it is not clear how to pick suitable triangles for the finite-elements methods.
+    Our proof suggests one must control $\mu_K$.
+    One approach in this direction is to use \href{https://duckduckgo.com/?q=delaunay+triangulation&t=osx&ia=web}{Delaunay triangulations}.
+    There is a rich community of algorithms for triangulation. See, for example
+    \\
+    \url{https://www.cs.cmu.edu/~quake/triangle.html}
+\end{remark}

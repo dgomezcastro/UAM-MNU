@@ -1,0 +1,235 @@
+\usepackage{amsthm,mdframed}
+\usepackage{nameref}
+
+%% FROM https://texblog.org/2015/09/30/fancy-boxes-for-theorem-lemma-and-proof-with-mdframed/
+\newcounter{theo}[chapter]
+\setcounter{theo}{0}
+\renewcommand{\thetheo}{\thechapter.\arabic{theo}}
+
+\labelformat{theo}{\thechapter-#1}
+
+
+%%%%%%%%%%%%%%%%%% TEOREMA
+% Following https://tex.stackexchange.com/questions/705270/mdthereom-shared-counters-cleverref-and-nested-theorems
+\let\theorem\relax
+
+\newcounter{theorem}
+\makeatletter
+\let\c@theorem\c@theo
+\let\thetheorem\thetheo
+\makeatother
+
+\makeatletter
+\newenvironment{theorem}[1][]{%
+        % \protected@edef\@currentlabelname{#1}
+        \refstepcounter{theorem}%
+        \ifstrempty{#1}%
+        {\mdfsetup{%
+                        frametitle={%
+                                        \tikz[baseline=(current bounding box.east),outer sep=0pt]
+                                        \node[anchor=east,rectangle,fill=orange!10]
+                                        {\strut Theorem~\thetheo};}}
+        }%
+        {
+                \mdfsetup{%
+                        frametitle={%
+                                        \tikz[baseline=(current bounding box.east),outer sep=0pt]
+                                        \node[anchor=east,rectangle,fill=orange!20]
+                                        {\strut Theorem~\thetheo:~#1};}}%
+        }%
+        \mdfsetup{innertopmargin=10pt,linecolor=orange!10,%
+                linewidth=2pt,topline=true,%
+                frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+        }
+        \begin{mdframed}[]}
+                {\end{mdframed}}
+\makeatother
+\Crefname{theorem}{Theorem}{Theorems}
+
+%%%%%%%%%%%%%%%%%% TEOREMA
+\newcounter{strongtheorem}
+\makeatletter
+\let\c@strongtheorem\c@theo
+\let\thestrongtheorem\thetheo
+\makeatother
+
+\makeatletter
+\newenvironment{strongtheorem}[1][]{%
+        % \protected@edef\@currentlabelname{#1}
+        \refstepcounter{strongtheorem}%
+        \ifstrempty{#1}%
+        {\mdfsetup{%
+                        frametitle={%
+                                        \tikz[baseline=(current bounding box.east),outer sep=0pt]
+                                        \node[anchor=east,rectangle,fill=red!20]
+                                        {\strut Theorem~\thetheo};}}
+        }%
+        {
+                \protected@edef\@currentlabelname{#1}
+                \mdfsetup{%
+                        frametitle={%
+                                        \tikz[baseline=(current bounding box.east),outer sep=0pt]
+                                        \node[anchor=east,rectangle,fill=red!20]
+                                        {\strut Theorem~\thetheo:~#1};}}%
+        }%
+        \mdfsetup{innertopmargin=10pt,linecolor=red!20,%
+                linewidth=2pt,topline=true,%
+                frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+        }
+        \begin{mdframed}[]}
+                {\end{mdframed}}
+\makeatother
+\Crefname{strongtheorem}{Theorem}{Theorems}
+
+%%%%%%%%%%%%%%%%%% LEMA
+\newcounter{lemma}
+\makeatletter
+\let\c@lemma\c@theo
+\let\thelemma\thetheo
+\makeatother
+
+\makeatletter
+\newenvironment{lemma}[1][]{%
+        \refstepcounter{lemma}%
+        \ifstrempty{#1}%
+        {\mdfsetup{%
+                        frametitle={%
+                                        \tikz[baseline=(current bounding box.east),outer sep=0pt]
+                                        \node[anchor=east,rectangle,fill=orange!20]
+                                        {\strut Lemma~\thetheo};}}
+        }%
+        {
+                \protected@edef\@currentlabelname{#1}
+                \mdfsetup{%
+                        frametitle={%
+                                        \tikz[baseline=(current bounding box.east),outer sep=0pt]
+                                        \node[anchor=east,rectangle,fill=orange!20]
+                                        {\strut Lemma~\thetheo:~#1};}}%
+        }%
+        \mdfsetup{innertopmargin=10pt,linecolor=orange!20,%
+                linewidth=2pt,topline=true,%
+                frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+        }
+        \begin{mdframed}[]}
+                {\end{mdframed}}
+\makeatother
+\Crefname{lemma}{Lemma}{Lemmas}
+
+%%%%%%%%%%%%%%%%%% DEFINICION
+\newcounter{definition}
+\makeatletter
+\let\c@definition\c@theo
+\let\thedefinition\thetheo
+\makeatother
+
+\makeatletter
+\newenvironment{definition}[1][]{%
+        \refstepcounter{definition}%
+        \ifstrempty{#1}%
+        {\mdfsetup{%
+                        frametitle={%
+                                        \tikz[baseline=(current bounding box.east),outer sep=0pt]
+                                        \node[anchor=east,rectangle,fill=blue!20]
+                                        {\strut Definition~\thetheo};}}
+        }%
+        {
+                \protected@edef\@currentlabelname{#1}
+                \mdfsetup{%
+                        frametitle={%
+                                        \tikz[baseline=(current bounding box.east),outer sep=0pt]
+                                        \node[anchor=east,rectangle,fill=blue!20]
+                                        {\strut Definition~\thetheo:~#1};}}%
+        }%
+        \mdfsetup{innertopmargin=10pt,linecolor=blue!20,%
+                linewidth=2pt,topline=true,%
+                frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+        }
+        \begin{mdframed}[]}
+                {\end{mdframed}}
+\makeatother
+
+\Crefname{definition}{Definition}{Definitions}
+
+
+%%%%%%%%%%%%%%%%%% REMARK
+\newcounter{remark}
+\makeatletter
+\let\c@remark\c@theo
+\let\theremark\thetheo
+\makeatother
+
+\makeatletter
+\newenvironment{remark}[1][]{%
+        \refstepcounter{remark}%
+        \ifstrempty{#1}%
+        {\mdfsetup{%
+                        frametitle={%
+                                        \tikz[baseline=(current bounding box.east),outer sep=0pt]
+                                        \node[anchor=east,rectangle,fill=gray!20]
+                                        {\strut Remark~\thetheo};}}
+        }%
+        {
+                \protected@edef\@currentlabelname{#1}
+                \mdfsetup{%
+                        frametitle={%
+                                        \tikz[baseline=(current bounding box.east),outer sep=0pt]
+                                        \node[anchor=east,rectangle,fill=gray!20]
+                                        {\strut Remark~\thetheo:~#1};}}%
+        }%
+        \mdfsetup{innertopmargin=10pt,linecolor=gray!20,%
+                linewidth=2pt,topline=true,%
+                frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+        }
+        \begin{mdframed}[]}
+                {\end{mdframed}}
+\makeatother
+
+\Crefname{remark}{Remark}{Remarks}
+
+%%%%%%%%%%%%%%%%%% EXAMPLE
+\newcounter{example}
+\makeatletter
+\let\c@example\c@theo
+\let\theexample\thetheo
+\makeatother
+
+\makeatletter
+\newenvironment{example}[1][]{%
+        \refstepcounter{example}%
+        \ifstrempty{#1}%
+        {\mdfsetup{%
+                        frametitle={%
+                                        \tikz[baseline=(current bounding box.east),outer sep=0pt]
+                                        \node[anchor=east,rectangle,fill=green!20]
+                                        {\strut Example~\thetheo};}}
+        }%
+        {
+                \protected@edef\@currentlabelname{#1}
+                \mdfsetup{%
+                        frametitle={%
+                                        \tikz[baseline=(current bounding box.east),outer sep=0pt]
+                                        \node[anchor=east,rectangle,fill=green!20]
+                                        {\strut Example~\thetheo:~#1};}}%
+        }%
+        \mdfsetup{innertopmargin=10pt,linecolor=green!20,%
+                linewidth=2pt,topline=true,%
+                frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+        }
+        \begin{mdframed}[]}
+                {\end{mdframed}}
+\makeatother
+
+% \mdfsetup{skipabove=1em,skipbelow=0em}
+\surroundwithmdframed[
+        topline=false,
+        rightline=false,
+        bottomline=false,
+        leftmargin=0em,%\parindent,
+        linewidth=4pt,
+        linecolor=gray!40,
+        skipabove=\medskipamount,
+        skipbelow=\medskipamount
+]{proof}
+
+
+\newcommand{\namedCref}[1]{\Cref{#1}~(\nameref{#1})}

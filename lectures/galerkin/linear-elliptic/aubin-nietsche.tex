@@ -1,0 +1,57 @@
+\subsection{Aubin-Nietsche's Duality Argument: better convergence in weaker norms}
+
+In \Cref{ex:Galerkin Laplace piecewise linear Cea} we could be interested in the rate of convergence in $L^2 (\Omega)$, which can be more optimistic.
+
+Assume, furthermore, that we can estimate
+\begin{equation}
+    \label{eq:Galerkin projection estimate in terms of A}
+    \inf_{v_h \in V_h} \| v - v_h \|_a \le \omega(h) \| A v \|_{H}.
+\end{equation}
+\namedCref{lem:cea} ensures that $\|u - u_h\|_V \le \frac{M}{\alpha^*} \omega(h) \| f \|_{H}$. In the weak space
+\begin{lemma}[Aubin-Nietsche]
+    \label{lem:Aubin-Nietsche}
+    Let $f \in H$, $u \in V$ and $u_h \in V_h$ be solutions to
+    \begin{align}
+        a(u,v)
+         & = (f,v)_H , \forall v \in V
+        \qquad
+        a(u_h,v_h)
+        = (f,v_h)_H , \forall v_h \in V_h.
+    \end{align}
+    We can estimate
+    \begin{equation*}
+        \| u - u_h \|_H \le \omega(h)^2 \| f \|_{H}.
+    \end{equation*}
+\end{lemma}
+
+\begin{proof}
+    First, we recall that
+    \begin{equation*}
+        \| v \|_H = \inf_{g \in H \setminus \{0\}} \frac{(v,g)}{\|g\|_H}.
+    \end{equation*}
+    Let us estimate the right-hand side. Let $g \in H$. We find $w \in V$ and $w_h \in V_h$ such that
+    \begin{equation}
+        a(w,v) = (g,v)_H , \qquad \forall v \in V,
+        \qquad
+        a(w_h,v_h) = (g,v_h) , \qquad \forall v_h \in V_h.
+    \end{equation}
+    First, we operate a little to deduce that
+    \begin{align*}
+        \prodH{u - u_h} g
+         & =a(w,u) - a(w_h,u_h)                                       \\
+         & =a(w,u) - \prodH f {w_h}                                   \\
+         & =a(w,u) + \prodH g {u_h} - \prodH g {u_h} - \prodH f {w_h} \\
+         & =a(w,u) + a(w_h,u_h) - a(w,u_h) - a(u, w_h)                \\
+         & = a(w - w_h, u - u_h)
+    \end{align*}
+    Notice that $A w = g$, and hence $\| Aw \|_H = \|g\|_H$. We can apply \namedCref{lem:cea} to deduce
+    \begin{align*}
+        (u - u_h, g)_H
+         & = a(w - w_h, u - u_h)                                                                                    \\
+         & \le \|w - w_h\|_a \|u - u_h\|_a                                                                          \\
+         & \le \left( \inf_{v_h \in V_h } \| w - v_h \|_a \right) \left( \inf_{v_h \in V_h} \| u - v_h \|_a \right) \\
+         & \le \omega(h) \| A w \|_H \omega(h) \| A u \|_H                                                          \\
+         & = \omega(h)^2 \| f \|_H \| g\|_{H}.
+    \end{align*}
+    Therefore, we recover the result.
+\end{proof}

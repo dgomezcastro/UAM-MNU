@@ -1,0 +1,54 @@
+
+\section{Linear element}
+
+We introduce the piece-wise linear basis in \Cref{ex:piece-wise linear in d=1}.
+In \Cref{ex:Galerkin Laplace piecewise linear Cea naive} and \Cref{ex:Galerkin Laplace piecewise linear Cea} we made estimated the error in an interval. There is a much more general approach using the Bramble-Hilbert lemma \Cref{lem:Bramble-Hilbert}, that can be extended to dimension $d > 1$.
+
+Given that $C([0,1]) \subset H^1(0,1)$ we can build the linear error functional
+\begin{equation*}
+    E(v) (x) = v (x) - \Big( v(0) + (v(1) - v(0))x \Big).
+\end{equation*}
+It is a linear continuous functional $H^2 (0,1) \to \mathbb R$.
+Clearly, if $E(P) = 0$ for any linear function, i.e. for all polynomials in $P_0[x]$. Therefore, due to \Cref{lem:Bramble-Hilbert} we have that
+\begin{equation*}
+    \| E(v) \|_{H^1(0,1)} \le C \left[\frac{d^2u}{dx^2}\right]_{L^2(0,1)}.
+\end{equation*}
+It is also easy to see that the piece-wise linear interpolator maps $C^0 ([0,1]) \to H^1(0,1)$.
+
+\begin{remark}[Computing stiffness and mass matrices via Gaussian quadrature]
+    For second-order problems with constant coefficients the computation of the stiffness and mass matrices involves integrating
+    \begin{equation*}
+        \int_{x_k}^{x_{k+1}} \frac{d^k \varphi_j}{dx^k} \frac{d^l \varphi_i}{dx^l}
+    \end{equation*}
+    with $k, l \in \{0,1\}$.
+    Hence, we would like to integrate polynomials of degree at most 2. This can be done analytically, however the formulas may become cumbersome. An efficient approach is recall the Gaussian quadrature
+    \begin{equation*}
+        \int_{-1}^1 f(x) dx \approx f(-\tfrac{1}{\sqrt{3}}) + f(\tfrac{1}{\sqrt{3}}).
+    \end{equation*}
+    Due to \Cref{thm:Gauss integration} this formula is exact for polynomials of degree $3$, and is therefore perfect for our situation. We have precisely that for $P \in \mathbb R_3[x]$
+    \begin{equation*}
+        \begin{aligned}
+            \int_{x_k}^{x_{k+1}} P(x) dx
+             & = \frac{x_{k+1} - x_k}{2} \left( Q(-\tfrac{1}{\sqrt{3}}) + Q(\tfrac{1}{\sqrt{3}}) \right),
+            \\
+             & \text{ where } Q(x) = P\left(\frac{x_{k+1} - x_k}2 x + \frac{x_{k+1}-x_k}{2}\right).
+        \end{aligned}
+    \end{equation*}
+\end{remark}
+
+\section{Lagrange's elements}
+
+The Lagrange element consists in taking $K = [0,1]$, $\mathcal P = \mathbb R_N[x]$, $N+1$ equi-distant points $x_i = \frac{i-1}{N}$ for $i= 1, \cdots, N+1$, the nodal functions
+\begin{equation*}
+    N_i(v) = v(x_i) \text{ for } i = 1, \cdots, N+1.
+\end{equation*}
+The nodal basis is given the Lagrange polynomials
+\begin{equation*}
+    \psi_i(x) = \prod_{\substack{j = 1 \\ j \ne i}}^{N+1} \frac{x - x_j}{x_i - x_j} \text{ for } i=1, \cdots, N+1.
+\end{equation*}
+The ``glueing'' is typically continuous, so we generate global basis of $H^1$ type. We recall the approximation estimate
+\begin{equation}
+    \label{eq:Lagrange interpolation error estimate}
+    u(x) - \mathcal I_K u(x) = \frac{\frac{d^{N+1}u}{dx^{N+1}} (\xi_{m+1}(x))}{(N+1)!} \prod_{i=1}^{N+1} (x - x_i).
+\end{equation}
+This is a nice formula for $N$ fixed, but it behaves unexpectly as $N \to \infty$ as we will discuss in \namedCref{sec:Runge's phenomenon}.
