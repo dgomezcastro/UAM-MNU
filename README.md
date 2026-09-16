@@ -15,65 +15,47 @@
   </thead>
   <tbody>
     <tr>
-    <th rowspan="5">Galerkin's method</th>
+    <th rowspan="2">Galerkin's method</th>
       <td>1</td>
       <td>Weak formulation</td>
-      <td>1.1.1-1.1.3</td>
-      <td>-</td>
-      <td>1.1-1.5</td>
+      <td>1.1.1-1.1.5</td>
+      <td><a href="lectures/galerkin/FEMlinear1dLaplaceDirichlet.ipynb">FEMlinear1dLaplaceDirichlet.ipynb</a></td>
+      <td>1.1-1.6</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>... for elliptic problems</td>
-      <td>1.1.4-1.1.5</td>
-      <td><a href="lectures/galerkin/FEMlinear1dLaplaceDirichlet.ipynb">FEMlinear1dLaplaceDirichlet.ipynb</a></td>
-      <td>1.6</td>
-    </tr>
-    <tr>
-      <td>3</td>
       <td>Céa's lemma</td>
-      <td>1.1.6-1.1.8</td>
-      <td><a href="lectures/galerkin/linearinterpolation.ipynb">linearinterpolation.ipynb</a></td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td>... for linear parabolic problems</td>
-      <td>1.2</td>
-      <td><a href="lectures/galerkin/FEMlinear1dHeatDirichlet.ipynb">FEMlinear1dHeatDirichlet.ipynb</a></td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <td>5</td>
-      <td>... for non-linear elliptic problems</td>
-      <td>1.3</td>
-      <td>-</td>
+      <td>1.1.6-1.3</td>
+      <td><a href="lectures/galerkin/linearinterpolation.ipynb">linearinterpolation.ipynb</a>
+      <br>
+      <a href="lectures/galerkin/FEMlinear1dHeatDirichlet.ipynb">FEMlinear1dHeatDirichlet.ipynb</a>
+      </td>
       <td>1.7</td>
     </tr>
     <tr>
     <th rowspan="4">The finite-elements method</th>
-      <td>6</td>
+      <td>3</td>
       <td>The finite-element formalism</td>
       <td>2.1-2.2</td>
       <td>-</td>
       <td>-</td>
     </tr>
     <tr>
-      <td>7</td>
+      <td>4</td>
       <td>Finite-elements spaces</td>
       <td>2.3-2.4</td>
       <td>-</td>
       <td>-</td>
     </tr>
     <tr>
-      <td>8</td>
+      <td>5</td>
       <td>Finite-elements in d=1</td>
       <td>Chapter 3</td>
-      <td><a href="lectures/finite-elements/d-1/Hermite/Hermite.ipynb">Hermite.ipynb</a> and <a href="lectures/finite-elements/d-1/Bsplines/Bsplines.ipynb">Bsplines.ipynb</a></td>
+      <td><a href="lectures/finite-elements/d-1/Hermite/Hermite.ipynb">Hermite.ipynb</a> <br> <a href="lectures/finite-elements/d-1/Bsplines/Bsplines.ipynb">Bsplines.ipynb</a></td>
       <td>-</td>
     </tr>
     <tr>
-      <td>9</td>
+      <td>6</td>
       <td>Finite-elements in d=2</td>
       <td>Chapter 4</td>
       <td><a href="lectures/finite-elements/d-greater-1/FEMlinear2dLaplaceDirichlet.ipynb">FEMlinear2dLaplaceDirichlet.ipynb</a></td>
@@ -81,26 +63,26 @@
     </tr>
     <tr>
       <th rowspan="4">Spectral methods</th>
-      <td>10</td>
+      <td>7</td>
       <td>Introduction: Galerkin v colocation</td>
       <td>Chapter 5</td>
       <td><a href="lectures/spectral/intro/colocationChebyshev.ipynb">colocationChebyshev.ipynb</a></td>
       <td>-</td>
     </tr><tr>
-      <td>11</td>
+      <td>8</td>
       <td>Fourier series</td>
       <td>6.1</td>
       <td>-</td>
       <td>6.1</td>
     </tr><tr>
-      <td>12</td>
+      <td>9</td>
       <td>Orthogonal polynomials</td>
       <td>6.2-6.5</td>
       <td><a href="lectures/spectral/basis/interpolationerror.ipynb">interpolationerror.ipynb</a></td>
       <td>-</td>
     </tr>
     <tr>
-      <td>13</td>
+      <td>10</td>
       <td>Applications of spectral methods</td>
       <td>Chapter 7</td>
       <td>-</td>
