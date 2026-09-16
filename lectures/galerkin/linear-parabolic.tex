@@ -165,3 +165,9 @@ Using an stability and consistency argument in \cite[Theorem 11.3.2]{QuarteroniV
 \begin{remark}
     Using \Cref{thm:Galerkin parabolic Cea,thm:Galerkin parabolic convergence in tau} and \eqref{eq:Galerkin parabolic estimate duhdt(0)} we can estimate $\| u (n \tau) - u_h^n \|_H$.
 \end{remark}
+
+\section*{Exercises}
+\begin{exercises}
+    \ex Implement the explicit Euler method for the heat equation in the interval $(0,1)$ using piece-wise linear basis functions. Avoid using any numerical library for ODEs. 
+    Compute the convergence error graph for the case where $f = 0$ and initial condition $u_0(x) = \sin(\pi x)$, where the exact solution is given by $u(x,t) = e^{-t} \sin(\pi x)$.
+\end{exercises}

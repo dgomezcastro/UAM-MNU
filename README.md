@@ -28,20 +28,20 @@
     </tr>
     <tr>
       <td>2</td>
-      <td>Céa's lemma</td>
+      <td>Lemmas of Céa, Aubin-Nietsche, and Strang</td>
       <td>1.1.6-1.1.8</td>
       <td><a href="lectures/galerkin/linearinterpolation.ipynb">linearinterpolation.ipynb</a>
       </td>
-      <td>-</td>
+      <td>1.7-1.8</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>... for parabolic and non-linear problems</td>
+      <td>Galerkin for parabolic and non-linear problems</td>
       <td>1.2-1.3</td>
       <td>
       <a href="lectures/galerkin/FEMlinear1dHeatDirichlet.ipynb">FEMlinear1dHeatDirichlet.ipynb</a>
       </td>
-      <td>1.7</td>
+      <td>1.9-1.11</td>
     </tr>
     <tr>
     <th rowspan="4">The finite-elements method</th>
@@ -49,14 +49,14 @@
       <td>The finite-element formalism</td>
       <td>2.1-2.2</td>
       <td>-</td>
-      <td>-</td>
+      <td>2.1-2.2</td>
     </tr>
     <tr>
       <td>5</td>
       <td>Finite-elements spaces</td>
       <td>2.3-2.4</td>
       <td>-</td>
-      <td>-</td>
+      <td>2.3-2.8</td>
     </tr>
     <tr>
       <td>6</td>

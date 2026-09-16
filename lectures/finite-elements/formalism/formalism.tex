@@ -48,7 +48,7 @@ Notice that the interpolant is can be extended to any functional space $X$ such 
         \mathcal I_K v (x) = v(x_1) \frac{x_2-x}{x_2-x_1} + v(x_2) \frac{x - x_1}{x_2-x_1}.
     \end{equation*}
     This is the piece-wise linear linear approximation.
-    We made the one-interval estimate in \eqref{eq:Galerkin linear interpolation error in one interval}.
+    We made the one-interval estimate in \Cref{ex:Galerkin Laplace piecewise linear Cea}.
 \end{example}
 
 \section{Affine equivalence}
@@ -167,7 +167,7 @@ This kind of affine-equivalence results work well when the nodal functions $N_i(
 \end{remark}
 
 This difficulty can be overcome with some additional work.
-We provide a result based \namedCref{lem:Bramble-Hilbert} thatcan be found in \cite[Section 3.2]{Suli}.
+We provide a result based on \namedCref{lem:Bramble-Hilbert} that can be found in \cite[Section 3.2]{Suli}.
 
 \begin{strongtheorem}[Bound on the interpolation error ]
     \label{thm:FEM bound interpolation error}
@@ -183,7 +183,22 @@ We provide a result based \namedCref{lem:Bramble-Hilbert} thatcan be found in \c
     \end{equation*}
 \end{strongtheorem}
 
+\subsection*{Exercises}
+\begin{exercises}
+    \ex Let $K=(a,b)$ and let $\mathcal P=\mathbb R_1[x]$ with degrees of freedom
+    $N_1(v)=v(a)$ and $N_2(v)=v(b)$. Compute the nodal basis and write the
+    local interpolant $\mathcal I_Kv$. Prove that $\mathcal I_Kp=p$ for every
+    $p\in\mathcal P$.
 
+    \ex Let $K$ be a triangle with vertices $z_1,z_2,z_3$. Write the three
+    affine Lagrange basis functions using determinants or barycentric
+    coordinates. Prove that their gradients are constant on $K$ and compute
+    \[
+        \int_K \nabla\varphi_i\cdot\nabla\varphi_j\,dx
+    \]
+    in terms of the vectors joining the vertices. Interpret the resulting
+    matrix as the local stiffness matrix.
+\end{exercises}
 
 
 \section{Sub-divisions}
@@ -250,7 +265,56 @@ An important particular case of sub-division in $d=2$ is
     \end{quote}
     This means that $\overline K_i \cap \overline K_j$ is either empty or the complete shared edge.
 \end{definition}
+\subsection*{Exercises}
+\begin{exercises}
+    \ex Let $\mathcal T$ be a subdivision of an interval into open elements
+    $K_i=(x_{i-1},x_i)$, and let $\mathcal I_{K_i}$ be the affine (piecewise
+    linear) Lagrange interpolant. Show that the elementwise interpolant
+    $\mathcal I_{\mathcal T}v$ is continuous on $[x_0,x_N]$ if and only if the
+    values prescribed at the common endpoints agree. Deduce that the global
+    interpolant is uniquely determined by the values of $v$ at the nodes.
 
+    \ex Consider two triangles $K_1$ and $K_2$ sharing an edge $E$. For the
+    affine Lagrange element, prove that if the nodal values at the two
+    endpoints of $E$ are the same on both triangles, then the two affine
+    interpolants have the same trace on $E$. Explain why this gives a globally
+    continuous piecewise affine function on a triangulation.
+
+    \ex Give an example of a subdivision of a polygonal domain that fails the
+    triangulation condition because a vertex lies in the interior of another
+    edge. Draw the subdivision and explain why the phrase ``the complete shared
+    edge'' is no longer sufficient to describe all intersections of element
+    closures. Suggest a minimal refinement that restores the condition.
+
+    % \emph{Solution.} Let $\Omega$ be the square with vertices $A,B,C,D$ in
+    % counterclockwise order, and let $E$ be the midpoint of the diagonal $AC$.
+    % Consider the subdivision
+    % \[
+    %     K_1=\triangle ABC, \qquad K_2=\triangle ADE,
+    %     \qquad K_3=\triangle EDC.
+    % \]
+    % It can be pictured schematically as
+    % \[
+    % \begin{array}{c@{\qquad}c}
+    %     D\,------------\,C & \text{(top)}\\[-6pt]
+    %     |\ \quad\ /\quad\ | & \\[-2pt]
+    %     |\quad E\quad\ | & \\[-2pt]
+    %     |\ /\quad\ \ | & \\[-2pt]
+    %     A\,------------\,B & \text{(bottom)}
+    % \end{array}
+    % \]
+    % where $A,E,C$ are collinear.  The point $E$ is a vertex of $K_2$ and
+    % $K_3$, but lies in the interior of the edge $AC$ of $K_1$.  Moreover,
+    % \[
+    %     \overline K_1\cap\overline K_2=[A,E],\qquad
+    %     \overline K_1\cap\overline K_3=[E,C].
+    % \]
+    % Neither intersection is the complete edge $AC$ of $K_1$; hence the
+    % stated triangulation condition fails.  The minimal refinement is to split
+    % $K_1$ along the point $E$, replacing it by $\triangle ABE$ and
+    % $\triangle EBC$.  Then every intersection of two element closures is
+    % empty, a vertex, or a complete common edge.
+\end{exercises}
 \section{Interpolation error on a sub-division}
 
 Using affine equivalence we can prove the following theorem
@@ -373,3 +437,30 @@ We will see this effect clearly in some bases in dimension $d=1$, and then again
     \\
     \url{https://www.cs.cmu.edu/~quake/triangle.html}
 \end{remark}
+
+\subsection*{Exercises}
+\begin{exercises}
+    % \ex For the affine map $F(\hat x)=a+(b-a)\hat x$ from $(0,1)$ to $(a,b)$,
+    % derive the transformation rules for the value and derivative degrees of
+    % freedom in the cubic Hermite element. Explain why the derivative degrees of
+    % freedom must be rescaled when transporting the reference element.
+
+    \ex Let $\mathcal T$ be a conforming triangulation in $\mathbb R^2$ and let $V_h$ be the
+    space of continuous piecewise affine functions. Prove that the hat
+    function associated with an interior vertex is uniquely determined by its
+    nodal values, and that the collection of all interior and boundary hat
+    functions is linearly independent. How does imposing homogeneous
+    Dirichlet data alter the basis?
+
+    \ex Consider a family of triangles with $h_K=1$ and with one angle tending
+    to zero. Show that $\rho_K/h_K\to0$. Using the interpolation estimate,
+    explain why the constant in the $H^1$ error bound cannot remain uniform for
+    this family. What geometric condition on a mesh prevents this degeneration?
+
+    \ex On $\Omega=(0,2)$ with elements $(0,1)$ and $(1,2)$, construct a
+    piecewise linear function whose values agree at $x=1$ but whose one-sided
+    derivatives there are different. Determine whether it belongs to
+    $H^1(0,2)$ and to $H^2(0,2)$, and justify both answers using the matching
+    conditions across the interface.
+\end{exercises}
+

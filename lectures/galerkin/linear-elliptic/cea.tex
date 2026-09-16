@@ -22,17 +22,6 @@
     We conclude the result.
 \end{proof}
 
-\begin{remark}
-    In fact, if we introduce the norm
-    \begin{equation}
-        \|u\|_a = a(u, u)^{\frac 1 2}
-    \end{equation}
-    we Céa's lemma can read, precisely as
-    \begin{equation}
-        \|u - u_h\|_a \le \inf_{v_h \in V_h} \|u - v_h\|_a.
-    \end{equation}
-\end{remark}
-
 \begin{example}
     \label{ex:piece-wise linear in d=1 interpolation}
     Consider \namedCref{ex:Galerkin Laplace d=1}.
@@ -44,6 +33,7 @@
     Clearly $\mathcal I_h u \in V_h$. Hence, a suitable upper bound for \namedCref{lem:cea} is $[u - \mathcal I_h u]_{H^1(0,1)}$.
 \end{example}
 
+Using Barron's rule, it is easy to prove the following estimate
 \begin{lemma}[Naive estimate of the error of the linear interpolation in $d=1$]
     \label{ex:Galerkin Laplace piecewise linear Cea naive}
     In the notation of \Cref{ex:piece-wise linear in d=1 interpolation}, for all $u \in H^2(0,1)$ we have that
@@ -52,35 +42,35 @@
     \end{equation*}
 \end{lemma}
 
-\begin{proof}
-    Let us follow the notation in \Cref{ex:piece-wise linear in d=1 interpolation}.
-    Let $u \in C^1([x_k,x_{k+1}])$ function is the following. By the intermediate value theorem we have that, for some $\xi_0 \in [0,1]$ we have $\frac{du}{dx} (\xi_k) = \frac{u(x_{k+1}) - u(x_k)}{x_{k+1}-x_k} = \frac{d \mathcal I_h}{dx} (x)$ for $x \in (x_k,x_{k+1})$.
-    Therefore
-    \begin{equation*}
-        \left| \frac{du}{dx} (x) - \frac{d \mathcal I_h}{dx} (x) \right| \le \left| \int_{\xi_0}^x \frac{d^2u}{dx^2} (y) dy\right| \le |x-\xi_0|^{\frac 1 2} \left\| \frac{d^2u}{dx^2} \right\|_{L^2(x_k,x_{k+1})}.
-    \end{equation*}
-    Therefore
-    \begin{equation}
-        \label{eq:Galerkin linear interpolation error in one interval}
-        \begin{aligned}
-            \int_{x_k}^{x_{k+1}} \left| \frac{du}{dx} (x) - \frac{d \mathcal I_h u}{dx} (x) \right|^2
-             & \le \left\| \frac{d^2u}{dx^2} \right\|_{L^2(x_k,x_{k+1})}^2 \int_{x_k}^{x_{k+1}} |x-\xi_k| dx
-            \\
-             & = \left\| \frac{d^2u}{dx^2} \right\|_{L^2(x_k,x_{k+1})}^2 \frac{|x_k-\xi_k|^2 + |x_{k+1}-\xi_k|^2}{2}
-            \\
-             & \le \left\| \frac{d^2u}{dx^2} \right\|_{L^2(x_k,x_{k+1})}^2 |x_{k+1} - x_k|^2.
-        \end{aligned}
-    \end{equation}
-    Therefore, we can estimate
-    \begin{align*}
-        \left\| \frac{du}{dx} (x) - \frac{d \mathcal I_h u}{dx} (x) \right\|_{L^2(0,1)}^2
-         & = \sum_{k=0}^{N-1} \left\| \frac{du}{dx} (x) - \frac{d \mathcal I_h u}{dx} (x) \right\|_{L^2(x_k,x_{k+1})}^2
-        \\
-         & \le \sum_{k=0}^{N-1} |x_{k+1} - x_k|^2\left\| \frac{d^2u}{dx^2} \right\|_{L^2(x_k,x_{k+1})}^2.
-    \end{align*}
-    We conclude the estimate in the statement for all $u \in C^1([0,1])$.
-    Since the result holds for all $u \in C^1([0,1])$ it can be extended by density to all $u \in H^1(0,1)$.
-\end{proof}
+% \begin{proof}
+%     Let us follow the notation in \Cref{ex:piece-wise linear in d=1 interpolation}.
+%     Let $u \in C^1([x_k,x_{k+1}])$ function is the following. By the intermediate value theorem we have that, for some $\xi_0 \in [0,1]$ we have $\frac{du}{dx} (\xi_k) = \frac{u(x_{k+1}) - u(x_k)}{x_{k+1}-x_k} = \frac{d \mathcal I_h}{dx} (x)$ for $x \in (x_k,x_{k+1})$.
+%     Therefore
+%     \begin{equation*}
+%         \left| \frac{du}{dx} (x) - \frac{d \mathcal I_h}{dx} (x) \right| \le \left| \int_{\xi_0}^x \frac{d^2u}{dx^2} (y) dy\right| \le |x-\xi_0|^{\frac 1 2} \left\| \frac{d^2u}{dx^2} \right\|_{L^2(x_k,x_{k+1})}.
+%     \end{equation*}
+%     Therefore
+%     \begin{equation}
+%         \label{eq:Galerkin linear interpolation error in one interval}
+%         \begin{aligned}
+%             \int_{x_k}^{x_{k+1}} \left| \frac{du}{dx} (x) - \frac{d \mathcal I_h u}{dx} (x) \right|^2
+%              & \le \left\| \frac{d^2u}{dx^2} \right\|_{L^2(x_k,x_{k+1})}^2 \int_{x_k}^{x_{k+1}} |x-\xi_k| dx
+%             \\
+%              & = \left\| \frac{d^2u}{dx^2} \right\|_{L^2(x_k,x_{k+1})}^2 \frac{|x_k-\xi_k|^2 + |x_{k+1}-\xi_k|^2}{2}
+%             \\
+%              & \le \left\| \frac{d^2u}{dx^2} \right\|_{L^2(x_k,x_{k+1})}^2 |x_{k+1} - x_k|^2.
+%         \end{aligned}
+%     \end{equation}
+%     Therefore, we can estimate
+%     \begin{align*}
+%         \left\| \frac{du}{dx} (x) - \frac{d \mathcal I_h u}{dx} (x) \right\|_{L^2(0,1)}^2
+%          & = \sum_{k=0}^{N-1} \left\| \frac{du}{dx} (x) - \frac{d \mathcal I_h u}{dx} (x) \right\|_{L^2(x_k,x_{k+1})}^2
+%         \\
+%          & \le \sum_{k=0}^{N-1} |x_{k+1} - x_k|^2\left\| \frac{d^2u}{dx^2} \right\|_{L^2(x_k,x_{k+1})}^2.
+%     \end{align*}
+%     We conclude the estimate in the statement for all $u \in C^1([0,1])$.
+%     Since the result holds for all $u \in C^1([0,1])$ it can be extended by density to all $u \in H^1(0,1)$.
+% \end{proof}
 
 We have not been careful with the constants. A sharper result is the following.
 
@@ -88,7 +78,6 @@ We have not been careful with the constants. A sharper result is the following.
     \label{ex:Galerkin Laplace piecewise linear Cea}
     % Let $\Omega = (0,1)$ and consider for $-\Delta u = f$ with $u(-1) = u(1) = 0$.
     In the notation of \Cref{ex:piece-wise linear in d=1 interpolation}, for all $u \in H^2(0,1)$ we have that
-    Then we have that
     \begin{align*}
         \| u - \mathcal I_h u \|_{L^2(0,1)}
          & \le \frac{h^2}{\pi^2} \left\| \frac{d^2u}{dx^2}  \right\|_{L^2} \\
@@ -171,3 +160,22 @@ We have not been careful with the constants. A sharper result is the following.
         \|u - u_h\|_{H^1(0,1)} \leq \frac{2h}{\pi} \left(1 + \frac{h^2}{\pi^2}\right)^{1/2} \|f\|_{L^2(0,1)}.
     \]
 \end{example}
+
+\subsection*{Exercises}
+\begin{exercises}
+    \item \label{ex:cea orthogonality}
+    Under the assumptions of \Cref{lem:cea}, prove Galerkin orthogonality:
+    \[
+        a(u-u_h,v_h)=0 \qquad \text{for all } v_h\in V_h.
+    \]
+    Deduce that, if we introduce the norm
+    \begin{equation}
+        \|u\|_a = a(u, u)^{\frac 1 2}
+    \end{equation}
+    then Céa's lemma says that $u_h$ is the best approximation of $u$ in $V_h$ with respect to the $\|\cdot\|_a$ norm, i.e.
+    \begin{equation}
+        \|u - u_h\|_a \le \inf_{v_h \in V_h} \|u - v_h\|_a.
+    \end{equation}
+
+    \item Prove \Cref{ex:Galerkin Laplace piecewise linear Cea naive}.
+\end{exercises}
