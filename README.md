@@ -26,21 +26,21 @@
       <td>2</td>
       <td>... for elliptic problems</td>
       <td>1.1.4-1.1.5</td>
-      <td><a href="#">FEM1dlinearLaplaceDirichlet.ipynb</a></td>
+      <td><a href="lectures/galerkin/FEMlinear1dLaplaceDirichlet.ipynb">FEMlinear1dLaplaceDirichlet.ipynb</a></td>
       <td>1.6</td>
     </tr>
     <tr>
       <td>3</td>
       <td>Céa's lemma</td>
       <td>1.1.6-1.1.8</td>
-      <td><a href="#">linearinterpolation.ipynb</a></td>
+      <td><a href="lectures/galerkin/linearinterpolation.ipynb">linearinterpolation.ipynb</a></td>
       <td>-</td>
     </tr>
     <tr>
       <td>4</td>
       <td>... for linear parabolic problems</td>
       <td>1.2</td>
-      <td><a href="#">FEM1dlinearHeatDirichlet.ipynb</a></td>
+      <td><a href="lectures/galerkin/FEMlinear1dHeatDirichlet.ipynb">FEMlinear1dHeatDirichlet.ipynb</a></td>
       <td>-</td>
     </tr>
     <tr>
@@ -69,14 +69,14 @@
       <td>8</td>
       <td>Finite-elements in d=1</td>
       <td>Chapter 3</td>
-      <td><a href="">Hermite.ipynb</a> and <a href="">Bsplines.ipynb</a></td>
+      <td><a href="lectures/finite-elements/d-1/Hermite/Hermite.ipynb">Hermite.ipynb</a> and <a href="lectures/finite-elements/d-1/Bsplines/Bsplines.ipynb">Bsplines.ipynb</a></td>
       <td>-</td>
     </tr>
     <tr>
       <td>9</td>
       <td>Finite-elements in d=2</td>
       <td>Chapter 4</td>
-      <td><a href="">FEMlinear2dLaplaceDirichlet</a></td>
+      <td><a href="lectures/finite-elements/d-greater-1/FEMlinear2dLaplaceDirichlet.ipynb">FEMlinear2dLaplaceDirichlet.ipynb</a></td>
       <td>-</td>
     </tr>
     <tr>
@@ -84,7 +84,7 @@
       <td>10</td>
       <td>Introduction: Galerkin v colocation</td>
       <td>Chapter 5</td>
-      <td><a href="">colocationChebyshev.ipnyb</a></td>
+      <td><a href="lectures/spectral/intro/colocationChebyshev.ipynb">colocationChebyshev.ipynb</a></td>
       <td>-</td>
     </tr><tr>
       <td>11</td>
@@ -96,7 +96,7 @@
       <td>12</td>
       <td>Orthogonal polynomials</td>
       <td>6.2-6.5</td>
-      <td><a href="">interpolationerror.ipynb</a></td>
+      <td><a href="lectures/spectral/basis/interpolationerror.ipynb">interpolationerror.ipynb</a></td>
       <td>-</td>
     </tr>
     <tr>
