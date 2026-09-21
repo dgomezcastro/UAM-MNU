@@ -185,6 +185,12 @@ We provide a result based on \namedCref{lem:Bramble-Hilbert} that can be found i
 
 \subsection*{Exercises}
 \begin{exercises}
+    \ex Prove that if $T \subset \mathbb R^2$ is a triangle and $v$ is a polynomial of degree $m$ in $T$ then we have that
+    \[
+        \|u\|_{L^\infty (T)} \le C(d,m,\frac{h_T}{\rho_T}) h^{-1} \|u\|_{L^1 (T)},
+    \]
+    where $C$ does not depend on $v$. Hint: pass to the reference triangle.
+
     \ex Let $K=(a,b)$ and let $\mathcal P=\mathbb R_1[x]$ with degrees of freedom
     $N_1(v)=v(a)$ and $N_2(v)=v(b)$. Compute the nodal basis and write the
     local interpolant $\mathcal I_Kv$. Prove that $\mathcal I_Kp=p$ for every
@@ -371,7 +377,7 @@ This very modest result can be extended to sub-division which are not affine equ
 
 \subsection{Assembling a basis of $V_h$}
 
-When the true solution $u \in C^r$ then the natural space to consider is $V_h = V \cap I_h C^r$ for some $r \ge 0$ since this will allow us to use \namedCref{lem:cea}. 
+When the true solution $u \in C^r$ then the natural space to consider is $V_h = V \cap I_h C^r$ for some $r \ge 0$ since this will allow us to use \namedCref{lem:cea}.
 We point out that
 \begin{equation*}
     \dim \mathcal P_{\mathcal T} = \sum_{K \in \mathcal T} \dim P_{K}

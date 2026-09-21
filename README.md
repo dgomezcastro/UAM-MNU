@@ -49,14 +49,14 @@
       <td>The finite-element formalism</td>
       <td>2.1-2.2</td>
       <td>-</td>
-      <td>2.1-2.2</td>
+      <td>2.1-2.3</td>
     </tr>
     <tr>
       <td>5</td>
       <td>Finite-elements spaces</td>
-      <td>2.3-2.4</td>
+      <td>2.4-2.5</td>
       <td>-</td>
-      <td>2.3-2.8</td>
+      <td>2.6-2.9</td>
     </tr>
     <tr>
       <td>6</td>
