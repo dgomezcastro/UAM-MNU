@@ -49,21 +49,21 @@
       <td>The finite-element formalism</td>
       <td>2.1-2.2</td>
       <td>-</td>
-      <td>2.1-2.3</td>
+      <td>2.1-2.4</td>
     </tr>
     <tr>
       <td>5</td>
       <td>Finite-elements spaces</td>
-      <td>2.4-2.5</td>
+      <td>2.5-2.6</td>
       <td>-</td>
-      <td>2.6-2.9</td>
+      <td>2.7-2.10</td>
     </tr>
     <tr>
       <td>6</td>
       <td>Finite-elements in d=1</td>
       <td>Chapter 3</td>
       <td><a href="lectures/finite-elements/d-1/Hermite/Hermite.ipynb">Hermite.ipynb</a> <br> <a href="lectures/finite-elements/d-1/Bsplines/Bsplines.ipynb">Bsplines.ipynb</a></td>
-      <td>-</td>
+      <td>3.1</td>
     </tr>
     <tr>
       <td>7</td>
