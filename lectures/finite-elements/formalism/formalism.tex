@@ -230,12 +230,15 @@ The usual procedure for build finite element meshes of a domain $\Omega$
     \end{enumerate}
 \end{definition}
 
-\begin{definition}[Global interpolant]
-    Let $\mathcal T$ be a sub-division of a domain $\Omega$ such that and for every $K \in \mathcal T$ we have a suitable finite element $(K,\mathcal P_K, \mathcal N_K)$.
-    The finite-element space of the sub-division is given by
+\begin{definition}[Finite-elements space]
+    Let $\Omega \subset \mathbb R^d$. A finite-elements space in $\Omega$ is given by: a sub-division $\mathcal T$ of $\Omega$ and a finite element $(K, \mathcal P_K, \mathcal N_K)$ in each $K \in \mathcal T$.
+    Then finite-element space is given by
     \begin{equation*}
-        \mathcal P_{\mathcal T} = \{ u \in L^0 (\Omega) : u|_K \in \mathcal P_K \}.
+        \mathcal P_{\mathcal T} \coloneqq \{ u : \Omega \to \mathbb R \text{ such that } u|_K \in \mathcal P_K \}.
     \end{equation*}
+\end{definition}
+
+\begin{definition}[Global interpolant of a finite-element space]
     We define the global interpolant piece-wise over each $K_i$ as
     \begin{equation*}
         (\mathcal I_{\mathcal T} v)\Big|_{K} = \mathcal I_K v, \qquad \forall K \in \mathcal T.
@@ -254,7 +257,6 @@ Notice that $K$ is open we have not defined the interpolant over $\partial K$, a
     In each $K_i$ set the finite element \Cref{ex:Lagrange element in an interval}.
     Then $\mathcal I_h$ is the piece-wise linear interpolation from \Cref{ex:Galerkin Laplace piecewise linear Cea}. It is defined on the space of continuous functions.
 \end{example}
-
 
 % \begin{definition}[$C^r$-finite element space]
 %     Let $\mathcal T$ be a sub-division such that and for every $K \in \mathcal T$ we have a suitable finite element $(K,\mathcal P, \mathcal N)$.
@@ -282,6 +284,37 @@ An important particular case of sub-division in $d=2$ is
     \end{quote}
     This means that $\overline K_i \cap \overline K_j$ is either empty or the complete shared edge.
 \end{definition}
+
+
+A very standard approach to sub-divisions passes by decomposing $\Omega$ into subdomains that are all equivalent, in the following sense.
+\begin{definition}[Reference element]
+    If in a subdivision every every element $(K, \mathcal P_K, \mathcal N_K)$ is affine equivalent to
+    $(\widehat{K}, \widehat{\mathcal P}, \widehat{\mathcal N})$,
+    we call this element the \emph{reference element}.
+\end{definition}
+
+\begin{remark}
+    When the nodal functions of the reference element are given by evaluation at certain points, $\widehat N_i (v) = \sum_j c_j \frac{\partial^{\alpha_j} v}{\partial^{\alpha_j} x}(\widehat x_i)$ there are several considerations:
+    \begin{enumerate}
+        \item The nodal local points translate to global nodal points by the affine equivalence. We may denote these points $x_{K,i} = F_K(\widehat x_i)$.
+
+              Likewise, we can build the nodal functions the nodal functions $\mathcal N_{K,i}$.
+        \item When $x_{K,i} = x_{L,j} \in \partial K \cap \partial J$ usually the global basis is usually constructed with continuity of the nodal functions:
+              \begin{equation*}
+                  \underline{\mathcal P_{\mathcal T}} \coloneqq \{ v \in \mathcal P_\mathcal T : \text{if } x_{K,i} = x_{L, j} \text{ then } N_{K,i}(v|_K) = N_{L, j}(v|_L) \}.
+              \end{equation*}
+
+        \item Hence, it is convenient to keep a list of \emph{global nodal functions} $N_i$ such that
+              \begin{equation*}
+                  \{N_1, \cdots, N_M\} = \{ N_{K,i} : K \in \mathcal T, i \in \{1, \cdots, \# \mathcal N_{\widehat K}\} \}.
+              \end{equation*}
+              It turns out that $\dim V_h = M$. Each value $N_i(v)$ is called a \emph{degree of freedom} of $\underline{\mathcal P_{\mathcal T}}$.
+
+        \item When all the points $\widehat x_i$ are different, this can be done by correctly labelling $x_{K,i}$.
+    \end{enumerate}
+\end{remark}
+
+
 \subsection*{Exercises}
 \begin{exercises}
     \ex Let $\mathcal T$ be a subdivision of an interval into open elements
@@ -302,6 +335,16 @@ An important particular case of sub-division in $d=2$ is
     edge. Draw the subdivision and explain why the phrase ``the complete shared
     edge'' is no longer sufficient to describe all intersections of element
     closures. Suggest a minimal refinement that restores the condition.
+
+    \ex
+    Let $\Omega = (-1,1)$ and
+    Consider the reference element $\widehat K = (0,1)$, $\widehat{\mathcal P}_K = \mathbb R_1[x]$
+    and the nodal functions $\widehat N_1(v) = v(0)$ and $\widehat N_2(v) = v(1)$.
+    \begin{enumerate}
+        \item Check that if we consider $x_0 = -1, \cdots, x_{N+1} = 1$, the piece-wise linear functions corresponds to the finite-element space given by the sub-division $(x_i, x_{i+1})$ and the affine-equivalent finite-elements, with the additional condition of continuity at $x_i$.
+        \item Observe that the global nodal functions are $N_i(v) = v(x_i)$ for $i = 0, \cdots, N+1$.
+        \item Notice that $H^1(\Omega) \cap \mathcal P_{\mathcal T} = \underline {\mathcal P_{\mathcal T}}$, but the intersection with $H_0^1(\Omega)$ is smaller.
+    \end{enumerate}
 
     % \emph{Solution.} Let $\Omega$ be the square with vertices $A,B,C,D$ in
     % counterclockwise order, and let $E$ be the midpoint of the diagonal $AC$.
