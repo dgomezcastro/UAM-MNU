@@ -13,3 +13,4 @@ mnu.pdf
 *.out
 *.tdo
 .DS_Store
+.vscode/settings.json
