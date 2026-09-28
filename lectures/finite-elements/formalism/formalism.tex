@@ -36,7 +36,7 @@ Notice that the interpolant is can be extended to any functional space $X$ such 
 
 \begin{remark}
     \label{rem:FEM formalism local interpolator at boundary}
-    Even though $K$ is open, it is common some nodal functions are $N_i(v) = \frac{d^\alpha v}{d x^\alpha}(x_i)$ with $x_i \in \partial K$. When $\mathcal P \in C^{|\alpha|}(\overline K)$ the evaluation is done in the sense of limits.
+    Even though $K$ is open, it is common some nodal functions are $N_i(v) = \sum_{\alpha_i} c_i \frac{d^{\alpha_i} v}{d x^{\alpha_i}}(x_i)$ with $x_i \in \partial K$. When $\mathcal P \in C^{|\alpha|}(\overline K)$ the evaluation is done in the sense of limits.
     This is specially relevant in the definition of the global interpolator.
 \end{remark}
 
@@ -50,6 +50,17 @@ Notice that the interpolant is can be extended to any functional space $X$ such 
     This is the piece-wise linear linear approximation.
     We made the one-interval estimate in \Cref{ex:Galerkin Laplace piecewise linear Cea}.
 \end{example}
+
+\subsection*{Exercises}
+\begin{exercises}
+    \ex[Hermite cubics] Let us take $K = (0,1)$ and $\mathcal P = \mathbb R_3[x]$
+    and the nodal functions
+    \begin{equation*}
+        N_1 (v) = v(0), \qquad N_2(v) = v(1), \qquad N_3(v) = \frac{dv}{dx} (0), \qquad N_4(v) = \frac{dv}{dx} (1).
+    \end{equation*}
+    Compute the nodal basis $\varphi_1, \cdots, \varphi_4$.
+    For historical reasons they are usually named $\theta_0, \cdots, \theta_3$.
+\end{exercises}
 
 \section{Affine equivalence}
 
@@ -377,7 +388,10 @@ This very modest result can be extended to sub-division which are not affine equ
 
 \subsection{Assembling a basis of $V_h$}
 
-When the true solution $u \in C^r$ then the natural space to consider is $V_h = V \cap I_h C^r$ for some $r \ge 0$ since this will allow us to use \namedCref{lem:cea}.
+When the true solution $u \in C^r$ then the natural space to consider is \begin{equation}
+    V_h = V \cap I_h C^r
+\end{equation}
+for some $r \ge 0$ since this will allow us to use \namedCref{lem:cea}.
 We point out that
 \begin{equation*}
     \dim \mathcal P_{\mathcal T} = \sum_{K \in \mathcal T} \dim P_{K}
