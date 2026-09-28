@@ -47,7 +47,7 @@ We pick as nodal functions
 As discussed in \Cref{ex:FEM affine equivalence Hermite cubics}, this is not affine equivalent to the element in $(0,1)$. However, the shape functions are
 \begin{equation*}
     \begin{aligned}
-        \psi_1(x) & = \theta_0 (\tfrac{x-a}{b-a}),       & \qquad \psi_2(x) & = \theta_1 (\tfrac{x-a}{b-a}),        \\
+        \psi_1(x) & = \theta_0 (\tfrac{x-a}{b-a}),       & \qquad \psi_2(x) & = \theta_1 (\tfrac{x-a}{b-a}),       \\
         \psi_3(x) & = (b-a) \theta_2 (\tfrac{x-a}{b-a}), & \qquad \psi_4(x) & = (b-a) \theta_3 (\tfrac{x-a}{b-a}).
     \end{aligned}
 \end{equation*}
@@ -82,8 +82,8 @@ $$
     \qquad
     w_{i} (x) =
     \begin{cases}
-        (x_{i}-x_{i-1}) \theta_3 \left( \frac{x-x_{i-1}}{x_{i}-x_{i-1}} \right) , & x \in [x_{i-1},x_{i})       \\
-        (x_{i+1}-x_{i}) \theta_2 (\frac{x-x_{i}}{x_{i+1}-x_{i}}) ,                & x \in [x_{i},x_{i+1})       \\
+        (x_{i}-x_{i-1}) \theta_3 \left( \frac{x-x_{i-1}}{x_{i}-x_{i-1}} \right) , & x \in [x_{i-1},x_{i}) \\
+        (x_{i+1}-x_{i}) \theta_2 (\frac{x-x_{i}}{x_{i+1}-x_{i}}) ,                & x \in [x_{i},x_{i+1}) \\
         0,                                                                        & \text{otherwise}.
     \end{cases}
 $$
@@ -168,7 +168,7 @@ Therefore, we only need to compute once and for all the reference matrices $\wid
 Using the explicit formulas
 \begin{equation*}
     \begin{aligned}
-        \theta_0 (\xi) & = 1 - 3 \xi^2 + 2 \xi^3,   & \qquad \theta_1 (\xi) & = 3 \xi^2 - 2 \xi^3, \\
+        \theta_0 (\xi) & = 1 - 3 \xi^2 + 2 \xi^3, & \qquad \theta_1 (\xi) & = 3 \xi^2 - 2 \xi^3, \\
         \theta_2 (\xi) & = \xi - 2 \xi^2 + \xi^3, & \qquad \theta_3 (\xi) & = - \xi^2 + \xi^3,
     \end{aligned}
 \end{equation*}
@@ -217,7 +217,7 @@ Then
 Similarly, if $i = 2I$ and $j = 2J + 1$, i.e. $\varphi_i = v_I$ and $\varphi_j = w_J$, we have
 \begin{align*}
     m_{2I, 2I+1}     & = h_{I-1}^2 \widehat M_{13} + h_I^2 \widehat M_{02} = \frac{22}{420} (h_I^2 - h_{I-1}^2), \\
-    m_{2I, 2(I+1)+1} & = h_I^2 \widehat M_{03} = -\frac{13}{420} h_I^2,                                        \\
+    m_{2I, 2(I+1)+1} & = h_I^2 \widehat M_{03} = -\frac{13}{420} h_I^2,                                          \\
     m_{2I, 2(I-1)+1} & = h_{I-1}^2 \widehat M_{12} = \frac{13}{420} h_{I-1}^2,
 \end{align*}
 and if $i = 2I + 1$ and $j = 2J+1$, i.e. $\varphi_i = w_I$ and $\varphi_j = w_J$, we have
@@ -254,3 +254,8 @@ If we also impose $u'(a) = u'(b) = 0$ (as for a clamped beam) we also remove the
     Due to \Cref{thm:Gauss integration}, Gaussian quadrature with $4$ points is exact for polynomials of degree $7$, so it is the natural choice.
     For $\widehat A$ and $\widehat B$ the integrands have degree $4$ and $2$, so $3$ and $2$ points suffice, respectively.
 \end{remark}
+
+\subsection*{Exercises}
+\begin{exercises}
+    \ex Solve the simplified beam equation $-\frac{d^4 u}{d x^4} = f$ in $\Omega=(-1,1)$ using different boundary conditions $u, u'$ at $x = \pm 1$.
+\end{exercises}
