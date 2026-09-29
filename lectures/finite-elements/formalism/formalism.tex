@@ -36,8 +36,9 @@ Notice that the interpolant is can be extended to any functional space $X$ such 
 
 \begin{remark}
     \label{rem:FEM formalism local interpolator at boundary}
-    Even though $K$ is open, it is common some nodal functions are $N_i(v) = \sum_{\alpha_i} c_i \frac{d^{\alpha_i} v}{d x^{\alpha_i}}(x_i)$ with $x_i \in \partial K$. When $\mathcal P \in C^{|\alpha|}(\overline K)$ the evaluation is done in the sense of limits.
-    This is specially relevant in the definition of the global interpolator.
+    Even though $K$ is open, it is common some nodal functions are $N_i(v) = \sum_{\alpha_i} c_i \frac{d^{\alpha_i} v}{d x^{\alpha_i}}(x_i)$ with $x_i \in \partial K$
+    using boundary points.
+    Then, we $\mathcal P \subset C_u^{|\alpha|}(K)$, i.e., the functions that can be continuous extended to the boundary, and the evaluation is done in the sense of limits.
 \end{remark}
 
 \begin{example}[The one-dimensional Lagrange element in $(x_1,x_2)$]
@@ -218,9 +219,9 @@ We provide a result based on \namedCref{lem:Bramble-Hilbert} that can be found i
 \end{exercises}
 
 
-\section{Sub-divisions}
+\section{Finite-element space}
 
-To make a mesh, our aim is to ``glue together'' many finite elements
+To make a mesh, our aim is to ``glue together'' many finite elements.
 The usual procedure for build finite element meshes of a domain $\Omega$
 \begin{definition}[Sub-division of the computational domain]
     A finite collection $\mathcal T$ of open sets $K_i$ such that
@@ -241,21 +242,99 @@ The usual procedure for build finite element meshes of a domain $\Omega$
 \begin{definition}[Global interpolant of a finite-element space]
     We define the global interpolant piece-wise over each $K_i$ as
     \begin{equation*}
-        (\mathcal I_{\mathcal T} v)\Big|_{K} = \mathcal I_K v, \qquad \forall K \in \mathcal T.
+        (\mathcal I_{\mathcal T} v)\Big|_{K} = \mathcal I_K (v|_K), \qquad \forall K \in \mathcal T.
     \end{equation*}
+    We will often denote the sud-division as $\mathcal T_h$ and the interpolation as $I_h$.
 \end{definition}
 \begin{remark}
     When $v$ are in Sobolev spaces, it is important to recall \Cref{rem:FEM formalism local interpolator at boundary}.
 \end{remark}
 
 As it was the case with $\mathcal I_K$, we will not pay too much attention at this stage at the domain of definition of $\mathcal I_{\mathcal T}$.
+Notice that $K$ is open we have not defined the interpolant over $\partial K$, and it may be discontinuous between two elements of $\mathcal T$.
 
-Notice that $K$ is open we have not defined the interpolant over $\partial K$, and it may be discontinuous between two elements of $\mathcal K$.
+\begin{definition}[Global nodal and basis functions]
+    Consider a finite element space the nodal functions of $K$, $N_i^{(K)} \in \mathcal N_K$ are all $\mathcal P_K \to \mathbb R$.
+    We define the global nodal functions $N_{K,i} : \mathcal P_{\mathcal T} \to \mathbb R$ as
+    \begin{equation*}
+        N_{K,i}(v) = N^{(K)}_i(v|_{\overline K}).
+    \end{equation*}
+    We introduce the set of global nodal functions
+    \begin{equation*}
+        \mathcal N_{\mathcal T} = \{ N_{K,i} : K \in \mathcal T, i \in \{1, \cdots, \# \mathcal N_{K}\} \}.
+    \end{equation*}
+\end{definition}
+
 
 \begin{example}
-    In $d=1$ we can take $\Omega = (0,1)$, a partitition $x_0 = 0, \cdots, x_N = 1$ and the finite elements $K_i = (x_{i-1},x_i)$ for $i = 1, \cdots, N$.
-    In each $K_i$ set the finite element \Cref{ex:Lagrange element in an interval}.
-    Then $\mathcal I_h$ is the piece-wise linear interpolation from \Cref{ex:Galerkin Laplace piecewise linear Cea}. It is defined on the space of continuous functions.
+    \label{eq:finite-element space in (-1,1)}
+    In $d=1$ we can take $\Omega = (-1,1)$,
+    and consider
+    \[
+        \mathcal T = \{ (-1,0), (0,1) \}.
+    \]
+    We consider the reference $\widehat K = (0,1)$ with piece-wise linear functions. The nodal reference functions are $\widehat{\mathcal N}_1(v) = v(0)$ and $\widehat{\mathcal N}_2(v) =v(1)$.
+
+    There are two basis functions in each element
+    \begin{align*}
+        \phi_1^{(-1,0)}(x) & = 1+x & \phi_2^{(-1,0)}(x) & = -x
+        \\
+        \phi_1^{(0,1)}(x)  & = x   & \phi_2^{(0,1)}(x)  & = 1-x
+    \end{align*}
+    The space $\mathcal P_{\mathcal T} = \spannedby\{\varphi_1, \varphi_2, \varphi_3, \varphi_4\}$ where
+    \begin{align*}
+        \varphi_1(x) & = \begin{dcases}
+                             -x & x \in (-1,0), \\
+                             0  & x \in (0,1)
+                         \end{dcases}
+        \qquad       &                            &
+        \varphi_2(x) = \begin{dcases}
+                           1+x & x \in (-1,0), \\
+                           0   & x \in (0,1)
+                       \end{dcases}
+        \\
+        \varphi_3(x) & = \begin{dcases}
+                             0   & x \in (-1,0), \\
+                             1-x & x \in (0,1)
+                         \end{dcases}
+        \qquad       &                            & \varphi_4(x) = \begin{dcases}
+                                                                       0 & x \in (-1,0), \\
+                                                                       x & x \in (0,1)
+                                                                   \end{dcases}
+    \end{align*}
+    However, in order to construct the space $\mathcal V_h$ we will interested in the intersections
+    \begin{equation*}
+        \mathcal P_{\mathcal T} \cap H^1(-1,1) = \mathcal P_{\mathcal T} \cap C([-1,1]) = \spannedby \{ \varphi_1, \varphi_2 + \varphi_3, \varphi_4 \}
+    \end{equation*}
+    These are hats like those given in \Cref{ex:piece-wise linear in d=1}, and $\mathcal I_{\mathcal T}$ is the piece-wise linear interpolation from \Cref{ex:Galerkin Laplace piecewise linear Cea}.
+
+    Let us now compute the nodal functions.
+    By using affine equivalent, we have that
+    \begin{align*}
+        N_1^{(-1,0)}(v) & = v(-1) & N_2^{(-1,0)}(v) & = v(0)  \\
+        N_1^{(0,1)}(v)  & = v(0)  & N_2^{(1,0)}(v)  & = v(1).
+    \end{align*}
+    Notice that these functions are defined for $v \in C^0$ of each sub-interval.
+    Going back to \Cref{rem:FEM formalism local interpolator at boundary}, rigurously speaking we have the nodal functions
+    \begin{equation*}
+        N_1^{(\mathcal T)}(v) = v(-1^+) , \quad
+        N_2^{(\mathcal T)}(v) = v(0^-), \quad
+        N_3^{(\mathcal T)}(v) = v(0^+), \quad
+        N_4^{(\mathcal T)}(v) = v(1^-).
+    \end{equation*}
+    This is 4 degrees of freedom because we are not assuming any continuity.
+
+    Notice that in $C([-1,1])$ we only have
+    \begin{equation*}
+        (\mathcal N_{\mathcal T})\big|_{C[-1,1]} = \{ v \mapsto v(-1), v \mapsto v(0), v \mapsto v(1) \}.
+    \end{equation*}
+    and leaves three degrees of freedom.
+    Notice that the adjoint basis is precisely $\{\varphi_1, \varphi_2 + \varphi_3, \varphi_4\}$.
+
+    \bigskip
+
+    The correct $V_h$ for \namedCref{example:Dirichlet Laplacian} is $V_h = H_0^1(\Omega) \cap I_h C(\Omega) = V \cap \mathcal P_{\mathcal T}$. Notice that $I_h C(a,b) = I_h C^r(a,b)$ for any $r \ge 0$. For \namedCref{ex:Galerkin Hemholz d=1} the space would be $V_h = H^1(\Omega) \cap I_h C^r(\Omega) = V \cap \mathcal P_{\mathcal T}$.
+
 \end{example}
 
 % \begin{definition}[$C^r$-finite element space]
@@ -288,32 +367,44 @@ An important particular case of sub-division in $d=2$ is
 
 A very standard approach to sub-divisions passes by decomposing $\Omega$ into subdomains that are all equivalent, in the following sense.
 \begin{definition}[Reference element]
-    If in a subdivision every every element $(K, \mathcal P_K, \mathcal N_K)$ is affine equivalent to
+    If in a subdivision every element $(K, \mathcal P_K, \mathcal N_K)$ is affine equivalent to
     $(\widehat{K}, \widehat{\mathcal P}, \widehat{\mathcal N})$,
     we call this element the \emph{reference element}.
 \end{definition}
 
+\paragraph{Assembling a basis of $V_h$.}
+
+When the true solution $u \in C^r (\overline \Omega)$ then the natural space to consider is \begin{equation}
+    V_h := V \cap I_h C^r \subset V \cap \mathcal P_{\mathcal T}
+\end{equation}
+since this will allow us to use \namedCref{lem:cea}.
+The $\subset$ here is usually an $=$.
+
+We will see this effect clearly in some bases in dimension $d=1$, and then again for some examples in dimension $d = 2$.
+
 \begin{remark}
-    When the nodal functions of the reference element are given by evaluation at certain points, $\widehat N_i (v) = \sum_j c_j \frac{\partial^{\alpha_j} v}{\partial^{\alpha_j} x}(\widehat x_i)$ there are several considerations:
-    \begin{enumerate}
-        \item The nodal local points translate to global nodal points by the affine equivalence. We may denote these points $x_{K,i} = F_K(\widehat x_i)$.
+    In practice, the nodal functions are evaluation of the function and its derivatives at certain points $x_i^{(K)}$. When $x_i^{(K)} \in \partial K$, the nodal functions are usually chosen so that $N_{K,i} = N_{L,j}$ between adjacent sub-domains $K$ and $L$.
+    This allows "natural" glueing between the local basis functions so get a basis functions of $V_h$ (similarly to \Cref{eq:finite-element space in (-1,1)})
+    and to the formula
+    \begin{equation*}
+        \dim V_h = \# \left( (\mathcal N_{\mathcal T})\big|_{V \cap C^r(\overline \Omega)}\right).
+    \end{equation*}
 
-              Likewise, we can build the nodal functions the nodal functions $\mathcal N_{K,i}$.
-        \item When $x_{K,i} = x_{L,j} \in \partial K \cap \partial J$ usually the global basis is usually constructed with continuity of the nodal functions:
-              \begin{equation*}
-                  \underline{\mathcal P_{\mathcal T}} \coloneqq \{ v \in \mathcal P_\mathcal T : \text{if } x_{K,i} = x_{L, j} \text{ then } N_{K,i}(v|_K) = N_{L, j}(v|_L) \}.
-              \end{equation*}
 
-        \item Hence, it is convenient to keep a list of \emph{global nodal functions} $N_i$ such that
-              \begin{equation*}
-                  \{N_1, \cdots, N_M\} = \{ N_{K,i} : K \in \mathcal T, i \in \{1, \cdots, \# \mathcal N_{\widehat K}\} \}.
-              \end{equation*}
-              It turns out that $\dim V_h = M$. Each value $N_i(v)$ is called a \emph{degree of freedom} of $\underline{\mathcal P_{\mathcal T}}$.
 
-        \item When all the points $\widehat x_i$ are different, this can be done by correctly labelling $x_{K,i}$.
-    \end{enumerate}
+    The computational implementation of the finite element method requires careful labelling of the finite elements $K$ and the nodal bases $\psi_i$ within each element, in order to assemble a suitable basis $\varphi_i$ for $V_h$, and furthermore compute the linear algebra representation by computing $a(\varphi_j,\varphi_i)$ and $\prodH{\varphi_j}{\varphi_i}$.
+    We will not discuss this difficulty in dimension $d > 1$.
 \end{remark}
 
+
+\begin{remark}[On triangulations]
+    Given a grid of points in the plane $x_i$, it is not clear how to pick suitable triangles for the finite-elements methods.
+    Our proof suggests one must control $\mu_K$.
+    One approach in this direction is to use \href{https://duckduckgo.com/?q=delaunay+triangulation&t=osx&ia=web}{Delaunay triangulations}.
+    There is a rich community of algorithms for triangulation. See, for example
+    \\
+    \url{https://www.cs.cmu.edu/~quake/triangle.html}
+\end{remark}
 
 \subsection*{Exercises}
 \begin{exercises}
@@ -323,6 +414,7 @@ A very standard approach to sub-divisions passes by decomposing $\Omega$ into su
     $\mathcal I_{\mathcal T}v$ is continuous on $[x_0,x_N]$ if and only if the
     values prescribed at the common endpoints agree. Deduce that the global
     interpolant is uniquely determined by the values of $v$ at the nodes.
+    How is this related to the nodal functions?
 
     \ex Consider two triangles $K_1$ and $K_2$ sharing an edge $E$. For the
     affine Lagrange element, prove that if the nodal values at the two
@@ -335,16 +427,6 @@ A very standard approach to sub-divisions passes by decomposing $\Omega$ into su
     edge. Draw the subdivision and explain why the phrase ``the complete shared
     edge'' is no longer sufficient to describe all intersections of element
     closures. Suggest a minimal refinement that restores the condition.
-
-    \ex
-    Let $\Omega = (-1,1)$ and
-    Consider the reference element $\widehat K = (0,1)$, $\widehat{\mathcal P}_K = \mathbb R_1[x]$
-    and the nodal functions $\widehat N_1(v) = v(0)$ and $\widehat N_2(v) = v(1)$.
-    \begin{enumerate}
-        \item Check that if we consider $x_0 = -1, \cdots, x_{N+1} = 1$, the piece-wise linear functions corresponds to the finite-element space given by the sub-division $(x_i, x_{i+1})$ and the affine-equivalent finite-elements, with the additional condition of continuity at $x_i$.
-        \item Observe that the global nodal functions are $N_i(v) = v(x_i)$ for $i = 0, \cdots, N+1$.
-        \item Notice that $H^1(\Omega) \cap \mathcal P_{\mathcal T} = \underline {\mathcal P_{\mathcal T}}$, but the intersection with $H_0^1(\Omega)$ is smaller.
-    \end{enumerate}
 
     % \emph{Solution.} Let $\Omega$ be the square with vertices $A,B,C,D$ in
     % counterclockwise order, and let $E$ be the midpoint of the diagonal $AC$.
@@ -429,77 +511,7 @@ This very modest result can be extended to sub-division which are not affine equ
     Again, this result holds between more general $W^{k,p}$ and $W^{m,p}$, and can be found in \cite{Suli}.
 \end{remark}
 
-\subsection{Assembling a basis of $V_h$}
 
-When the true solution $u \in C^r$ then the natural space to consider is \begin{equation}
-    V_h = V \cap I_h C^r
-\end{equation}
-for some $r \ge 0$ since this will allow us to use \namedCref{lem:cea}.
-We point out that
-\begin{equation*}
-    \dim \mathcal P_{\mathcal T} = \sum_{K \in \mathcal T} \dim P_{K}
-\end{equation*}
-If we consider $V_h = V \cap \mathcal P_{\mathcal T}$ we may get odd behaviours.
-\begin{example}
-    If we take $\Omega = (0,2)$, $K_1 = (0,1)$, $K_2 = (1, 2)$, and piece-wise linear elements, then $\mathcal P_{\mathcal T}$ is generated by the all possible combinations of the nodal basis
-    \begin{gather*}
-        \varphi_1(x) = \begin{dcases}
-            1-x & x \in (0,1), \\
-            0   & x \in (1,2)
-        \end{dcases}
-        \qquad
-        \varphi_2(x) = \begin{dcases}
-            x   & x \in (0,1), \\
-            2-x & x \in (1,2)
-        \end{dcases}
-        \qquad
-        \varphi_3(x) = \begin{dcases}
-            0   & x \in (0,1), \\
-            x-1 & x \in (1,2)
-        \end{dcases}
-        \\
-        \varphi_4(x) = \begin{dcases}
-            1-x & x \in (0,1), \\
-            x   & x \in (1,2)
-        \end{dcases}
-        \qquad
-        \varphi_5(x) = \begin{dcases}
-            x   & x \in (0,1), \\
-            x-1 & x \in (1,2)
-        \end{dcases}
-    \end{gather*}
-    Clearly $\varphi_4$ and $\varphi_5$ are not continuous.
-    When we request more regularity, we must drop some basis functions
-    \begin{equation*}
-        \mathcal P_{\mathcal T} \cap H^1 (0,2) = \spannedby\{ \varphi_1, \varphi_2, \varphi_3 \}.
-    \end{equation*}
-    If we add some extra conditions, we drop even more basis functions
-    \begin{equation*}
-        \mathcal P_{\mathcal T} \cap H^1_0 (0,2) = \spannedby\{\varphi_2\}.
-    \end{equation*}
-    If we require too much regularity, we are left with only the trivial element $\mathcal P_{\mathcal T} \cap H^2 (0,2) = \{0\}$.
-
-    \bigskip
-
-    The correct $V_h$ for \namedCref{example:Dirichlet Laplacian} is $V_h = H_0^1(\Omega) \cap I_h C(\Omega) = V \cap \mathcal P_{\mathcal T}$. Notice that $I_h C(a,b) = I_h C^r(a,b)$ for any $r \ge 0$. For \namedCref{ex:Galerkin Hemholz d=1} the space would be $V_h = H^1(\Omega) \cap I_h C^r(\Omega) = V \cap \mathcal P_{\mathcal T}$.
-\end{example}
-
-We will see this effect clearly in some bases in dimension $d=1$, and then again for some examples in dimension $d = 2$.
-
-\begin{remark}
-    The computational implementation of the finite element method requires careful labelling of the finite elements $K$ and the nodal bases $\psi_i$ within each element, in order to assemble a suitable basis $\varphi_i$ for $V_h$, and furthermore compute the linear algebra representation by computing $a(\varphi_j,\varphi_i)$ and $\prodH{\varphi_j}{\varphi_i}$.
-    We will not discuss this difficulty in dimension $d > 1$.
-\end{remark}
-
-
-\begin{remark}[On triangulations]
-    Given a grid of points in the plane $x_i$, it is not clear how to pick suitable triangles for the finite-elements methods.
-    Our proof suggests one must control $\mu_K$.
-    One approach in this direction is to use \href{https://duckduckgo.com/?q=delaunay+triangulation&t=osx&ia=web}{Delaunay triangulations}.
-    There is a rich community of algorithms for triangulation. See, for example
-    \\
-    \url{https://www.cs.cmu.edu/~quake/triangle.html}
-\end{remark}
 
 \subsection*{Exercises}
 \begin{exercises}
