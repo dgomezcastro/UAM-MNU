@@ -1,12 +1,12 @@
 \section{Chebyshev Polynomials}
 \label{sec:Chebyshev polynomials}
-The Chebyshev polynomials of first kind are the eigenfunctions of the singular \eqref{eq:Sturm-Liouville} with $p(x) = \sqrt{1-x^2}$, $q = 0$, and $w = (1-x^2)^{-\frac 1 2}$
+The Chebyshev polynomials of the first kind are the eigenfunctions of the singular Sturm--Liouville problem \eqref{eq:Sturm-Liouville} with $p(x) = \sqrt{1-x^2}$, $q = 0$, and $w = (1-x^2)^{-\frac 1 2}$
 \begin{equation*}
-    \frac{d}{dx} \left( \sqrt{1-x^2} \frac{dT_k}{dx} \right) =  \frac{-k^2}{\sqrt{1-x^2}} T_k(x).
+    -\frac{\diff}{\diff x} \left( \sqrt{1-x^2} \frac{\diff T_k}{\diff x} \right) =  \frac{k^2}{\sqrt{1-x^2}} T_k(x).
 \end{equation*}
 
 \begin{remark}
-    The reason of choosing $p$ degenerate at $x = \pm 1$ (i.e., $p(\pm 1) = 0$) is justified by \Cref{rem:Sturm-Liouville degenerate}.
+    The reason for choosing $p$ degenerate at $x = \pm 1$ (i.e., $p(\pm 1) = 0$) is justified by \Cref{rem:Sturm-Liouville degenerate}.
     The choice of a weight $w$ that is singular at $x = \pm 1$ can be explained by \Cref{sec:Runge's phenomenon}, although $P_N u$ is not the interpolation.
     It is also common in this framework that most of the error happens near the boundary $x = \pm 1$.
     We expect the $L^\infty$-error to improve if we work with $L^2_w$-error for $w$ singular on the boundary instead of $L^2$-error.
@@ -39,33 +39,33 @@ We have the recurrence relation
 
 We have that
 \begin{equation*}
-    \|u - P_N u\|_{L^2_w (-1,1)} \le C N^{-m} \| u \|_{H^m_w (-1,1)}.
+    \|u - P_N u\|_{L^2_w (-1,1)} \le C N^{-m} \| u \|_{H^m_w (-1,1)},
 \end{equation*}
-The same hols for $I_N$.
+where $H^m_w$ is the weighted Sobolev space. The same holds for $I_N$ at the Gauss or Gauss--Lobatto nodes.
 
-\begin{example}[Gauss-Lobatto integration for the Chebyshev weight]
+\begin{example}[Gauss--Lobatto integration for the Chebyshev weight]
     \label{ex:Chebyshev Gauss-Lobatto}
-    Let $w = (1 - x^2)^{-\frac 1 2}$.
-    We to apply in \Cref{thm:Gauss-Lobatto integration Jacobi weights} we get precisely
+    Let $w = (1 - x^2)^{-\frac 1 2}$, i.e., $\alpha = \beta = -\frac 1 2$.
+    Applying \Cref{thm:Gauss-Lobatto integration Jacobi weights} we get precisely
     \begin{equation*}
-        x_k = \cos \frac{k \pi}{N} \text{ for } k \in \{0, \cdots, N \},
+        x_k = \cos \frac{k \pi}{N} \text{ for } k \in \{0, \dots, N \},
     \end{equation*}
     and
     \begin{equation*}
-        w_0 = w_N = \frac{\pi}{2N}, \qquad w_k = \frac{\pi}N \text{ for } k \in \{1, \cdots, N-1\}.
+        w_0 = w_N = \frac{\pi}{2N}, \qquad w_k = \frac{\pi}N \text{ for } k \in \{1, \dots, N-1\}.
     \end{equation*}
 \end{example}
 
-The Chebyschev polynomials of second kind are given by
+The Chebyshev polynomials of the second kind are given by
 \begin{equation*}
-    U_n (x) = \frac{\sin (n+1) \arccos x}{\sin n \arccos x }
+    U_n (x) = \frac{\sin \big( (n+1) \arccos x \big)}{\sin \left( \arccos x \right)}.
 \end{equation*}
 We have that
 \begin{equation}
     \label{eq:Chebyshev derivatives}
-    \frac{dT_n}{dx} = n U_{n-1}, \qquad \frac{d U_n}{dx} = \frac{(n+1) T_{n+1} - x U_n}{x^2 - 1}, \qquad \frac{d^2T_n}{dx^2} = n \frac{n T_n - x U_{n-1}}{x^2 - 1}.
+    \frac{\diff T_n}{\diff x} = n U_{n-1}, \qquad \frac{\diff U_n}{\diff x} = \frac{(n+1) T_{n+1} - x U_n}{x^2 - 1}, \qquad \frac{\diff^2T_n}{\diff x^2} = n \frac{n T_n - x U_{n-1}}{x^2 - 1}.
 \end{equation}
 
 \subsection{Differentiation}
 
-When $x_j$ the Gauss-Lobatto points \namedCref{ex:Chebyshev Gauss-Lobatto} the coefficients of these matrices can be found in \cite[Section 2.4]{CanutoHussainiQuarteroniZang2011}.
+When the $x_j$ are the Gauss--Lobatto points of \namedCref{ex:Chebyshev Gauss-Lobatto}, the coefficients of the differentiation matrices $\mat D_N$ of \Cref{sec:spectral collocation linear algebra} can be found explicitly in \cite[Section 2.4]{CanutoHussainiQuarteroniZang2011}.

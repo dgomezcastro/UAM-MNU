@@ -20,7 +20,7 @@
 \end{definition}
 
 \begin{definition}
-    A function $u:\Omega \to \mathbb R$ is absolutely continuous if there exists a modulus of continuity $\omega$ such that
+    A function $u:\Omega \to \mathbb R$ is uniformly continuous if there exists a modulus of continuity $\omega$ such that
     \begin{equation*}
         |u(x) - u(y)| \le \omega(|x-y|) \quad \forall x,y \in \Omega.
     \end{equation*}
@@ -36,39 +36,39 @@
 \subsection{Sobolev Spaces}
 
 \begin{definition}[Sobolev Space $W^{1,p}$]
-    For $p \in [1,\infty)$ we say that $u \in W^{1,p} (\Omega)$ if $u \in L^p (\Omega)$ and there exist $g_1, \cdots, g_n \in L^p(\Omega)$ such that
+    Let $\Omega \subset \mathbb R^d$ be open. For $p \in [1,\infty)$ we say that $u \in W^{1,p} (\Omega)$ if $u \in L^p (\Omega)$ and there exist $g_1, \dots, g_d \in L^p(\Omega)$ such that
     \begin{equation*}
-        \int_\Omega u \frac{\partial \varphi}{\partial x_i} = - \int_\Omega g_i \varphi .
+        \int_\Omega u \frac{\partial \varphi}{\partial x_i} = - \int_\Omega g_i \varphi , \qquad \forall \varphi \in C_c^\infty(\Omega), i \in \{1, \dots, d\}.
     \end{equation*}
     In this case, we call $g_i$ the weak derivative of $u$ in the direction $x_i$, denote $\frac{\partial u}{\partial x_i} = g_i$, and introduce
     \begin{equation*}
-        [u]_{W^{1,p}(\Omega)} \defeq \sum_{i=1}^n \| g_i \|_{L^p (\Omega)}, \qquad
+        [u]_{W^{1,p}(\Omega)} \defeq \sum_{i=1}^d \| g_i \|_{L^p (\Omega)}, \qquad
         \|u\|_{W^{1,p}(\Omega)} \defeq \|u\|_{L^p (\Omega)} + [u]_{W^{1,p} (\Omega)}.
     \end{equation*}
 \end{definition}
 
 \begin{strongtheorem}[Glueing theorem]
     \label{thm:H1 glueing}
-    Let $\omega_1, \omega_2, \Omega$ be bounded open set of $\mathbb R^n$ such that $\overline \Omega = \overline \omega_1 \cup \overline\omega_2$ and $\omega_1 \cap \omega_2 = \emptyset$.
+    Let $\omega_1, \omega_2, \Omega$ be bounded open sets of $\mathbb R^d$ such that $\overline \Omega = \overline \omega_1 \cup \overline\omega_2$ and $\omega_1 \cap \omega_2 = \emptyset$.
     Assume $\partial \omega_1, \partial \omega_2, \partial \Omega$ are Lipschitz continuous. Let $u_i \in C^1 (\overline {\omega_i})$ and define
     \begin{equation*}
         u = \begin{dcases}
-            u_1 & \text{in } \Omega_1  \\
-            u_2 & \text{in } \Omega_2.
+            u_1 & \text{in } \omega_1  \\
+            u_2 & \text{in } \omega_2,
         \end{dcases}
         \qquad
         g_k =
         \begin{dcases}
-            \frac{\partial u_1}{\partial x_k} & \text{in } \Omega_1  \\
-            \frac{\partial u_2}{\partial x_k} & \text{in } \Omega_2.
+            \frac{\partial u_1}{\partial x_k} & \text{in } \omega_1  \\
+            \frac{\partial u_2}{\partial x_k} & \text{in } \omega_2.
         \end{dcases}
     \end{equation*}
     For $\varphi \in C_c^\infty(\Omega)$ we have that
     \begin{equation*}
-        \int_\Omega u \frac{\partial \varphi}{\partial x_k} = - \int_\Omega g_k \varphi + \int_{\partial \omega_1 \cap \partial \omega_2} (u_1 - u_2) \varphi n_{\omega_1} \cdot e_k .
+        \int_\Omega u \frac{\partial \varphi}{\partial x_k} = - \int_\Omega g_k \varphi + \int_{\partial \omega_1 \cap \partial \omega_2} (u_1 - u_2) \varphi \, n_{\omega_1} \cdot e_k ,
     \end{equation*}
     where $n_{\omega_1}$ is the exterior unit normal to $\omega_1$.
-    In particular, $u \in H^1 (\Omega)$ if and only if $u_1 = u_2$ in $\partial \omega_1 \cap \partial \omega_2$.
+    In particular, $u \in H^1 (\Omega)$ if and only if $u_1 = u_2$ on $\partial \omega_1 \cap \partial \omega_2$.
 \end{strongtheorem}
 
 % \section{Compactness Theorems}
@@ -79,14 +79,14 @@
 
 % \subsection{Aubin-Lions / Aubin-Simons Theorem}
 
-\section{The Bramble-Hilbert lemma}
+\section{The Bramble--Hilbert lemma}
 
-\begin{lemma}[Bramble-Hilbert]
+\begin{lemma}[Bramble--Hilbert]
     \label{lem:Bramble-Hilbert}
-    Suppose that $\Omega$ is a bounded open set of $\mathbb R^d$, star-shaped with respect to every point on a set $B \subset \Omega$ of positive measure.
+    Suppose that $\Omega$ is a bounded open set of $\mathbb R^d$, star-shaped with respect to every point of a ball $B \subset \Omega$.
     Let $m \ge 1$, $p \in (1,\infty)$, and $F: W^{m,p} (\Omega) \to \mathbb R$ be linear and continuous. Assume that it vanishes for polynomials of degree up to $m-1$, i.e.,
     \begin{equation*}
-        F(P) = 0, \qquad \forall P \in \mathbb R_{m-1}[x].
+        F(P) = 0, \qquad \forall P \in \mathbb R_{m-1}[x_1, \dots, x_d].
     \end{equation*}
     Then, we have that
     \begin{equation*}

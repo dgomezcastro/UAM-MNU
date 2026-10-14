@@ -28,7 +28,7 @@
     </tr>
     <tr>
       <td>2</td>
-      <td>Lemmas of Céa, Aubin-Nietsche, and Strang</td>
+      <td>Lemmas of Céa, Aubin–Nitsche, and Strang</td>
       <td>1.1.6-1.1.8</td>
       <td><a href="lectures/galerkin/linearinterpolation.ipynb">linearinterpolation.ipynb</a>
       </td>

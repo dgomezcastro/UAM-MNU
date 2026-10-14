@@ -13,11 +13,11 @@
 \begin{proof}
     For any $v_h \in V_h$ we can write
     \begin{equation*}
-        \alpha \|u - u_h\|_V^2 \le a(u-u_h, u - u_h) = a(u - u_h, u - v_h) + a(u-u_h, v_h - u_h)
+        \alpha^* \|u - u_h\|_V^2 \le a(u-u_h, u - u_h) = a(u - u_h, u - v_h) + a(u-u_h, v_h - u_h).
     \end{equation*}
-    Since $v_h - u_h \in V_h$ we have $a(u-u_h, v_h - u_h) = 0$. Using the continuity of $a$
+    Since $v_h - u_h \in V_h$, subtracting \eqref{eq:Galerkin elliptic variational discrete} from \eqref{eq:Galerkin elliptic variational} we have $a(u-u_h, v_h - u_h) = 0$. Using the continuity of $a$
     \begin{equation*}
-        \alpha \|u - u_h\|_V^2 \le a(u - u_h, u - v_h) \le M \| u - u_h \|_V \|u - v_h \|_V.
+        \alpha^* \|u - u_h\|_V^2 \le a(u - u_h, u - v_h) \le M \| u - u_h \|_V \|u - v_h \|_V.
     \end{equation*}
     We conclude the result.
 \end{proof}
@@ -25,20 +25,20 @@
 \begin{example}
     \label{ex:piece-wise linear in d=1 interpolation}
     Consider \namedCref{ex:Galerkin Laplace d=1}.
-    We take $V = H_0^1 (0,1)$, and $a(u,v) = \int_{0}^1 \frac{du}{dx}\frac{dv}{dx}$.
+    We take $V = H_0^1 (0,1)$, and $a(u,v) = \int_{0}^1 \frac{\diff u}{\diff x}\frac{\diff v}{\diff x}$.
     Following the notation in \namedCref{ex:piece-wise linear in d=1}, for $u \in H^1_0 (0,1)$ we define
     \begin{equation}
         \mathcal I_h u (x) \defeq \sum_{i=0}^{N} u(x_i) \varphi_i(x).
     \end{equation}
-    Clearly $\mathcal I_h u \in V_h$. Hence, a suitable upper bound for \namedCref{lem:cea} is $[u - \mathcal I_h u]_{H^1(0,1)}$.
+    Clearly $\mathcal I_h u \in V_h$. Hence, a suitable upper bound for \namedCref{lem:cea} is $\|u - \mathcal I_h u\|_{H^1(0,1)}$.
 \end{example}
 
-Using Barron's rule, it is easy to prove the following estimate
+Using the fundamental theorem of calculus (Barrow's rule), it is easy to prove the following estimate
 \begin{lemma}[Naive estimate of the error of the linear interpolation in $d=1$]
     \label{ex:Galerkin Laplace piecewise linear Cea naive}
     In the notation of \Cref{ex:piece-wise linear in d=1 interpolation}, for all $u \in H^2(0,1)$ we have that
     \begin{equation*}
-        \left\| \frac{du}{dx} (x) - \frac{d \mathcal I_h u}{dx} (x) \right\|_{L^2(0,1)} \le h \left\| \frac{d^2u}{dx^2} \right\|_{L^2(0,1)}.
+        \left\| \frac{\diff u}{\diff x} - \frac{\diff \mathcal I_h u}{\diff x} \right\|_{L^2(0,1)} \le h \left\| \frac{\diff^2u}{\diff x^2} \right\|_{L^2(0,1)}.
     \end{equation*}
 \end{lemma}
 
@@ -86,7 +86,7 @@ We have not been careful with the constants. A sharper result is the following.
     \end{align*}
 \end{lemma}
 \begin{proof}
-    Consider a subinterval $[x_{i-1}, x_i]$, $1 \leq i \leq N$, and define $\zeta(x) = u(x) - I_h u(x)$ for $x \in [x_{i-1}, x_i]$. Then $\zeta \in H^2(x_{i-1}, x_i)$ and $\zeta(x_{i-1}) = \zeta(x_i) = 0$. Therefore, $\zeta$ can be expanded into a convergent Fourier sine series,
+    Consider a subinterval $[x_{i-1}, x_i]$, $1 \leq i \leq N$, and define $\zeta(x) = u(x) - \mathcal I_h u(x)$ for $x \in [x_{i-1}, x_i]$. Then $\zeta \in H^2(x_{i-1}, x_i)$ and $\zeta(x_{i-1}) = \zeta(x_i) = 0$. Therefore, $\zeta$ can be expanded into a convergent Fourier sine series,
     \[
         \zeta(x) = \sum_{k=1}^\infty a_k \sin\left(\frac{k\pi(x - x_{i-1})}{h_i}\right), \quad x \in [x_{i-1}, x_i].
     \]
@@ -108,12 +108,12 @@ We have not been careful with the constants. A sharper result is the following.
     \[
         \int_{x_{i-1}}^{x_i} [\zeta'(x)]^2 dx \leq \frac{h_i^2}{\pi^2} \int_{x_{i-1}}^{x_i} [\zeta''(x)]^2 dx.
     \]
-    However, $\zeta''(x) = u''(x) - (I_h u)''(x) = u''(x)$ for $x \in (x_{i-1}, x_i)$ because $I_h u$ is a linear function on this interval. Therefore, upon summation over $i = 1, \ldots, N$ and letting $h = \max_i h_i$, we obtain
+    However, $\zeta''(x) = u''(x) - (\mathcal I_h u)''(x) = u''(x)$ for $x \in (x_{i-1}, x_i)$ because $\mathcal I_h u$ is a linear function on this interval. Therefore, upon summation over $i = 1, \ldots, N$ and letting $h = \max_i h_i$, we obtain
     \[
         \|\zeta\|^2_{L^2(0,1)} \leq \frac{h^4}{\pi^4} \|u''\|^2_{L^2(0,1)}, \qquad
         \|\zeta'\|^2_{L^2(0,1)} \leq \frac{h^2}{\pi^2} \|u''\|^2_{L^2(0,1)}.
     \]
-    After taking the square root and recalling that $\zeta = u - I_h u$, these yield the desired bounds on the interpolation error.
+    After taking the square root and recalling that $\zeta = u - \mathcal I_h u$, these yield the desired bounds on the interpolation error.
     % 
     % Now (2.33) follows directly from this theorem by noting that
     % \[
@@ -155,27 +155,34 @@ We have not been careful with the constants. A sharper result is the following.
 \end{proof}
 
 \begin{example}
-    For the Laplace equation \Cref{ex:Galerkin Laplace d=1} using piece-wise linear function given by \Cref{ex:piece-wise linear in d=1} we can use the estimate \Cref{ex:Galerkin Laplace piecewise linear Cea} to deduce the error estimate
+    \label{ex:Galerkin Laplace piecewise linear error estimate}
+    For the Laplace equation in \Cref{ex:Galerkin Laplace d=1} with $f \in L^2(0,1)$ using the piece-wise linear functions given by \Cref{ex:piece-wise linear in d=1}, the bilinear form is symmetric and $\|v\|_a = \|\frac{\diff v}{\diff x}\|_{L^2(0,1)}$. Since $u'' = -f$, by \Cref{ex:cea orthogonality} and \Cref{ex:Galerkin Laplace piecewise linear Cea} we deduce the error estimate
     \[
-        \|u - u_h\|_{H^1(0,1)} \leq \frac{2h}{\pi} \left(1 + \frac{h^2}{\pi^2}\right)^{1/2} \|f\|_{L^2(0,1)}.
+        \left\| \frac{\diff u}{\diff x} - \frac{\diff u_h}{\diff x} \right\|_{L^2(0,1)} \le \left\| \frac{\diff u}{\diff x} - \frac{\diff \mathcal I_h u}{\diff x} \right\|_{L^2(0,1)} \leq \frac{h}{\pi} \|f\|_{L^2(0,1)}.
+    \]
+    Using Poincaré's inequality $\|v\|_{L^2(0,1)} \le \frac 1 \pi \|\frac{\diff v}{\diff x}\|_{L^2(0,1)}$ for $v \in H^1_0(0,1)$, we also get
+    \[
+        \|u - u_h\|_{H^1(0,1)} \leq \frac{h}{\pi} \left(1 + \frac{1}{\pi^2}\right)^{1/2} \|f\|_{L^2(0,1)}.
     \]
 \end{example}
 
 \subsection*{Exercises}
 \begin{exercises}
-    \item \label{ex:cea orthogonality}
+    \ex \label{ex:cea orthogonality}
     Under the assumptions of \Cref{lem:cea}, prove Galerkin orthogonality:
     \[
         a(u-u_h,v_h)=0 \qquad \text{for all } v_h\in V_h.
     \]
-    Deduce that, if we introduce the norm
+    Assume furthermore that $a$ is symmetric. Deduce that, if we introduce the \emph{energy norm}
     \begin{equation}
-        \|u\|_a = a(u, u)^{\frac 1 2}
+        \label{eq:energy norm}
+        \|u\|_a = a(u, u)^{\frac 1 2},
     \end{equation}
-    then Céa's lemma says that $u_h$ is the best approximation of $u$ in $V_h$ with respect to the $\|\cdot\|_a$ norm, i.e.
+    then $u_h$ is the best approximation of $u$ in $V_h$ with respect to the $\|\cdot\|_a$ norm, i.e.
     \begin{equation}
-        \|u - u_h\|_a \le \inf_{v_h \in V_h} \|u - v_h\|_a.
+        \|u - u_h\|_a = \inf_{v_h \in V_h} \|u - v_h\|_a.
     \end{equation}
+    Prove also the Cauchy--Schwarz inequality $|a(u,v)| \le \|u\|_a \|v\|_a$.
 
-    \item Prove \Cref{ex:Galerkin Laplace piecewise linear Cea naive}.
+    \ex Prove \Cref{ex:Galerkin Laplace piecewise linear Cea naive}.
 \end{exercises}

@@ -1,25 +1,26 @@
-\subsection{Aubin-Nietsche's Duality Argument: better convergence in weaker norms}
+\subsection{Aubin--Nitsche's duality argument: better convergence in weaker norms}
 
-In \Cref{ex:Galerkin Laplace piecewise linear Cea} we could be interested in the rate of convergence in $L^2 (\Omega)$, which can be more optimistic.
+In \Cref{ex:Galerkin Laplace piecewise linear error estimate} we could be interested in the rate of convergence in $L^2 (\Omega)$, which can be more optimistic.
 
+Throughout this section we assume that $a$ is symmetric, continuous and coercive, so that the energy norm \eqref{eq:energy norm} is a norm equivalent to $\|\cdot\|_V$, and we use the notation of \Cref{sec:Galerkin linear problems Hilbert space} for the operator $A$ associated to $a$ and $H$.
 Assume, furthermore, that we can estimate
 \begin{equation}
     \label{eq:Galerkin projection estimate in terms of A}
-    \inf_{v_h \in V_h} \| v - v_h \|_a \le \omega(h) \| A v \|_{H}.
+    \inf_{v_h \in V_h} \| v - v_h \|_a \le \omega(h) \| A v \|_{H}, \qquad \forall v \in D_H(A).
 \end{equation}
-\namedCref{lem:cea} ensures that $\|u - u_h\|_V \le \frac{M}{\alpha^*} \omega(h) \| f \|_{H}$. In the weak space
-\begin{lemma}[Aubin-Nietsche]
+\Cref{ex:cea orthogonality} ensures that $\|u - u_h\|_a \le \omega(h) \| f \|_{H}$. In the weaker norm of $H$ we have the following.
+\begin{lemma}[Aubin--Nitsche]
     \label{lem:Aubin-Nietsche}
     Let $f \in H$, $u \in V$ and $u_h \in V_h$ be solutions to
     \begin{align}
         a(u,v)
-         & = (f,v)_H , \forall v \in V
+         & = \prodH{f}{v} , \quad \forall v \in V,
         \qquad
         a(u_h,v_h)
-        = (f,v_h)_H , \forall v_h \in V_h,
+        = \prodH{f}{v_h} , \quad \forall v_h \in V_h,
     \end{align}
-    and assume that \eqref{eq:Galerkin projection estimate in terms of A}.
-    We can estimate
+    and assume that \eqref{eq:Galerkin projection estimate in terms of A} holds.
+    Then, we can estimate
     \begin{equation*}
         \| u - u_h \|_H \le \omega(h)^2 \| f \|_{H}.
     \end{equation*}
@@ -28,15 +29,15 @@ Assume, furthermore, that we can estimate
 \begin{proof}
     First, we recall that
     \begin{equation*}
-        \| v \|_H = \inf_{g \in H \setminus \{0\}} \frac{(v,g)}{\|g\|_H}.
+        \| v \|_H = \sup_{g \in H \setminus \{0\}} \frac{\prodH{v}{g}}{\|g\|_H}.
     \end{equation*}
     Let us estimate the right-hand side. Let $g \in H$. We find $w \in V$ and $w_h \in V_h$ such that
     \begin{equation}
-        a(w,v) = (g,v)_H , \qquad \forall v \in V,
+        a(w,v) = \prodH{g}{v} , \qquad \forall v \in V,
         \qquad
-        a(w_h,v_h) = (g,v_h) , \qquad \forall v_h \in V_h.
+        a(w_h,v_h) = \prodH{g}{v_h} , \qquad \forall v_h \in V_h.
     \end{equation}
-    First, we operate a little to deduce that
+    Using the symmetry of $a$, we operate a little to deduce that
     \begin{align*}
         \prodH{u - u_h} g
          & =a(w,u) - a(w_h,u_h)                                       \\
@@ -45,9 +46,9 @@ Assume, furthermore, that we can estimate
          & =a(w,u) + a(w_h,u_h) - a(w,u_h) - a(u, w_h)                \\
          & = a(w - w_h, u - u_h)
     \end{align*}
-    Notice that $A w = g$, and hence $\| Aw \|_H = \|g\|_H$. We can apply \namedCref{lem:cea} to deduce
+    Notice that $A w = g$ and $Au = f$, and hence $\| Aw \|_H = \|g\|_H$ and $\|Au\|_H = \|f\|_H$. We can apply the Cauchy--Schwarz inequality for $a$ and the best-approximation property of \Cref{ex:cea orthogonality} to deduce
     \begin{align*}
-        (u - u_h, g)_H
+        \prodH{u - u_h}{g}
          & = a(w - w_h, u - u_h)                                                                                    \\
          & \le \|w - w_h\|_a \|u - u_h\|_a                                                                          \\
          & \le \left( \inf_{v_h \in V_h } \| w - v_h \|_a \right) \left( \inf_{v_h \in V_h} \| u - v_h \|_a \right) \\

@@ -4,12 +4,12 @@
 \subsection{The linear Lagrange element}
 
 If we want to use linear functions, then we must pick $K$ as a triangle.
-Let us $z_1, z_2, z_3 \in \mathbb R^d$, and take $K$ as the triangle
+Let $z_1, z_2, z_3 \in \mathbb R^2$ be non-collinear, and take $K$ as the (interior of the) triangle
 \begin{equation}
     \label{eq:FEM d=2 K triangle}
-    \trianglegenerated(z_1,z_2,z_3) \defeq \left\{ \sum_{i=1}^3 \theta_i z_i : \theta_i \ge 0 \text{ and } \sum_i \theta_i \le 1\right\}.
+    \trianglegenerated(z_1,z_2,z_3) \defeq \left\{ \sum_{i=1}^3 \theta_i z_i : \theta_i \ge 0 \text{ and } \sum_{i=1}^3 \theta_i = 1\right\}.
 \end{equation}
-We take $\mathcal P = \mathbb R_1[x]$ and the nodal functions  $N_i (v) = v(z_i)$.
+We take $\mathcal P = \mathbb R_1[x,y]$ (polynomials of degree at most $1$ in two variables) and the nodal functions  $N_i (v) = v(z_i)$.
 
 \begin{example}
     Let us take
@@ -23,14 +23,14 @@ We take $\mathcal P = \mathbb R_1[x]$ and the nodal functions  $N_i (v) = v(z_i)
     \end{equation*}
 \end{example}
 
-\subsection{Quadratic Lagrage elements}
+\subsection{Quadratic Lagrange elements}
 
-Let us take $K$ the triangle \eqref{eq:FEM d=2 K triangle} and $\mathcal P = Z_2[x]$.
-We take $z_1, z_2, z_3$ the vertexes of the triangles and the mid-points $z_4 = \frac{z_2 + z_3}{2}, z_5 = \frac{z_1 + z_3}{2}, z_6 = \frac{z_1+z_2}{2}$. Then $N_i (v) = v(z_i)$.
+Let us take $K$ the triangle \eqref{eq:FEM d=2 K triangle} and $\mathcal P = \mathbb R_2[x,y]$.
+We take $z_1, z_2, z_3$ the vertices of the triangle and the mid-points $z_4 = \frac{z_2 + z_3}{2}, z_5 = \frac{z_1 + z_3}{2}, z_6 = \frac{z_1+z_2}{2}$. Then $N_i (v) = v(z_i)$.
 
 \subsection{Cubic Hermite triangle}
 
-We take $K$ the triangle \eqref{eq:FEM d=2 K triangle}, $\mathcal P = \mathbb R_3[x]$.
+We take $K$ the triangle \eqref{eq:FEM d=2 K triangle}, $\mathcal P = \mathbb R_3[x,y]$.
 Taking $z_1, z_2,z_3$ the corners of the triangle and $z_4$ the centroid, we define the 10 nodal functions
 \begin{equation*}
     \mathcal N = \{ v \mapsto v(z_i): i \in \{1,2,3,4\} \} \cup \left\{v \mapsto \frac{\partial v}{\partial x_k} (z_{i}) : i \in \{1,2,3\} , k \in \{1,2\}\right\}.
@@ -43,14 +43,14 @@ We take
 \begin{equation}
     K = [0,1] \times [0,1]
 \end{equation}
-and take $z_1, \cdots, z_4$ the corners of the squares. Take $\mathcal P = \mathbb R_1[x]$ and $N_i(v) = v(z_i)$.
+and take $z_1, \dots, z_4$ the corners of the square. Take $\mathcal P = \mathbb Q_1 \defeq \spannedby\{1, x, y, xy\}$ (bi-linear functions) and $N_i(v) = v(z_i)$.
 
 \subsection{Bi-quadratic Lagrange rectangle}
-Consider the previous examples and let $z_5, \cdots, z_9$ be the mid-points of the sides. Then we can take $\mathcal P = \mathbb R_2[x]$ and $N_i(v) = v(z_i)$.
+Consider the previous example and let $z_5, \dots, z_8$ be the mid-points of the sides and $z_9$ the centre of the square. Then we can take $\mathcal P = \mathbb Q_2 \defeq \spannedby\{x^i y^j : 0 \le i, j \le 2\}$ (bi-quadratic functions) and $N_i(v) = v(z_i)$.
 
 \subsection{B-splines}
 
-The B-spline in dimension for a uniform mesh $x_i = (i h, j h )$  can be obtained by tensor product of the one-dimensional B-splines, and we have
+The B-splines in dimension $d = 2$ for a uniform mesh $x_{ij} = (i h, j h )$  can be obtained by tensor product of the one-dimensional B-splines, and we have
 \begin{equation*}
     b_{(p_1,p_2),(i,j),h} (x,y) = b_{p_1,i,h}(x) b_{p_2,j,h}(y).
 \end{equation*}
@@ -59,24 +59,24 @@ For a detailed presentation on splines in higher dimensions see \cite{laiSplineF
 
 \subsection{Higher-order elements}
 
-There exist a plethora of higher-order elements: Argyris triangle, Hsieh-Clough-Tocher triangle, Singular Zienkievwicz triangle, Veubeke-Sander quadrilateral, ...
-An excelent reference is \cite{ciarletFiniteElementMethod2002}.
+There exists a plethora of higher-order elements: Argyris triangle, Hsieh--Clough--Tocher triangle, singular Zienkiewicz triangle, Fraeijs de Veubeke--Sander quadrilateral, \dots
+An excellent reference is \cite{ciarletFiniteElementMethod2002}.
 \Cref{fig:FEM Ciarlet higher order} summarises some higher-order elements
 \begin{figure}[p]
     \centering
     \includegraphics[width=\textwidth]{Ciarlet_diagram.pdf}
-    \caption{\cite{ciarletFiniteElementMethod2002}. The convention used is that a black indicates that the nodal is obtained by evaluation at that point. A larger circle indicates the derivative is taken at that point.}
+    \caption{Reproduction of Figure 3.1.2 in \cite{ciarletFiniteElementMethod2002}. The convention used is that a black dot indicates that the nodal function is the evaluation at that point. A larger circle indicates that the first derivatives are also evaluated at that point.}
     \label{fig:FEM Ciarlet higher order}
 \end{figure}
 
 \section{The Dirichlet Laplacian with piece-wise linear basis}
 
 Let $K_0$ be the triangle \eqref{eq:FEM d=2 K triangle} and recall the notation \eqref{eq:FEM d=2 K triangle corners}.
-Let $\mathcal T$ be a triangulation of $\Omega$, and let $x_i$ be the corners of the triangles. For each triangle $K \in \mathcal T$ there exists an affine map
+Let $\mathcal T$ be a triangulation of $\Omega$, and let $x_i$ be the vertices of the triangles. For each triangle $K \in \mathcal T$ there exists an affine map
 \begin{equation*}
-    F_K : {K_0} \to  K
+    F_K : {K_0} \to  K.
 \end{equation*}
-The space of continuous functions that are linear in each $K$ is generated precisely by the unique continuous piece-wise linear function with value $\varphi_i(x_j) = \delta_{ij}$.
+The space of continuous functions that are linear in each $K$ is generated precisely by the unique continuous piece-wise linear functions $\varphi_i$ with values $\varphi_i(x_j) = \delta_{ij}$.
 In a triangulation, $\varphi_i \in H^1 (\Omega)$ due to \Cref{thm:H1 glueing}.
 In other words, a basis of $\mathcal P_{\mathcal T} \cap C (\overline \Omega)$ is given precisely by
 \begin{equation*}
@@ -85,34 +85,27 @@ In other words, a basis of $\mathcal P_{\mathcal T} \cap C (\overline \Omega)$ i
         0                     & \text{if } x_i \notin \overline K.
     \end{dcases}
 \end{equation*}
-It is not difficult to see that these functions are continuous on each $\partial K$, since they are linear.
+It is not difficult to see that these functions are continuous across each $\partial K$, since they are linear on each edge and agree at the vertices.
 To include the Dirichlet boundary conditions we take the basis of $\mathcal P_{\mathcal T} \cap H_0^1(\Omega)$ given by
 \begin{equation*}
     \mathcal B_{\mathcal T} = \{ \varphi_i : x_i \in \Omega \}.
 \end{equation*}
 
-In order to compute the stiffness matrices, we point out that
+In order to compute the stiffness matrix, we point out that
 \begin{equation*}
     \int_\Omega \nabla \varphi_i \cdot \nabla \varphi_j =
-    \begin{dcases}
-        0
-                                    & \text{if } \supp \varphi_i \cap \supp \varphi_j = \emptyset
-        \\
-        \int_K \nabla \varphi_i \cdot \nabla \varphi_j
-                                    & \text{if } i \ne j \text{ and } K = \supp \varphi_i \cap \supp \varphi_j
-        \\
-        \sum_{\substack{x_i \in \overline K                                                                    \\ K \in \mathcal T}}
-        \int_K |\nabla \varphi_i|^2 & \text{if } i = j.
-    \end{dcases}
+    \sum_{\substack{K \in \mathcal T \\ x_i, x_j \in \overline K}}
+    \int_K \nabla \varphi_i \cdot \nabla \varphi_j,
 \end{equation*}
+which vanishes unless $x_i$ and $x_j$ are vertices of a common triangle (for $i \ne j$ the sum has at most two terms, the triangles sharing the edge $[x_i, x_j]$).
 Notice that $\nabla \varphi_i$ is constant in each triangle. The computation of the mass matrix is similar, although $\varphi_i$ is not constant.
 
 \subsection{Square triangulation}
 
-Let $\Omega = [0,1] \times [0,1]$ and
-consider the mesh $x_{ij} = (ih, ij h)$. We have the sub-division
+Let $\Omega = (0,1) \times (0,1)$, $h = 1/N$, and
+consider the mesh $x_{ij} = (ih, j h) = (x_i, y_j)$ for $i, j \in \{0, \dots, N\}$. We have the sub-division
 \begin{equation*}
-    \mathcal T =\Big \{ \operatorname{Triangle}( h(i,j), h(i+1,j), h(i ,j+1 )) \Big\} \cup \Big\{ \operatorname{Triangle}( h(i,j), h(i-1,j), h(i ,j-1 )) \Big\}.
+    \mathcal T =\Big \{ \trianglegenerated( h(i,j), h(i+1,j), h(i ,j+1 )) \Big\} \cup \Big\{ \trianglegenerated( h(i,j), h(i-1,j), h(i ,j-1 )) \Big\}.
 \end{equation*}
 See \Cref{fig:FEM d=2 triangles on uniform grid}.
 \begin{figure}[H]
@@ -152,21 +145,21 @@ We can explicitly write the continuous piece-wise linear function (see \Cref{fig
 Consider
 $$
     \begin{dcases}
-        -\Delta u = f & Q = [0,1]^2, \\
-        u = 0         & \partial Q
+        -\Delta u = f & \text{in } \Omega = (0,1)^2, \\
+        u = 0         & \text{on } \partial \Omega,
     \end{dcases}
 $$
-and a solution
+and the Galerkin approximation
 $$
-    u^h(x,y) = \sum_{k,\ell} u_{k,\ell}^h \varphi^h_{k,\ell} (x,y).
+    u_h(x,y) = \sum_{k,l=1}^{N-1} U_{kl} \varphi_{kl} (x,y).
 $$
-Multiplying by a test function we get
+Testing against $\varphi_{ij}$ we get
 $$
-    \sum_{k,l} \iint_\Omega U_{kl} \left( \frac{\partial \varphi_{kl}}{\partial x} \frac{\partial \varphi_{ij}}{\partial x}  + \frac{\partial \varphi_{kl}}{\partial y} \frac{\partial \varphi_{ij}}{\partial y}  \right) = \iint_\Omega f \varphi_{ij}  .
+    \sum_{k,l} U_{kl} \iint_\Omega  \left( \frac{\partial \varphi_{kl}}{\partial x} \frac{\partial \varphi_{ij}}{\partial x}  + \frac{\partial \varphi_{kl}}{\partial y} \frac{\partial \varphi_{ij}}{\partial y}  \right) = \iint_\Omega f \varphi_{ij}  .
 $$
 The explicit calculation of the integrals leads to
 $$
-    \frac{-U_{i+1,j} + 2 U_{ij} - U_{i-1,j}}{h^2} + \frac{-U_{i,j+1} + 2 U_{ij} - U_{i,j-1}}{h^2} = \frac{1}{h^2} \iint_{  \textrm{supp} \varphi_{ij}  } f (x,y) \varphi_{ij} (x,y) \diff x \diff y .
+    \frac{-U_{i+1,j} + 2 U_{ij} - U_{i-1,j}}{h^2} + \frac{-U_{i,j+1} + 2 U_{ij} - U_{i,j-1}}{h^2} = \frac{1}{h^2} \iint_{  \supp \varphi_{ij}  } f (x,y) \varphi_{ij} (x,y) \diff x \diff y .
 $$
 
 Writing this in matrix form is rather inconvenient. It can be achieved concisely using Kronecker products of the finite-difference matrix of dimension $d=1$. We will not get into the details.
@@ -174,10 +167,10 @@ Writing this in matrix form is rather inconvenient. It can be achieved concisely
 
 \subsection{General triangulation}
 
-In general triangulation there are two approaches to compute the stiffness-matrix.
+In a general triangulation there are two approaches to compute the stiffness matrix.
 
 \paragraph{Direct computation}
-Let us consider a triangle of vertexes $(x_i,y_i)$ for $i=1, 2, 3$, then the unique piece-wise linear function such that
+Let us consider a triangle of vertices $(x_i,y_i)$ for $i=1, 2, 3$, then the unique linear function such that
 $$
     \varphi =
     \begin{cases}
@@ -208,7 +201,7 @@ Also if $K$ is a triangle of sides with lengths $a,b,c$ then Heron's formula all
 For example, for the mass matrix we can compute, if $F_K z_{j_k} = x_{i_k}$ that
 \begin{align*}
     \int_K \varphi_{i_1} \varphi_{i_2}
-     & = \int_{F(K_0)} (\psi_{j_1} \circ F_K^{-1}) (\psi_{j_2} \circ F_K^{-1}) \\
+     & = \int_{F_K(K_0)} (\psi_{j_1} \circ F_K^{-1}) (\psi_{j_2} \circ F_K^{-1}) \\
      & = |\det DF_K| \int_{K_0} \psi_{j_1} \psi_{j_2}.
 \end{align*}
 The computation of the stiffness matrix is a little more involved, since it will involve multiplying by the constant matrix $DF_K^{-1}$. It is a straight-forward computation with linear functions. This approach is more extensible to general settings.

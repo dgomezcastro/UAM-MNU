@@ -10,7 +10,7 @@ We pick as nodal functions
 \begin{equation*}
     N_1 (v) = v(0), \qquad N_2(v) = v(1), \qquad N_3(v) = \frac{dv}{dx} (0), \qquad N_4(v) = \frac{dv}{dx} (1).
 \end{equation*}
-Our nodal basis will be $\theta_0, \cdots, \theta_3$ such that
+Our nodal basis will be $\theta_0, \dots, \theta_3$ such that
 \begin{equation*}
     \begin{matrix}
         \theta_0(0) = 1, & \theta_0(1) = 0, & \theta_0'(0) = 0, & \theta_0'(1) = 0
@@ -44,7 +44,7 @@ We pick as nodal functions
 \begin{equation*}
     N_1 (v) = v(a), \qquad N_2(v) = v(b), \qquad N_3(v) = \frac{dv}{dx} (a), \qquad N_4(v) = \frac{dv}{dx} (b).
 \end{equation*}
-As discussed in \Cref{ex:FEM affine equivalence Hermite cubics}, this is not affine equivalent to the element in $(0,1)$. However, the shape functions are
+As discussed in \Cref{ex:FEM affine equivalence Hermite cubics}, this is not affine equivalent to the element in $(0,1)$. However, the nodal basis functions are
 \begin{equation*}
     \begin{aligned}
         \psi_1(x) & = \theta_0 (\tfrac{x-a}{b-a}),       & \qquad \psi_2(x) & = \theta_1 (\tfrac{x-a}{b-a}),       \\
@@ -56,7 +56,7 @@ As discussed in \Cref{ex:FEM affine equivalence Hermite cubics}, this is not aff
 In dimension $d=1$ we have that $\rho_K = h_K$.
 We can use \Cref{thm:FEM bound interpolation error} to deduce that
 \begin{equation*}
-    [v - \mathcal I_K v]_{W^{j,p} (K)} \le C h_K^{4-j}[v]_{W^{4,p}(K)}, \qquad j \in \{0, \cdots, 4\}.
+    [v - \mathcal I_K v]_{W^{j,p} (K)} \le C h_K^{4-j}[v]_{W^{4,p}(K)}, \qquad j \in \{0, \dots, 4\}.
 \end{equation*}
 
 
@@ -113,7 +113,7 @@ Notice that $\mathcal I_{\mathcal T} u(x_j) = u(x_j)$ and $\frac{d \mathcal I_{\
 \end{remark}
 
 \paragraph{$H^2$-global-interpolation error}
-Notice that due to the $C^1$-glueing, the interpolant is at most $H^2$.
+Notice that due to the $C^1$-glueing, the interpolant is in general only $H^2$ (and not $H^3$).
 We have for $j \in \{0, 1, 2\}$ that
 \begin{align*}
     [v - \mathcal I_{\mathcal T} v]_{H^j (a,b)}
@@ -144,7 +144,7 @@ On $K_k = (x_k, x_{k+1})$ only four basis functions do not vanish, namely $v_k, 
 \begin{equation*}
     v_k (x) = \theta_0 (\xi), \qquad v_{k+1} (x) = \theta_1 (\xi), \qquad w_k (x) = h_k \theta_2 (\xi), \qquad w_{k+1} (x) = h_k \theta_3 (\xi).
 \end{equation*}
-In other words, the restrictions of the basis to $K_k$ are the shape functions $\psi_1, \cdots, \psi_4$ of $(a,b) = (x_k,x_{k+1})$.
+In other words, the restrictions of the basis to $K_k$ are the shape functions $\psi_1, \dots, \psi_4$ of $(a,b) = (x_k,x_{k+1})$.
 It is convenient to write this as a local-to-global map: for the local index $\alpha \in \{0,1,2,3\}$ we define
 \begin{equation*}
     g(k,0) = 2k, \qquad g(k,1) = 2(k+1), \qquad g(k,2) = 2k+1, \qquad g(k,3) = 2(k+1)+1,
@@ -233,7 +233,7 @@ In practice we do not compute the entries one by one as above. Instead, we loop 
 The global mass matrix $M \in \mathbb R^{2(N+2) \times 2(N+2)}$ is computed as follows:
 \begin{enumerate}
     \item Set $M = 0$.
-    \item For $k = 0, \cdots, N$ and $\alpha, \beta \in \{0, 1, 2, 3\}$ do
+    \item For $k = 0, \dots, N$ and $\alpha, \beta \in \{0, 1, 2, 3\}$ do
           \begin{equation*}
               M_{g(k,\alpha), g(k,\beta)} \gets M_{g(k,\alpha), g(k,\beta)} + h_k \, s_{k,\alpha} s_{k,\beta} \widehat M_{\alpha \beta}.
           \end{equation*}
@@ -257,5 +257,5 @@ If we also impose $u'(a) = u'(b) = 0$ (as for a clamped beam) we also remove the
 
 \subsection*{Exercises}
 \begin{exercises}
-    \ex Solve the simplified beam equation $-\frac{d^4 u}{d x^4} = f$ in $\Omega=(-1,1)$ using different boundary conditions $u, u'$ at $x = \pm 1$.
+    \ex Solve the simplified beam equation $\frac{\diff^4 u}{\diff x^4} = f$ in $\Omega=(-1,1)$ using different boundary conditions on $u$ and $u'$ at $x = \pm 1$. Write first the weak formulation in $H^2(-1,1)$.
 \end{exercises}
