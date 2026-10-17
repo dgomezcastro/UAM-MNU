@@ -15,7 +15,7 @@ Here
 $p$ is continuously differentiable, strictly positive in $(-1, 1)$ and continuous at $x = \pm 1$; $q$ is continuous, nonnegative and bounded in $(-1, 1)$; the weight function $w$ is continuous, nonnegative and integrable over $(-1, 1)$; $\lambda$ is the eigenvalue.
 
 \subsection{Orthogonal systems of polynomials}
-Given $w: (-1,1) \to \mathbb R$ we define
+Given an integrable weight $w:(-1,1)\to(0,\infty)$ (positivity almost everywhere suffices), we define
 \begin{equation*}
     (u,v)_w = \int_{-1}^1 u(x)v(x)w(x)\diff x, \qquad \|u\|_w = (u,u)_w^{\frac 1 2}.
 \end{equation*}
@@ -39,7 +39,7 @@ Weierstrass' theorem implies that this system is complete in $L^2_w(-1,1)$, i.e.
 
 \begin{remark}[Sturm--Liouville problems with $p(\pm 1) = 0$]
     \label{rem:Sturm-Liouville degenerate}
-    When $p(\pm 1) = 0$ the Sturm--Liouville operator is self-adjoint without imposing any boundary conditions. Notice that if $u,v \in C^2([-1,1])$ then
+    When $p(\pm1)=0$, integration by parts proves symmetry on sufficiently regular functions. Self-adjointness additionally requires a specified operator domain; at singular endpoints, vanishing $p$ alone does not eliminate boundary terms for every function in the maximal domain. Notice that if $u,v \in C^2([-1,1])$ then
     \begin{align*}
         -\int_{-1}^1\frac{\diff}{\diff x}\left(p\frac{\diff u}{\diff x}\right)v
          & = -\int_{-1}^1\frac{\diff}{\diff x}\left(p\frac{\diff u}{\diff x}v \right) + \int_{-1}^1p\frac{\diff u}{\diff x} \frac{\diff v}{\diff x}
@@ -61,7 +61,7 @@ Weierstrass' theorem implies that this system is complete in $L^2_w(-1,1)$, i.e.
          & = -\int_{-1}^1 u_\lambda \frac{\diff}{\diff x} \left( p \frac{\diff u_\mu}{\diff x} \right) + \int_{-1}^1 q u_\lambda u_\mu     \\
          & = \mu \int_{-1}^1 u_\lambda u_\mu w.
     \end{align*}
-    If $\lambda \ne \mu$ then $(u_\lambda, u_\mu)_w = 0$.
+    If $\lambda \ne \mu$ then $(u_\lambda, u_\mu)_w = 0$. This proves the orthogonality of the polynomial eigenfunctions used below. For general solutions, endpoint regularity or flux conditions must be stated separately.
 \end{remark}
 
 \subsection{Polynomial interpolation}

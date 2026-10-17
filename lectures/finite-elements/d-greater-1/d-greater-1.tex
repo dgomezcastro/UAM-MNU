@@ -7,7 +7,7 @@ If we want to use linear functions, then we must pick $K$ as a triangle.
 Let $z_1, z_2, z_3 \in \mathbb R^2$ be non-collinear, and take $K$ as the (interior of the) triangle
 \begin{equation}
     \label{eq:FEM d=2 K triangle}
-    \trianglegenerated(z_1,z_2,z_3) \defeq \left\{ \sum_{i=1}^3 \theta_i z_i : \theta_i \ge 0 \text{ and } \sum_{i=1}^3 \theta_i = 1\right\}.
+    \trianglegenerated(z_1,z_2,z_3) \defeq \left\{ \sum_{i=1}^3 \theta_i z_i : \theta_i > 0 \text{ and } \sum_{i=1}^3 \theta_i = 1\right\}.
 \end{equation}
 We take $\mathcal P = \mathbb R_1[x,y]$ (polynomials of degree at most $1$ in two variables) and the nodal functions  $N_i (v) = v(z_i)$.
 
@@ -41,7 +41,7 @@ Taking $z_1, z_2,z_3$ the corners of the triangle and $z_4$ the centroid, we def
 \subsection{Bi-linear Lagrange rectangle}
 We take
 \begin{equation}
-    K = [0,1] \times [0,1]
+    K=(0,1)\times(0,1)
 \end{equation}
 and take $z_1, \dots, z_4$ the corners of the square. Take $\mathcal P = \mathbb Q_1 \defeq \spannedby\{1, x, y, xy\}$ (bi-linear functions) and $N_i(v) = v(z_i)$.
 
@@ -105,7 +105,10 @@ Notice that $\nabla \varphi_i$ is constant in each triangle. The computation of 
 Let $\Omega = (0,1) \times (0,1)$, $h = 1/N$, and
 consider the mesh $x_{ij} = (ih, j h) = (x_i, y_j)$ for $i, j \in \{0, \dots, N\}$. We have the sub-division
 \begin{equation*}
-    \mathcal T =\Big \{ \trianglegenerated( h(i,j), h(i+1,j), h(i ,j+1 )) \Big\} \cup \Big\{ \trianglegenerated( h(i,j), h(i-1,j), h(i ,j-1 )) \Big\}.
+    \begin{aligned}
+        \mathcal T={}&\Big\{\trianglegenerated(h(i,j),h(i+1,j),h(i,j+1)):0\le i,j<N\Big\}\\
+        &\cup\Big\{\trianglegenerated(h(i,j),h(i-1,j),h(i,j-1)):1\le i,j\le N\Big\}.
+    \end{aligned}
 \end{equation*}
 See \Cref{fig:FEM d=2 triangles on uniform grid}.
 \begin{figure}[H]

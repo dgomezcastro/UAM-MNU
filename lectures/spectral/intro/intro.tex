@@ -1,15 +1,8 @@
 \chapter{Spectral methods: Galerkin and collocation}
 
-We begin with a quote
-\begin{quote}
-    Spectral methods and finite-element methods are closely related and built on the same ideas; the main difference between them is that spectral methods use basis functions that are generally nonzero over the whole domain, while finite element methods use basis functions that are nonzero only on small subdomains (compact support).
+Spectral and finite-element methods both approximate a solution in a finite-dimensional space. Spectral bases usually extend over the whole domain, while standard finite-element bases have local support. Spectral-element methods combine high-degree approximation with a subdivision into elements.
 
-    Consequently, spectral methods connect variables globally while finite elements do so locally. Partially for this reason, spectral methods have excellent error properties, with the so-called ``exponential convergence'' being the fastest possible, when the solution is smooth. However, there are no known three-dimensional single-domain spectral shock capturing results (shock waves are not smooth).
-
-    In the finite-element community, a method where the degree of the elements is very high or increases as the grid parameter $h$ decreases to zero is sometimes called a spectral-element method.
-
-    \url{https://en.wikipedia.org/wiki/Spectral_method}
-\end{quote}
+The convergence rate depends on regularity and on the basis. With the appropriate periodic or endpoint compatibility, $C^\infty$ smoothness gives convergence faster than every fixed algebraic power. Analyticity in a neighbourhood of the domain gives geometric (exponential) convergence; some entire functions converge still faster. Smoothness alone does not imply an exponential rate. We develop these distinctions using Fourier and polynomial approximation; see \cite{CanutoHussainiQuarteroniZang2011}.
 
 For our spectral methods we will use either Fourier bases or polynomial bases.
 Within this choice of bases we will use two techniques
@@ -45,7 +38,7 @@ Within this choice of bases we will use two techniques
     Let us look for an approximate polynomial solution $u_N \in \mathbb R_N[x]$.
     To recover the $N+1$ coefficients uniquely we need $N+1$ independent equations.
 
-    The collocation method consists in selecting $N+1$ points $x_0 = -1 < x_1 < \cdots < x_N = 1$ and selecting the $u_N$ such that
+    The collocation method consists in selecting $N+1$ points $x_0=1>x_1>\cdots>x_N=-1$ and selecting the $u_N$ such that
     \begin{equation*}
         \begin{dcases}
             -\frac{\diff^2 u_N}{\diff x^2} (x_j) = f(x_j)
@@ -60,7 +53,7 @@ Within this choice of bases we will use two techniques
 
     Depending on the choice of $x_k$, it might be better to pick a different basis.
     If we select as collocation points
-    $x_j = \cos j \pi /N$,
+    $x_j=\cos(j\pi/N)$,
     (the \emph{Chebyshev--Gauss--Lobatto} points in \Cref{ex:Chebyshev Gauss-Lobatto}),
     then it is more suitable to use the basis of Chebyshev polynomials (see \Cref{sec:Chebyshev polynomials})
     \begin{equation*}
@@ -70,7 +63,7 @@ Within this choice of bases we will use two techniques
     \begin{figure}[H]
         \centering
         \includegraphics[width=0.75\textwidth]{convergenceChebyshev}
-        \caption{Notice that the $\log \text{error} \sim -2N$ up to floating-point error. Therefore, the numerical results suggest convergence is \emph{exponential}. This very fast convergence is usually difficult to prove. A more usual result is super-polynomial convergence if $u \in C^\infty$.}
+        \caption{Maximum error sampled on an independent uniform grid of 20,001 points for the sine example in the accompanying notebook. The rapid decay eventually reaches floating-point accuracy. This sampled maximum approximates the $L^\infty$ error; it is not the exact norm.}
     \end{figure}
 \end{example}
 For the heat equation we can follow the same reasoning to get a spatial semi-discretisation.
@@ -173,3 +166,5 @@ If the basis $\phi_k$ is orthogonal in some scalar product, the elements of $\ma
     \label{rem:pointwise evaluation plotting}
     Pointwise evaluations are suitable for plotting. However, if we wanted to recover the basis coefficients we can use $\mat A_N^{-1}$.
 \end{remark}
+
+\printbibliography[heading=subbibliography]

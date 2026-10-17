@@ -54,7 +54,7 @@
     <tr>
       <td>5</td>
       <td>Finite-elements spaces</td>
-      <td>2.5-2.6</td>
+      <td>2.3-2.4</td>
       <td>-</td>
       <td>2.7-2.10</td>
     </tr>

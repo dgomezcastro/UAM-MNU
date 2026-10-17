@@ -14,9 +14,9 @@ Galerkin approximation is used as an analytical tool to prove existence in some 
 \begin{equation*}
     -\Delta_p u = - \diver \left( |\nabla u|^{p-2} \nabla u \right).
 \end{equation*}
-Due to the divergence form we have the integration by parts
+For $p>1$, define the flux $|\xi|^{p-2}\xi$ to be zero at $\xi=0$. The distributional definition gives
 \begin{equation*}
-    \int_\Omega (-\Delta_p u) \varphi = \int_\Omega |\nabla u|^{p-2} \nabla u \cdot \nabla \varphi, \qquad \forall u \in C^2(\overline \Omega), \varphi \in C_c^1 (\Omega).
+    \langle-\Delta_p u,\varphi\rangle = \int_\Omega |\nabla u|^{p-2} \nabla u \cdot \nabla \varphi, \qquad \forall u\in W^{1,p}(\Omega),\ \varphi\in C_c^\infty(\Omega).
 \end{equation*}
 This operator is coercive in a non-linear sense.
 More generally we can write the quasi-linear elliptic problem
@@ -32,7 +32,7 @@ However, we want to highlight a common technique known as \emph{convergence by c
 It is more broadly applicable than Céa-type estimates, but it does not guarantee any rate of convergence.
 For the following example we follow the presentation in \cite[Section 9.14]{Ciarlet2013}.
 \begin{example}[Convergence by compactness for \eqref{eq:cuasilinear}]
-    Suppose that $a : {\mathbb R^d} \to {\mathbb R^d}$ is continuous,
+    Let $\Omega$ be a bounded Lipschitz domain. Suppose that $a : {\mathbb R^d} \to {\mathbb R^d}$ is continuous,
     monotone in the sense that
     \begin{equation*}
         (a(\xi) - a(\eta) ) \cdot (\xi - \eta) \ge 0, \qquad \forall \xi, \eta \in {\mathbb R^d},
@@ -49,7 +49,7 @@ For the following example we follow the presentation in \cite[Section 9.14]{Ciar
     Finally, let $f \in L^{p'}(\Omega)$ with $p'= \frac{p}{p-1}$.
     Under these hypotheses, we will apply compactness techniques.
 
-    Let $e_i \in W^{1,p}_0 (\Omega)$ be a sequence of functions such that the finite-dimensional spaces
+    Let $e_i \in W^{1,p}_0 (\Omega)$ be a linearly independent sequence of functions such that the finite-dimensional spaces
     \begin{equation*}
         V_N = \spannedby\{e_1, \dots, e_N\}
     \end{equation*}
@@ -93,7 +93,7 @@ For the following example we follow the presentation in \cite[Section 9.14]{Ciar
               \end{equation*}
               and show that a subsequence of $u_N$ converges weakly in $W_0^{1,p}(\Omega)$ and strongly in $L^p (\Omega)$.
 
-        \item  Prove that if $v_n$ is a sequence in $W_0^{1,p}(\Omega)$, $v \in W_0^{1,p}(\Omega)$ and $\xi \in L^{p'} (\Omega)$ are such that
+        \item  Prove that if $v_n$ is a sequence in $W_0^{1,p}(\Omega)$, $v \in W_0^{1,p}(\Omega)$ and $\xi \in L^{p'} (\Omega)^d$ are such that
               $$
                   v_n \rightharpoonup v \text{ in } W_0^{1,p} (\Omega), \qquad a(\nabla v_n) \rightharpoonup \xi \text{ in } L^{p'} (\Omega)^d, \qquad \int_\Omega a(\nabla v_n) \cdot \nabla v_n \to \int_\Omega \xi \cdot \nabla v
               $$
@@ -104,7 +104,9 @@ For the following example we follow the presentation in \cite[Section 9.14]{Ciar
 
         \item Construct a weak solution of \eqref{eq:cuasilinear}.
 
-        \item Show that if $a$ is strictly monotone, that is for some $\theta > 0$
+        \item Show that ordinary strict monotonicity,
+              $(a(\xi)-a(\eta))\cdot(\xi-\eta)>0$ for $\xi\ne\eta$, gives uniqueness for every $p>1$.
+              If $p\ge2$, assume the stronger quantitative condition, for some $\theta>0$,
               $$	(a(\xi) - a(\eta) ) \cdot (\xi - \eta) \ge \theta |\xi - \eta|^p , \qquad \forall \xi, \eta \in {\mathbb R^d}, $$
               then the solution is unique. Moreover, show that the map $f \in L^{p'} (\Omega) \mapsto u \in W_0^{1,p}(\Omega)$ is Hölder continuous with exponent $\frac{1}{p-1}$ (in particular Lipschitz continuous if $p = 2$).
 
@@ -215,9 +217,16 @@ For the following example we follow the presentation in \cite[Section 9.14]{Ciar
                   \int_\Omega f \varphi  = \int_\Omega \xi \cdot \nabla \varphi = \int_\Omega a(\nabla v) \cdot \nabla \varphi, \qquad \forall \varphi \in W_0^{1,p}(\Omega).
               $$
 
-        \item In this case, if $u$ and $v$ are solutions with data $f$ and $g$ respectively, then testing the difference of the equations with $u - v$
+        \item For equal data, testing with $u-v$ gives $\int_\Omega(a(\nabla u)-a(\nabla v))\cdot(\nabla u-\nabla v)=0$. Strict monotonicity implies $\nabla u=\nabla v$ almost everywhere, and the zero trace gives $u=v$.
+              Under the stronger quantitative assumption with $p\ge2$, if $u$ and $v$ have data $f$ and $g$, testing with $u-v$ gives
               $$
-                  \theta \| \nabla u - \nabla v \|_{L^p}^p \le \int_\Omega (a(\nabla u) - a(\nabla v)) \cdot \nabla(u - v) = \int_\Omega (f - g) (u - v) \le \| f - g \|_{L^{p'}} \| u - v \|_{L^p} \le C \| f - g \|_{L^{p'}} \| \nabla u - \nabla v \|_{L^p}.
+                  \begin{aligned}
+                      \theta\|\nabla u-\nabla v\|_{L^p}^p
+                      &\le\int_\Omega(a(\nabla u)-a(\nabla v))\cdot\nabla(u-v)
+                       =\int_\Omega(f-g)(u-v)\\
+                      &\le\|f-g\|_{L^{p'}}\|u-v\|_{L^p}
+                       \le C\|f-g\|_{L^{p'}}\|\nabla u-\nabla v\|_{L^p}.
+                  \end{aligned}
               $$
               So
               $$
@@ -259,7 +268,10 @@ The scheme of the proof of the previous result allows us to prove, in general, t
 
 
 \begin{remark}
-    When $a$ does not have natural coercivity on the space $H^1 = W^{1,2}$, one can work in other spaces, for example $W^{1,p}$. This is the case of the $p$-Laplacian operator, where $a(\nabla u) = |\nabla u|^{p-2} \nabla u$. If the situation is even more general, sometimes one can work in the so-called Orlicz spaces, where the norm is defined by $\int_\Omega \Phi(|\nabla u|)$.
+    When $a$ does not have natural coercivity on the space $H^1 = W^{1,2}$, one can work in other spaces, for example $W^{1,p}$. This is the case of the $p$-Laplacian operator, where $a(\nabla u) = |\nabla u|^{p-2} \nabla u$. If the situation is even more general, sometimes one can work in the so-called Orlicz spaces, where a Young function $\Phi$ defines the modular $\int_\Omega\Phi(|\nabla u|)$, rather than a norm directly. On the zero-trace space the associated Luxemburg gradient norm is
+    \begin{equation*}
+        \|\nabla u\|_{L^\Phi}=\inf\left\{\lambda>0:\int_\Omega\Phi\left(\frac{|\nabla u|}{\lambda}\right)\le1\right\}.
+    \end{equation*}
 \end{remark}
 
 \subsection*{Exercises}

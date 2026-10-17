@@ -2,7 +2,7 @@
 
 \section{Linear Parabolic Problems}
 
-\footnotetext{For this section we loosely follow \cite[Chapter 11]{QuarteroniValli1994}.}
+For this section we loosely follow \cite[Chapter 11]{QuarteroniValli1994}.
 Parabolic problems like the heat equation can be written as
 \begin{equation*}
     \frac{\diff u}{\diff t}(t) + A u(t) = f(t), \qquad \forall t \in (0,T).
@@ -63,7 +63,7 @@ The corresponding discretisation in ``space'' can be written as
 
 \begin{strongtheorem}[Parabolic version of Céa's lemma]
     \label{thm:Galerkin parabolic Cea}
-    \footnotetext{This result is a small generalisation of the type of result in \cite[Chapter 11]{QuarteroniValli1994}}%
+    This result is a small generalisation of the type of result in \cite[Chapter 11]{QuarteroniValli1994}.
     Under the assumptions of \Cref{lem:Galerkin parabolic a priori estimate}, let $u$ and $u_h$ be the solutions to \eqref{eq:Galerkin parabolic variational} and \eqref{eq:Galerkin parabolic variational space-discrete}, respectively. Then, we have that
     \begin{equation}
         \begin{aligned}
@@ -75,7 +75,7 @@ The corresponding discretisation in ``space'' can be written as
     \begin{equation*}
         C_h(t) = 2 \sup_{s \in (0,t)} \left( \left\| \frac{\diff u}{\diff t} (s) \right\|_H + \left\| \frac{\diff u_h}{\diff t} (s) \right\|_H \right)
     \end{equation*}
-    can be estimated using \Cref{lem:Galerkin parabolic a priori estimate}.
+    is finite under the stated time-continuity assumptions. A bound independent of $h$ requires additional regularity; the energy estimate for $u_t$ in $L^2(0,T;H)$ alone does not bound this supremum.
 \end{strongtheorem}
 
 \begin{proof}
@@ -110,6 +110,13 @@ Taking $v_h = \frac{\diff u_h}{\diff t}(0)$ we recover that
 \end{equation}
 
 
+If, in addition, $f\in H^1(0,T;H)$ and the differentiated equations admit the energy estimate of \Cref{lem:Galerkin parabolic a priori estimate}, apply that estimate to $u_t$ and $u_{h,t}$. With the Ritz initial value, $u_{h,t}(0)$ is the $H$-orthogonal projection of $f(0)-Au_0$. Thus
+\begin{equation*}
+    C_h(t) \le 4\left(\|f(0)-Au_0\|_H^2+
+    \frac{1}{\alpha^*}\int_0^t\|f'(s)\|_H^2\diff s\right)^{1/2}.
+\end{equation*}
+This gives an $h$-independent bound. The differentiated energy argument is justified directly for smooth solutions and, by approximation, for the corresponding energy solutions.
+
 \subsubsection{System of linear ODEs for the coefficients}
 \label{sec:Galerkin parabolic linear ODEs}
 We now look for solutions of the form
@@ -143,28 +150,51 @@ Equivalently, in terms of coefficients
 \begin{equation*}
     ( \mat M + \tau \theta \mat K ) \vec u^{n+1} = (\mat M - \tau (1-\theta) \mat K) \vec u^n + \tau \Big( \theta \vec b((n+1)\tau) + (1-\theta) \vec b(n \tau) \Big).
 \end{equation*}
-Using a stability and consistency argument, in \cite[Theorem 11.3.2]{QuarteroniValli1994} the authors prove that
+The following stability and consistency argument gives explicit time-error bounds; see also \cite[Chapter 11]{QuarteroniValli1994} for estimates in terms of the data.
 \begin{theorem}
     \label{thm:Galerkin parabolic convergence in tau}
-    Assume that $a: V \times V \to \mathbb R$ is bilinear and coercive, and $f \in L^2 (0,T; H)$.
-
-    \noindent If $\theta \in [0,\frac 1 2)$ assume also the CFL-type condition
-    $$
-        \tau ( 1 + C(h) ) < \frac{2 \alpha^*}{(1-2 \theta)}
-        \qquad \text{where }C(h) = \sup_{v_h \in V_h \setminus \{0\}} \frac{\| v_h \|_V^2 }{ \|v_h\|_H^2 } .
-    $$
-    Then, we have the linear convergence in $\tau$
+    Assume that $a:V\times V\to\mathbb R$ is bilinear, symmetric, continuous and coercive, that $f\in H^1(0,T;H)$, and that $u_h^0=u_h(0)$. Define
     \begin{equation*}
-        \sup_{n \tau \le T} \|u_h^n - u_h(n\tau) \|_H \le C_\theta \tau \left( \left\| \frac{\diff u_h}{\diff t} (0) \right\|_H^2 + \int_0^T \left\| \frac{\diff f}{\diff t} \right\|_H^2  \right)^{\frac 1 2}.
+        \lambda_{\max,h}=\max_{v_h\ne0}\frac{a(v_h,v_h)}{\|v_h\|_H^2}
+        =\lambda_{\max}(\mat M^{-1}\mat K).
     \end{equation*}
-    If $\theta = \frac 1 2$ then we have the quadratic convergence
+    For $0\le\theta<\frac12$, assume the CFL condition
     \begin{equation*}
-        \sup_{n \tau \le T} \|u_h^n - u_h(n\tau) \|_H \le C_\theta \tau^2 \left( \left\| \frac{\diff^2 u_h}{\diff t^2} (0) \right\|_H^2 + \int_0^T \left\| \frac{\diff^2f}{\diff t^2} \right\|_H^2  \right)^{\frac 1 2}.
+        \tau(1-2\theta)\lambda_{\max,h}\le2.
     \end{equation*}
+    For $\frac12\le\theta\le1$ no such restriction is needed. Then
+    \begin{equation*}
+        \max_{n\tau\le T}\|u_h^n-u_h(n\tau)\|_H
+        \le \max\{\theta,1-\theta\}\,\tau\int_0^T\|u_h''(s)\|_H\diff s.
+    \end{equation*}
+    If $\theta=\frac12$ and $f\in H^2(0,T;H)$, then
+    \begin{equation*}
+        \max_{n\tau\le T}\|u_h^n-u_h(n\tau)\|_H
+        \le \frac{\tau^2}{8}\int_0^T\|u_h^{(3)}(s)\|_H\diff s.
+    \end{equation*}
+    These are first- and second-order estimates for fixed $h$. Uniform estimates as $h\to0$ require uniform bounds on the displayed derivative integrals.
 \end{theorem}
+\begin{proof}
+    Let $A_h:V_h\to V_h$ satisfy $(A_hv_h,w_h)_H=a(v_h,w_h)$. In an $H$-orthonormal eigenbasis its eigenvalues are positive. The amplification factors of the method are
+    \begin{equation*}
+        R_\theta(\tau\lambda)=\frac{1-(1-\theta)\tau\lambda}{1+\theta\tau\lambda}.
+    \end{equation*}
+    Under the stated restriction their absolute values are at most one, and $\|(I+\tau\theta A_h)^{-1}\|_{H\to H}\le1$.
+    Substituting the exact semidiscrete solution into a time step gives the residual
+    \begin{equation*}
+        r_n=\frac1\tau\int_{n\tau}^{(n+1)\tau}u_h'(s)\diff s
+        -(1-\theta)u_h'(n\tau)-\theta u_h'((n+1)\tau).
+    \end{equation*}
+    The fundamental theorem of calculus bounds $\|r_n\|_H$ by
+    $\max\{\theta,1-\theta\}\int_{n\tau}^{(n+1)\tau}\|u_h''(s)\|_H\diff s$.
+    For $\theta=\frac12$, the trapezoidal-rule remainder instead gives
+    $\|r_n\|_H\le(\tau/8)\int_{n\tau}^{(n+1)\tau}\|u_h^{(3)}(s)\|_H\diff s$.
+    The contraction estimate for each step yields an error bounded by $\tau\sum_n\|r_n\|_H$, proving both claims.
+\end{proof}
 
 \begin{remark}
-    Using \Cref{thm:Galerkin parabolic Cea,thm:Galerkin parabolic convergence in tau} and \eqref{eq:Galerkin parabolic estimate duhdt(0)} we can estimate $\| u (n \tau) - u_h^n \|_H$.
+    If $|a(v,w)|\le M_a\|v\|_V\|w\|_V$, then $\lambda_{\max,h}\le M_a C(h)$, where $C(h)=\sup_{v_h\ne0}\|v_h\|_V^2/\|v_h\|_H^2$. Thus $\tau(1-2\theta)M_aC(h)\le2$ is a sufficient CFL restriction when $\theta<\frac12$. A strict safety margin gives damping of the highest-frequency modes.
+    Combining the spatial and temporal bounds by the triangle inequality estimates $\|u(n\tau)-u_h^n\|_H$.
 \end{remark}
 
 \subsection*{Exercises}

@@ -24,7 +24,7 @@ As an approximation we use, for $N$ even, the trigonometric polynomials
 Recall that if $u$ is periodic and $C^1$ (or, more generally, Hölder continuous), then $P_N u \to u$ uniformly in $(0,2\pi)$. Continuity alone is not enough for uniform convergence.
 We also define the space
 \begin{equation*}
-    S_N = \spannedby \{ \phi_k : -N/2 \le k \le N/2 - 1\}.
+    S_N = \operatorname{span}_{\mathbb C} \{ \phi_k : -N/2 \le k \le N/2 - 1\}.
 \end{equation*}
 We recall Parseval's identity
 \begin{equation*}
@@ -46,8 +46,8 @@ Thus
     Then
     \begin{equation*}
         \hat u_k = \begin{dcases}
-            \frac 1 2                      & \text{if } k = 0                \\
-            0                        & \text{if } k \ne 0 \text{ even} \\
+            \frac 1 2                     & \text{if } k = 0                \\
+            0                             & \text{if } k \ne 0 \text{ even} \\
             -\frac{(-1)^{(k-1)/2}}{k \pi} & \text{if } k \text{ odd.}
         \end{dcases}
     \end{equation*}
@@ -56,7 +56,7 @@ If $u: (0,2\pi)\to \mathbb R$ is real-valued then $\hat u_{-k} = \overline{\hat 
 \begin{equation*}
     u(x) = \sum_{k=-\infty}^{\infty} a_k \cos k x + \sum_{k=-\infty}^\infty b_k \sin k x,
 \end{equation*}
-where $a_k = \operatorname{Re} \hat u_k$ and $b_k = -\operatorname{Im} \hat u_k$, i.e. $\hat u_k = a_k - i b_k$. Notice that, due to the asymmetric truncation, $P_N u$ need not be real-valued (the term $k = -N/2$ has no conjugate partner); in practice one takes the real part of $P_N u$, which amounts to halving the coefficient $\hat u_{-N/2}$ and adding the term $k = N/2$.
+where $a_k = \operatorname{Re} \hat u_k$ and $b_k = -\operatorname{Im} \hat u_k$, i.e. $\hat u_k = a_k - i b_k$. Notice that, due to the asymmetric truncation, $P_N u$ need not be real-valued (the term $k = -N/2$ has no conjugate partner); taking the real part changes the approximation space. The general Fourier formulas below use the complex space $S_N$. For real-valued approximations one can instead use symmetric frequencies (for example, an odd number of modes).
 
 \subsection{Periodic functions}
 
@@ -79,7 +79,7 @@ This is an equivalent norm of $H_p^m(0,2\pi)$.
 
 
 \subsection{Discrete Fourier series}
-Let us take
+For pointwise sampling assume $u\in C_p([0,2\pi])$. Let us take
 \begin{equation*}
     x_j = \frac{2\pi j}{N} \qquad j \in \{0,\dots, N-1\}.
 \end{equation*}
@@ -106,7 +106,7 @@ We point out that $\psi_j (x_l) = \delta_{lj}$.
 
 \bigskip
 
-Lastly we define the \emph{aliasing error}
+For the following aliasing identity assume, more specifically, $u\in H_p^m(0,2\pi)$ with integer $m\ge1$. Its Fourier coefficients are then absolutely summable. We define the \emph{aliasing error}
 \begin{equation*}
     R_N u = \sum_{k=-N/2}^{N/2-1} \phi_k \sum_{\substack{m =-\infty \\ m \ne 0}}^{\infty} \hat u_{k + Nm}.
 \end{equation*}
@@ -136,7 +136,7 @@ The Fourier series of a discontinuous function can have oscillations near the di
 
 \begin{theorem}[Truncation of the Fourier series for a periodic function]
     \label{thm:Fourier truncation of periodic function}
-    We have that for $u \in H_p^m (0,2\pi)$ and $k \le m$
+    For integers $0\le k\le m$ and $u\in H_p^m(0,2\pi)$, we have
     \begin{equation*}
         \|u - P_N u\|_{H^k(0,2\pi)} \le C N^{k-m} \|u^{(m)}\|_{L^2(0,2\pi)}.
     \end{equation*}
@@ -156,7 +156,7 @@ As a consequence
 \begin{equation*}
     \inf_{\phi \in S_N} \|u - \phi\|_{H^k(0,2\pi)} \le C N^{k-m} \|u^{(m)}\|_{L^2(0,2\pi)}, \qquad \forall u \in H^{m}_p(0,2\pi).
 \end{equation*}
-We can also prove that
+For integer $m\ge1$ (so that point values are defined), we can also prove that
 \begin{equation*}
     \|R_N u\|_{L^2} \le C N^{-m} \|u^{(m)} \|_{L^2(0,2\pi)}, \qquad u \in H^{m}_p(0,2\pi).
 \end{equation*}
@@ -164,7 +164,7 @@ We can also prove that
 Now is a good time for an example.
 \begin{example}[Laplace equation with periodic conditions via Fourier--Galerkin]
     \label{ex:Laplace equation by Fourier-Galerkin}
-    Let us assume we are trying to solve
+    For real-valued $f\in L^2(0,2\pi;\mathbb R)$, seek a real-valued solution of
     \begin{equation*}
         \begin{dcases}
             -\Delta u = f & \text{in } (0,2\pi), \\
@@ -174,52 +174,59 @@ Now is a good time for an example.
     We need to assume the compatibility condition $\int_0^{2\pi} f = 0$. Notice that this is exactly $\hat f_0 = 0$.
     This problem is under-determined since for any solution $u$ and any constant $c \in \mathbb R$ we have that $u + c$ is also a solution.
     So we look for the solution with $\int_0^{2\pi} u = 0$.
-    We expand $u, f: (0,2\pi) \to \mathbb C$ in their Fourier series.
+    We retain complex Fourier coefficients as notation for real functions: $\hat f_{-k}=\overline{\hat f_k}$ and $\hat u_{-k}=\overline{\hat u_k}$.
     Thus, we consider
     \begin{equation*}
-        V = \left\{ u \in H^1_p(0,2\pi) : \int_0^{2\pi} u = 0 \right\}.
+        V = \left\{ u \in H^1_p(0,2\pi;\mathbb R) : \int_0^{2\pi} u = 0 \right\}.
     \end{equation*}
     The problem can be written equivalently as finding $u \in V$ such that
     \begin{equation*}
-        (-\Delta u, \phi)_{L^2(0,2\pi)} = (f, \phi)_{L^2(0,2\pi)} , \qquad \forall \phi \in V.
+        \int_0^{2\pi}u'\phi'\,\diff x = \int_0^{2\pi}f\phi\,\diff x, \qquad \forall \phi \in V.
     \end{equation*}
-    We point out that $-\Delta \phi_k = k^2 \phi_k$. Using $\phi = \phi_k$ we recover
+    Testing separately with $\cos(kx)$ and $\sin(kx)$, and combining the two real identities, gives
     \begin{equation*}
-        k^2 \hat u_k = \hat f_k.
+        k^2 \hat u_k = \hat f_k, \qquad k\ne0.
     \end{equation*}
-    This is precisely why we need $\hat f_0 = 0$.
+    The missing equation for the constant mode is the compatibility condition $\hat f_0=0$, obtained by integrating the original equation.
     We can see that the exact solution is
     \begin{equation*}
-        u = \sum_{\substack{k=-\infty \\ k \ne 0}}^\infty \frac{\hat f_k}{k^2} \phi_k.
+        u(x) = \sum_{\substack{k=-\infty \\ k \ne 0}}^\infty \frac{\hat f_k}{k^2} \phi_k(x)
+        = 2\operatorname{Re}\sum_{k=1}^\infty\frac{\hat f_k}{k^2}e^{ikx}.
     \end{equation*}
-    The corresponding Galerkin problem consists of finding a solution $u_N \in S_N \cap V$ in the sense that
+    To retain real-valued approximations, choose $N=2K+1$ with $K\ge1$ and use the symmetric real space
     \begin{equation*}
-        (-\Delta u_N, \phi)_{L^2(0,2\pi)} = (f, \phi)_{L^2(0,2\pi)} , \qquad \forall \phi \in S_N \cap V.
+        S_N^{\mathbb R}=\operatorname{span}_{\mathbb R}\{1,\cos x,\sin x,\dots,\cos(Kx),\sin(Kx)\}.
     \end{equation*}
-    Similarly to before, we observe that
+    Its $L^2$-orthogonal projection on real functions is $Q_Nu=\sum_{k=-K}^K\hat u_k\phi_k$. Conjugate pairs make this sum real. The Galerkin problem is to find $u_N\in V_N:=S_N^{\mathbb R}\cap V$ such that
     \begin{equation*}
-        u_N = \sum_{\substack{k=-N/2 \\ k \ne 0}}^{N/2-1}\frac{\hat f_k}{k^2} \phi_k = P_N u.
+        \int_0^{2\pi}u_N'\phi'\,\diff x=\int_0^{2\pi}f\phi\,\diff x,
+        \qquad\forall\phi\in V_N.
     \end{equation*}
-    We can therefore directly estimate the error using \Cref{thm:Fourier truncation of periodic function}.
+    Hence
+    \begin{equation*}
+        u_N(x)=\sum_{0<|k|\le K}\frac{\hat f_k}{k^2}\phi_k(x)
+        =2\operatorname{Re}\sum_{k=1}^K\frac{\hat f_k}{k^2}e^{ikx}=Q_Nu(x).
+    \end{equation*}
+    The proof of \Cref{thm:Fourier truncation of periodic function} applies to $Q_N$ with the same powers of $N$, since the omitted frequencies satisfy $|k|\ge K+1>N/2$.
     Higher orders of convergence require $f \in H^m_p(0,2\pi)$.
 \end{example}
 
 \begin{remark}[\Cref{ex:Laplace equation by Fourier-Galerkin} in terms of Céa's lemma]
     Let us define for $u,v$ periodic
     \begin{equation*}
-        a(u,v) = (-\Delta u, v)_{L^2(0,2\pi)} = \int_0^{2\pi} \frac{\diff u}{\diff x} \frac{\diff v}{\diff x}.
+        a(u,v) = \int_0^{2\pi} \frac{\diff u}{\diff x}\frac{\diff v}{\diff x}\,\diff x.
     \end{equation*}
-    Due to the Poincaré--Wirtinger inequality this is a coercive bilinear form on $V = \{ u \in H^1_p (0,2\pi; \mathbb R) : \int_0^{2\pi} u = 0 \}$. The weak formulation is given by \eqref{eq:Galerkin elliptic variational}.
-    Let us define $h = N^{-1}$, we can set $V_h = V \cap S_N$.
+    Due to the Poincaré--Wirtinger inequality this is a continuous, coercive, symmetric bilinear form on the real Hilbert space $V$ above. The weak formulation is given by \eqref{eq:Galerkin elliptic variational}, so the real versions of Lax--Milgram and Céa's lemma apply directly.
+    Let $h=N^{-1}$ and $V_h=V_N=V\cap S_N^{\mathbb R}$.
     Let $u_h \in V_h$ solve \eqref{eq:Galerkin elliptic variational discrete}.
     Again notice that, since this is a very simple example, $u_h = u_N$.
     Then, due to \namedCref{lem:cea} we have that
     \begin{align*}
-        \|u - u_h\|_{H^1(0,2\pi)} & \le C \|u - P_Nu\|_{H^1(0,2\pi)} \le C h^{(m+2)-1} \|\tfrac{\diff^{m+2} u}{\diff x^{m+2}}\|_{L^2(0,2\pi)} \\
+        \|u - u_h\|_{H^1(0,2\pi)} & \le C \|u - Q_Nu\|_{H^1(0,2\pi)} \le C h^{(m+2)-1} \|\tfrac{\diff^{m+2} u}{\diff x^{m+2}}\|_{L^2(0,2\pi)} \\
                                   & = C h^{m+1} \| \tfrac{\diff^m f}{\diff x^m} \|_{L^2(0,2\pi)},
     \end{align*}
     whenever $f \in H^m_p(0,2\pi)$.
-    And by \Cref{lem:Aubin-Nietsche} (with $H = L^2(0,2\pi)$ and $\omega(h) = Ch$) we have also that
+    And by \Cref{lem:Aubin-Nietsche} (with the real mean-zero pivot space $H=L^2_0(0,2\pi;\mathbb R)$ and $\omega(h)=Ch$) we have also that
     \begin{align*}
         \|u - u_h\|_{L^2(0,2\pi)} & \le C h^{2} \| f \|_{L^2(0,2\pi)}.
     \end{align*}
@@ -228,12 +235,12 @@ Now is a good time for an example.
 \subsection*{Exercises}
 
 \begin{exercises}
-\ex[]
-Code the Fourier--Galerkin method in \Cref{ex:Laplace equation by Fourier-Galerkin}. You will need to numerically approximate $\hat f_k$.
-We will discuss numerical integration in the next class.
-You can avoid this difficulty by using a library for numerical integration. In \texttt{julia} you can use \texttt{Integrals.jl}.
+    \ex[]
+    Code the Fourier--Galerkin method in \Cref{ex:Laplace equation by Fourier-Galerkin}. You will need to numerically approximate $\hat f_k$.
+    We will discuss numerical integration in the next class.
+    You can avoid this difficulty by using a library for numerical integration. In \texttt{julia} you can use \texttt{Integrals.jl}.
 
-Code the corresponding Fourier collocation method using the points $x_j = 2\pi j / N$ for $j = 0, \dots, N-1$.
+Code the corresponding real Fourier collocation method in $S_N^{\mathbb R}$, with $N=2K+1$ and nodes $x_j=2\pi j/N$ for $j=0,\dots,N-1$. Use the discrete coefficients $\tilde f_k=N^{-1}\sum_j f(x_j)e^{-ikx_j}$ for $-K\le k\le K$; real samples give conjugate pairs. Solvability requires $\sum_j f(x_j)=0$. Continuous mean zero alone does not imply this. If necessary replace the samples by $f_j^0=f(x_j)-N^{-1}\sum_l f(x_l)$, explicitly solving for the projected load. Fix the solution by requiring $\sum_j u_N(x_j)=0$.
 
-Compare the numerical errors as a function of $N$.
+    Compare the numerical errors as a function of $N$.
 \end{exercises}

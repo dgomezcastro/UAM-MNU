@@ -3,7 +3,7 @@ The Legendre polynomials are the eigenfunctions of the singular Sturm--Liouville
 \begin{equation*}
     -\frac{\diff}{\diff x} \left( (1-x^2) \frac{\diff L_k}{\diff x} \right) = k(k+1) L_k(x).
 \end{equation*}
-We have a unique solution if we set the condition $L_k(1) = 1$ and it is given by
+Among polynomial solutions, the normalisation $L_k(1)=1$ determines a unique solution, given by
 \begin{equation*}
     L_{k}(x) = \frac 1 {2^k} \sum_{l=0}^{\lfloor k / 2 \rfloor} (-1)^l \binom{k}{l} \binom{2k-2l}{k} x^{k-2l} .
 \end{equation*}
@@ -31,11 +31,15 @@ We have a unique solution if we set the condition $L_k(1) = 1$ and it is given b
     which are discrete (shifted) delta functions, since they satisfy $\psi_j (x_k) = \delta_{jk}$. We will use them.
 \end{example}
 
-Again, we have the estimate
+For integers $m\ge1$ and $u\in H^m(-1,1)$, we have the estimate
 \begin{equation*}
     \|u - P_N u\|_{L^2(-1,1)} \le C N^{-m} \|u \|_{H^m (-1,1)}.
 \end{equation*}
-In the $H^k$ norms with $k \ge 1$ the $L^2$-projection $P_N$ loses some order (the exponent becomes $2k - \frac 1 2 - m$); the rate $N^{k-m}$ is recovered if $P_N$ is replaced by the $H^1$-orthogonal projection, see \cite[Section 5.4]{CanutoHussainiQuarteroniZang2011}.
+In the $H^k$ norms, for integers $1\le k\le m$, the $L^2$-projection $P_N$ loses some order (the exponent becomes $2k-\frac12-m$). For the $H^1$-orthogonal projection $\Pi_N^1$ onto $\mathbb R_N[x]$, best approximation in $H^1$ instead gives
+\begin{equation*}
+    \|u-\Pi_N^1u\|_{H^1(-1,1)}\le C N^{1-m}\|u\|_{H^m(-1,1)}.
+\end{equation*}
+This assertion concerns the $H^1$ error, not arbitrary higher derivative norms; see \cite[Section 5.4]{CanutoHussainiQuarteroniZang2011}.
 We also have that, for the interpolant at the Gauss or Gauss--Lobatto nodes,
 \begin{equation*}
     \|u - I_N u \|_{L^2(-1,1)} \le C N^{-m} \|u \|_{H^m (-1,1)}.
@@ -46,7 +50,11 @@ We also have that, for the interpolant at the Gauss or Gauss--Lobatto nodes,
     \begin{equation*}
         -\frac{\diff}{\diff x}\left((1-x^2) \frac{\diff u}{\diff x}\right) = f \text{ in } (-1,1).
     \end{equation*}
-    Due to \Cref{rem:Sturm-Liouville degenerate} we do not impose any boundary conditions.
+    Take $f\in L^2(-1,1)$ and use the natural Legendre operator domain: $u\in L^2(-1,1)$, both $u$ and $(1-x^2)u'$ are locally absolutely continuous, $-((1-x^2)u')'\in L^2(-1,1)$, and
+    \begin{equation*}
+        \lim_{x\to\pm1}(1-x^2)u'(x)=0.
+    \end{equation*}
+    These flux conditions specify the self-adjoint realisation. They are automatic for polynomials, but exclude, for example, the singular homogeneous solution $\log((1+x)/(1-x))$, whose flux is $2$.
     Notice that $L_k$ are orthogonal in $L^2(-1,1)$ and $\deg L_k = k$. Therefore, they generate $L^2(-1,1)$. Let us look for a solution
     \begin{equation*}
         u = \sum_{k=0}^\infty \hat u_k L_k.

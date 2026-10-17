@@ -9,10 +9,9 @@ Since $V_h$ is finite-dimensional, it is also a Hilbert space. And we can apply 
 
 \begin{example}[Piece-wise linear functions in $d=1$]
     \label{ex:piece-wise linear in d=1}
-    Let us consider the mesh $\{x_0 = 0, x_1, \dots, x_{N} = 1\}$,
+    Let us consider the strictly increasing mesh $0=x_0<x_1<\cdots<x_N=1$,
     let $h_i = x_i - x_{i-1}$, and define the mesh parameter $h = \max_i h_i$.
-    Formally let $x_{-1}= -\infty$ and $x_{N+1} = +\infty$.
-    For such a subdivision, we consider the finite element basis function
+    For each interior node $i=1,\dots,N-1$, we consider the finite element basis function
 
     \begin{minipage}{0.95\textwidth}
         \begin{minipage}{0.6\textwidth}
@@ -31,6 +30,12 @@ Since $V_h$ is finite-dimensional, it is also a Hilbert space. And we can apply 
         \end{minipage}
     \end{minipage}
     \\
+    At the boundary nodes we use only the adjacent physical interval:
+    \begin{equation*}
+        \varphi_0(x)=\begin{cases}(x_1-x)/h_1 & x\in[x_0,x_1],\\0&\text{otherwise},\end{cases}
+        \qquad
+        \varphi_N(x)=\begin{cases}(x-x_{N-1})/h_N & x\in[x_{N-1},x_N],\\0&\text{otherwise}.\end{cases}
+    \end{equation*}
     If $V = H^1(\Omega)$ (e.g., \Cref{ex:Galerkin Helmholtz d=1}) we can take
     \begin{equation*}
         V_h \defeq \spannedby\{\varphi_0, \dots, \varphi_{N}\}.
@@ -107,9 +112,11 @@ Notice that if $a$ is coercive then $\mat K$ is positive-definite and hence inve
 \ex Solve the Galerkin discretisation of \namedCref{ex:Galerkin Helmholtz d=1} using $V_h = \mathbb R_N[x]$.
 When we take as basis $\varphi_k (x) = x^{k-1}$ with $k = 1, \dots, N+1$ we have that
 \begin{align*}
-    K_{ij} & = a(\varphi_j, \varphi_i) = (j-1)(i-1) \int_0^1 x^{j-2} x^{i-2} \diff x + \int_0^1 x^{j-1} x^{i-1} \diff x
-    \\
-           & = \frac{(j-1)(i-1)}{i+j-3} + \frac{1}{i+j-1}
+    K_{ij} & = a(\varphi_j, \varphi_i) = \frac{1}{i+j-1} +
+    \begin{cases}
+        \dfrac{(j-1)(i-1)}{i+j-3}, & i,j\ge2,\\
+        0, & i=1\text{ or }j=1,
+    \end{cases}
     \\
     b_i    & = \int_0^1 f(x) x^{i-1} \diff x.
 \end{align*}

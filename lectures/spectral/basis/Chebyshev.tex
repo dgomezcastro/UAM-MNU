@@ -41,7 +41,11 @@ We have that
 \begin{equation*}
     \|u - P_N u\|_{L^2_w (-1,1)} \le C N^{-m} \| u \|_{H^m_w (-1,1)},
 \end{equation*}
-where $H^m_w$ is the weighted Sobolev space. The same holds for $I_N$ at the Gauss or Gauss--Lobatto nodes.
+where, for integer $m\ge0$, the weighted Sobolev norm is
+\begin{equation*}
+    \|u\|_{H^m_w}^2=\sum_{j=0}^m\int_{-1}^1|u^{(j)}(x)|^2w(x)\diff x.
+\end{equation*}
+For integer $m\ge1$ and $u\in H^m_w(-1,1)$, the same estimate holds for $I_N$ at the Gauss or Gauss--Lobatto nodes. These assumptions ensure that point values are defined.
 
 \begin{example}[Gauss--Lobatto integration for the Chebyshev weight]
     \label{ex:Chebyshev Gauss-Lobatto}
@@ -50,7 +54,7 @@ where $H^m_w$ is the weighted Sobolev space. The same holds for $I_N$ at the Gau
     \begin{equation*}
         x_k = \cos \frac{k \pi}{N} \text{ for } k \in \{0, \dots, N \},
     \end{equation*}
-    and
+    Here the endpoints are ordered $x_0=1$, $x_N=-1$, reversing the order in the general quadrature theorem without changing the rule. The weights are
     \begin{equation*}
         w_0 = w_N = \frac{\pi}{2N}, \qquad w_k = \frac{\pi}N \text{ for } k \in \{1, \dots, N-1\}.
     \end{equation*}

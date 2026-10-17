@@ -30,28 +30,27 @@ Since $u_N(-1) = 0$, we have $|u_N(x)| = |\int_{-1}^x \frac{\diff u_N}{\diff x}|
 
 \section{Spectral approximation of Burgers' Equation}
 We follow \cite[Section 3.3]{CanutoHussainiQuarteroniZang2011}.
-Consider the viscous Burgers' equation with periodic boundary conditions
+For real-valued initial data and viscosity $\nu>0$, consider the real-valued solution of the viscous Burgers' equation with periodic boundary conditions
 \begin{equation}
     \frac{\partial u}{\partial t} + u \frac{\partial u}{\partial x} = \nu \frac{\partial^2 u }{\partial x^2}.
 \end{equation}
 
 \subsection{Fourier--Galerkin in $(0,2\pi)$ with periodic boundary conditions}
 
-Let us look for solutions
+To preserve real-valued solutions, use an odd number $N=2K+1$ of Fourier modes, indexed symmetrically by $-K,\dots,K$. Let us look for solutions
 \begin{equation}
     \label{eq:Fourier discrete solution}
-    u_N(t,x) = \sum_{k=-N/2}^{N/2-1} \hat u_k(t) e^{ikx}.
+    u_N(t,x) = \sum_{k=-K}^{K} \hat u_k(t) e^{ikx}.
 \end{equation}
-The periodic boundary conditions are already imposed in the choice of basis.
-We enforce the weak formulation
+Here $\hat u_{-k}(t)=\overline{\hat u_k(t)}$ and $\hat u_0(t)\in\mathbb R$, so $u_N(t,\cdot)\in S_N^{\mathbb R}$ as defined in \Cref{ex:Laplace equation by Fourier-Galerkin}. The periodic boundary conditions are already imposed in the basis. Testing with $1$, $\cos(kx)$ and $\sin(kx)$ gives the following equivalent complex notation for the real weak formulation:
 \begin{equation*}
     \int_0^{2\pi} \left( \frac{\partial u_N}{\partial t} + u_N \frac{\partial u_N}{\partial x} - \nu \frac{\partial^2 u_N}{\partial x^2} \right) e^{-ikx} = 0,
-    \qquad \text{for }k = -\frac N 2, \dots, \frac N 2 - 1.
+    \qquad \text{for }k = -K,\dots,K.
 \end{equation*}
 Due to orthogonality we have that
 \begin{equation*}
     \frac{d \hat u_k}{dt} + \widehat {\left( u_N \frac{\partial u_N}{\partial x} \right)}_k+ k^2 \nu \hat u_k = 0
-    \qquad \text{for }k = -\frac N 2, \dots, \frac N 2 - 1
+    \qquad \text{for }k = -K,\dots,K
 \end{equation*}
 where
 \begin{equation*}
@@ -59,13 +58,14 @@ where
 \end{equation*}
 We observe that
 \begin{equation*}
-    \widehat {\left( uv \right)}_k = \frac 1 {2\pi} \int_0^{2\pi} uv e^{-ikx} dx = \sum_{\substack{p+q = k \\ -\frac{N}{2} \le p,q \le \frac{N}{2} - 1}} \hat u_p \hat v_q.
+    \widehat {\left( uv \right)}_k = \frac 1 {2\pi} \int_0^{2\pi} uv e^{-ikx} dx = \sum_{\substack{p+q = k \\ -K\le p,q\le K}} \hat u_p \hat v_q.
 \end{equation*}
 Therefore we can write the closed (but unpleasant) formula for the drift term
 \begin{equation*}
-    \widehat {\left( u_N \frac{\partial u_N}{\partial x} \right)}_k = \sum_{\substack{p+q = k \\ -\frac{N}{2} \le p,q \le \frac{N}{2} - 1}} i q \, \hat u_p(t) \hat u_q(t).
+    \widehat {\left( u_N \frac{\partial u_N}{\partial x} \right)}_k = \sum_{\substack{p+q = k \\ -K\le p,q\le K}} i q \, \hat u_p(t) \hat u_q(t).
 \end{equation*}
 This kind of sums can be computed reasonably efficiently (see \cite[Section 3.4]{CanutoHussainiQuarteroniZang2011}).
+The coefficient equations preserve conjugate symmetry when it holds initially, and hence preserve real-valuedness. Initialise with the symmetric projection $u_N(0)=Q_Nu_0$.
 
 \subsection{Fourier collocation in $(0,2\pi)$ with periodic boundary conditions}
 Now we set the collocation formulation on $x_j = 2 \pi j / N$ for $j = 0, \dots, N-1$, $u_N$ given in Fourier expansion \eqref{eq:Fourier discrete solution}
@@ -73,6 +73,7 @@ and set the conditions
 \begin{equation*}
     \left( \frac{\partial u_N}{\partial t} + u_N \frac{\partial u_N}{\partial x} - \nu \frac{\partial^2 u_N}{\partial x^2} \right)\Bigg|_{x = x_j} = 0 , \qquad \forall t > 0, j \in \{0,\dots, N-1\}.
 \end{equation*}
+With $N=2K+1$, interpolation of real nodal values in $S_N^{\mathbb R}$ gives a real trigonometric polynomial. Its first and second derivatives are real, so the nodal ODE system below is a real system.
 \begin{remark}
     \label{rem:collocation solve in point-values}
     In previous examples like \namedCref{ex:collocation Laplace Chebyshev} it was easier to write the algebraic system of the collocation problem directly in the coefficients with respect to the basis, $\hat u_k(t)$.
@@ -123,17 +124,17 @@ We recall \Cref{rem:pointwise evaluation plotting}.
 
 
 \subsection{Chebyshev collocation in $(-1,1)$ with Dirichlet boundary conditions}
-We can use the Chebyshev--Gauss--Lobatto nodes $x_j = \cos \pi j / N$ for $j = 0, \dots, N$. Then we set
+We can use the Chebyshev--Gauss--Lobatto nodes $x_j=\cos(j\pi/N)$ for $j = 0, \dots, N$. Then we set
 \begin{equation*}
     \left( \frac{\partial u_N}{\partial t} + u_N \frac{\partial u_N}{\partial x} - \nu \frac{\partial^2 u_N}{\partial x^2} \right)\Bigg|_{x = x_j} = 0 , \qquad \forall t > 0, j \in \{1,\dots, N-1\},
 \end{equation*}
 and
 \begin{equation*}
-    u_N(t, x_0) = u_L(t), \qquad u_N(t, x_N) = u_R(t),
+    u_N(t,x_0)=u_R(t), \qquad u_N(t,x_N)=u_L(t),
 \end{equation*}
-where $u_L$ and $u_R$ are known functions.
+where $u_L(t)=u(t,-1)$ and $u_R(t)=u(t,1)$ are prescribed boundary data.
 Again we have to point out \Cref{rem:collocation solve in point-values}.
-For convenience and consistency with \Cref{sec:spectral collocation linear algebra} we write the whole vector $\vec u (t) = (u_L(t), u_N(t, x_1), \dots, u_N(t, x_{N-1}), u_R(t))^t$.
+For convenience and consistency with \Cref{sec:spectral collocation linear algebra} we write the whole vector $\vec u (t) = (u_R(t), u_N(t,x_1),\dots,u_N(t,x_{N-1}),u_L(t))^t$.
 We only have ODEs for the nodes with $j \in \{1, \dots, N-1\}$, so we can write the system as
 \begin{equation*}
     \mat Z_N
@@ -153,10 +154,15 @@ Written as a system of ODEs for the interior values, this reads
     = - \mat Z_N
     \left( \vec u \boxtimes  {\mat D}_N \vec u - \nu  {\mat D}^2_N \vec u \right).
 \end{equation}
-As usual, the natural way to initialize is $\vec u(0) = (u_0 (x_0), \dots, u_0 (x_N))^t$.
+Assume that $u_0(-1)=u_L(0)$ and $u_0(1)=u_R(0)$. Initialise with
+\begin{equation*}
+    \vec u(0)=(u_0(x_0),\dots,u_0(x_N))^t.
+\end{equation*}
 We recall \Cref{rem:pointwise evaluation plotting}.
 
 \subsection*{Exercises}
 \begin{exercises}
 \ex[] Solve some previous systems numerically.
 \end{exercises}
+
+\printbibliography[heading=subbibliography]

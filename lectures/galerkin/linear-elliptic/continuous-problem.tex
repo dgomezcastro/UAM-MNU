@@ -83,7 +83,7 @@ Apply Lax--Milgram's theorem to find a unique weak solution in
 We have developed above the situation for Laplace's equation with Dirichlet boundary conditions. The other natural conditions are the Neumann boundary conditions, written in $d = 1$ as $\frac{\diff u}{\diff x} (0) = \frac{\diff u}{\diff x} (1) = 0$. Write the corresponding linear algebra problem with piece-wise linear functions (see \Cref{sec:Galerkin elliptic linear algebra}). Compute the first eigenvalue and eigenvector of the matrix. Explain the result.
 
 \ex[Non-homogeneous Dirichlet conditions]
-\Cref{sec:Galerkin linear problems Hilbert space} was devoted to problems set on a Hilbert space $V$. This is the case, for example, of \emph{homogeneous} Dirichlet conditions $u = 0$ on $\partial \Omega$ which yields the Hilbert space $H^1_0 (\Omega)$. If we take $g \in C(\overline \Omega) \setminus \{0\}$, then
+\Cref{sec:Galerkin linear problems Hilbert space} was devoted to problems set on a Hilbert space $V$. This is the case, for example, of \emph{homogeneous} Dirichlet conditions $u = 0$ on $\partial \Omega$ which yields the Hilbert space $H^1_0 (\Omega)$. Let $\Omega$ be a bounded Lipschitz domain and take nonzero boundary data $g \in H^{1/2}(\partial\Omega)$. The trace theorem guarantees an $H^1$ lifting of $g$. Then
 \begin{equation*}
     H_g^1 (\Omega) = \{u \in H^1(\Omega) : \trace_{\partial \Omega} u = g \}
 \end{equation*}
@@ -100,7 +100,7 @@ Write the corresponding linear-algebra formulation.
 \end{exercises}
 
 \subsection{Functional equations: from bilinear forms to operators}
-Let $a: V \times V \to \mathbb R$ be continuous and bilinear, and let $H \supset V$ be another Hilbert space such that $V$ is continuously embedded in $H$.
+Let $a: V \times V \to \mathbb R$ be continuous and bilinear, and let $H \supset V$ be another Hilbert space such that $V$ is densely and continuously embedded in $H$.
 For $u$ fixed the map $\varphi_u : v \mapsto a(u,v)$ is in $V^*$.
 By the embedding, $H^* \subset V^*$. We define the domain of $a$ with respect to $H$ as the set
 \begin{equation*}

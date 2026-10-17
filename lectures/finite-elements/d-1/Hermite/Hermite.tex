@@ -54,7 +54,7 @@ As discussed in \Cref{ex:FEM affine equivalence Hermite cubics}, this is not aff
 
 \paragraph{Local interpolation in an interval $K$}
 In dimension $d=1$ we have that $\rho_K = h_K$.
-We can use \Cref{thm:FEM bound interpolation error} to deduce that
+After rescaling to $(0,1)$, the factors in the derivative degrees of freedom cancel those in the derivative basis functions. Thus the rescaled interpolator is the fixed cubic Hermite interpolator, so its norm $\sigma_K$ is independent of the interval. For $1<p<\infty$, \Cref{thm:FEM bound interpolation error} gives
 \begin{equation*}
     [v - \mathcal I_K v]_{W^{j,p} (K)} \le C h_K^{4-j}[v]_{W^{4,p}(K)}, \qquad j \in \{0, \dots, 4\}.
 \end{equation*}
@@ -87,7 +87,7 @@ $$
         0,                                                                        & \text{otherwise}.
     \end{cases}
 $$
-See \Cref{fig:Hermite cubics basis functions}.
+These formulas apply to interior nodes. For $i=0$ retain only the right interval, and for $i=N+1$ retain only the left interval; no exterior intervals are introduced. Values and one-sided derivatives at $a,b$ are given by continuous extension from $[a,b]$. See \Cref{fig:Hermite cubics basis functions}.
 Then we have the interpolant
 \begin{equation*}
     \mathcal I_{\mathcal T} u(x) = \sum_{i=0}^{N+1} \Big( u(x_i) v_i(x) + \frac{du}{dx}(x_i) w_i (x)\Big).
@@ -250,9 +250,9 @@ If we also impose $u'(a) = u'(b) = 0$ (as for a clamped beam) we also remove the
 
 \begin{remark}[Gaussian quadrature]
     The integrands $\theta_\alpha \theta_\beta$ are polynomials of degree $6$.
-    Hence, if we want to compute the integrals numerically (for example, when there are variable coefficients), we need a quadrature that is exact at least for polynomials of degree $6$.
+    To compute these constant-coefficient mass integrals exactly, we need a quadrature rule exact for degree $6$.
     Due to \Cref{thm:Gauss integration}, Gaussian quadrature with $4$ points is exact for polynomials of degree $7$, so it is the natural choice.
-    For $\widehat A$ and $\widehat B$ the integrands have degree $4$ and $2$, so $3$ and $2$ points suffice, respectively.
+    For $\widehat A$ and $\widehat B$ the integrands have degree $4$ and $2$, so $3$ and $2$ points suffice, respectively. Variable coefficients or a nonpolynomial load change the integrands: these rules then give approximations unless their polynomial exactness still applies.
 \end{remark}
 
 \subsection*{Exercises}

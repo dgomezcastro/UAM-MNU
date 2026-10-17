@@ -25,15 +25,15 @@ Their key property is that
 \begin{equation*}
     \sum_{i=0}^{m-p-1} B_{i,p}(x) = 1
 \end{equation*}
-for all $x \in [t_p,t_{m-p}]$.
+for all $x\in[t_p,t_{m-p}]$ when $p\ge1$ and this interval is nonempty (for $p=0$, use $[t_0,t_m)$).
 We build approximations of the form
 \begin{equation*}
     S_p (x) = \sum_j c_{j,p} B_{j,p}(x).
 \end{equation*}
-For degree $p > 1$ we do not have a nice closed formula for the interpolation and typical approximations rely on least-squares optimisation.
+For degree $p>1$, interpolation at suitable sites is obtained by solving a linear system; least-squares fitting is another common choice. The degree is $p$ and the order is $p+1$.
 
 \subsubsection{Linear B-splines}
-If we take a mesh $x_0, \dots, x_N$ and knots $t_i = x_i$, then $B_{i-1,1}$ coincides with the hat function $\varphi_i$ of \Cref{ex:piece-wise linear in d=1}.
+If we take a mesh $x_0,\dots,x_N$ and knots $t_i=x_i$, then for interior nodes $i=1,\dots,N-1$, $B_{i-1,1}$ coincides with the hat function $\varphi_i$ of \Cref{ex:piece-wise linear in d=1}.
 
 \subsubsection{Quadratic B-splines}
 
@@ -70,11 +70,11 @@ Notice that, due to the compact support, only finitely many terms are non-zero i
 
 \paragraph{Finite-elements space}
 If we take the sub-division $\mathcal T$ corresponding to $x_0 = a, \dots, x_N = b$,
-the basis is obtained precisely by adding enough fictitious points outside $(a,b)$, see \Cref{fig:Bspline quadratic basis}.
+one can extend the knots outside $(a,b)$, as in the uniform construction above. The accompanying notebook and \Cref{fig:Bspline quadratic basis} instead use a \emph{clamped} knot vector: repeat each endpoint $p+1$ times and retain each interior breakpoint once. For a nondecreasing knot vector, the Cox--de Boor recursion uses the convention that any term with zero denominator is zero. An interior knot of multiplicity $r$ reduces continuity to $C^{p-r}$ for $1\le r\le p$; multiplicity $p+1$ permits a jump. At the right endpoint of a clamped interval, evaluate by the limit from the left. Thus the basis still forms a partition of unity on the closed physical interval.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{Bsplines_quadratic_basis}
-    \caption{B-splines of degree 2 with knots $t_0 = -0.3, t_1 = 1.1, t_2=1.4, t_3 = 2.0$.}
+    \caption{Clamped B-splines of degree 2 with breakpoints $-0.3,1.1,1.4,2.0$. The full knot vector is $(-0.3,-0.3,-0.3,1.1,1.4,2.0,2.0,2.0)$.}
     \label{fig:Bspline quadratic basis}
 \end{figure}
 
@@ -98,6 +98,6 @@ When discussing the cubic B-splines basis people usually refer to the space $\ma
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{Bsplines_cubic_basis}
-    \caption{B-splines of degree 3 with knots $t_0 = -0.3, t_1 = 1.1, t_2=1.4, t_3 = 2.0$.}
+    \caption{Clamped B-splines of degree 3 with breakpoints $-0.3,1.1,1.4,2.0$; each endpoint occurs four times in the full knot vector.}
     \label{fig:Bspline cubic basis}
 \end{figure}

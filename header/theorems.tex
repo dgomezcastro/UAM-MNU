@@ -17,6 +17,7 @@
 \makeatletter
 \let\c@theorem\c@theo
 \let\thetheorem\thetheo
+\renewcommand{\theHtheorem}{\theHchapter.\arabic{theo}}
 \makeatother
 
 \makeatletter
@@ -51,6 +52,7 @@
 \makeatletter
 \let\c@strongtheorem\c@theo
 \let\thestrongtheorem\thetheo
+\renewcommand{\theHstrongtheorem}{\theHchapter.\arabic{theo}}
 \makeatother
 
 \makeatletter
@@ -86,6 +88,7 @@
 \makeatletter
 \let\c@lemma\c@theo
 \let\thelemma\thetheo
+\renewcommand{\theHlemma}{\theHchapter.\arabic{theo}}
 \makeatother
 
 \makeatletter
@@ -120,6 +123,7 @@
 \makeatletter
 \let\c@definition\c@theo
 \let\thedefinition\thetheo
+\renewcommand{\theHdefinition}{\theHchapter.\arabic{theo}}
 \makeatother
 
 \makeatletter
@@ -156,6 +160,7 @@
 \makeatletter
 \let\c@remark\c@theo
 \let\theremark\thetheo
+\renewcommand{\theHremark}{\theHchapter.\arabic{theo}}
 \makeatother
 
 \makeatletter
@@ -191,6 +196,7 @@
 \makeatletter
 \let\c@example\c@theo
 \let\theexample\thetheo
+\renewcommand{\theHexample}{\theHchapter.\arabic{theo}}
 \makeatother
 
 \makeatletter

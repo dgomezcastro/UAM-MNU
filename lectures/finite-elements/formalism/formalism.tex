@@ -178,19 +178,23 @@ This kind of affine-equivalence results work well when the nodal functions $N_i(
 \end{remark}
 
 This difficulty can be overcome with some additional work.
-We provide a result based on \namedCref{lem:Bramble-Hilbert} that can be found in \cite[Section 3.2]{Suli}.
+The following estimate uses the Bramble--Hilbert lemma (\Cref{lem:Bramble-Hilbert}); see \cite[Section 3.2]{Suli}.
 
 \begin{strongtheorem}[Bound on the interpolation error]
     \label{thm:FEM bound interpolation error}
     Let $(K, \mathcal P, \mathcal N)$ be a finite element in $\mathbb R^d$ satisfying
     \begin{enumerate}
-        \item $K$ is star-shaped with respect to some ball contained in $K$,
+        \item $K$ is star-shaped with respect to a ball of diameter $\rho_{*,K}>0$ contained in $K$,
         \item $\mathbb R_{m-1}[x] \subset \mathcal P \subset W^{m,\infty} (K)$,
         \item each $N_i \in \mathcal N $ satisfies $|N_i(v)| \le C_i \| v \|_{C^\ell(\overline K)}$,
     \end{enumerate}
-    where $1< p <\infty$ and $m - \ell - \frac{d}{p} > 0$. Then, for all $j \in \{0, \dots, m\}$ we have that
+    where $1<p<\infty$ and $m-\ell-d/p>0$. Choose $x_K\in K$ and rescale $K$ to diameter one by $\widehat K=(K-x_K)/h_K$, transporting the shape functions and degrees of freedom by this affine map. Set
     \begin{equation*}
-        [v - \mathcal I_K v ]_{W^{j,p} (K)} \le C\left(d,m,p,\frac{h_K}{\rho_K}\right) h_K^{m-j} [v]_{W^{m,p}(K)}, \qquad \forall v \in W^{m,p}(K).
+        \sigma_K=\|\mathcal I_{\widehat K}\|_{C^\ell(\overline{\widehat K})\to W^{m,p}(\widehat K)}.
+    \end{equation*}
+    For convex elements one may take $\rho_{*,K}=\rho_K$, the diameter of an inscribed ball. Then, for all $j \in \{0, \dots, m\}$ we have that
+    \begin{equation*}
+        [v - \mathcal I_K v ]_{W^{j,p} (K)} \le C\left(d,m,p,\ell,\frac{h_K}{\rho_{*,K}},\sigma_K\right) h_K^{m-j} [v]_{W^{m,p}(K)}, \qquad \forall v \in W^{m,p}(K).
     \end{equation*}
 \end{strongtheorem}
 
@@ -234,8 +238,9 @@ The usual procedure to build finite element meshes of a domain $\Omega$ is the f
     Let $\Omega \subset \mathbb R^d$. A finite-elements space in $\Omega$ is given by: a sub-division $\mathcal T$ of $\Omega$ and a finite element $(K, \mathcal P_K, \mathcal N_K)$ in each $K \in \mathcal T$.
     The finite-element space is given by
     \begin{equation*}
-        \mathcal P_{\mathcal T} \defeq \{ u : \Omega \to \mathbb R \text{ such that } u|_K \in \mathcal P_K \text{ for all } K \in \mathcal T \}.
+        \mathcal P_{\mathcal T} \defeq \prod_{K\in\mathcal T}\mathcal P_K.
     \end{equation*}
+    We identify these tuples with piecewise functions defined almost everywhere in $\Omega$. Interface values are supplied by elementwise traces, not by independent point values.
 \end{definition}
 
 \begin{definition}[Global interpolant of a finite-element space]
@@ -256,8 +261,9 @@ Notice that, since $K$ is open, we have not defined the interpolant over $\parti
     Consider a finite-element space. The nodal functions of $K$, $N_i^{(K)} \in \mathcal N_K$, are maps $\mathcal P_K \to \mathbb R$.
     We define the global nodal functions $N_{K,i} : \mathcal P_{\mathcal T} \to \mathbb R$ as
     \begin{equation*}
-        N_{K,i}(v) = N^{(K)}_i(v|_{\overline K}).
+        N_{K,i}(v) = N^{(K)}_i(v|_K).
     \end{equation*}
+    Boundary evaluations use the trace from $K$, as in \Cref{rem:FEM formalism local interpolator at boundary}.
     We introduce the set of global nodal functions
     \begin{equation*}
         \mathcal N_{\mathcal T} = \{ N_{K,i} : K \in \mathcal T, i \in \{1, \dots, \# \mathcal N_{K}\} \}.
@@ -384,9 +390,9 @@ We will see this effect clearly in some bases in dimension $d=1$, and then again
 \begin{remark}
     In practice, the nodal functions are evaluation of the function and its derivatives at certain points $x_i^{(K)}$. When $x_i^{(K)} \in \partial K$, the nodal functions are usually chosen so that $N_{K,i} = N_{L,j}$ between adjacent sub-domains $K$ and $L$.
     This allows a ``natural'' glueing between the local basis functions to get basis functions of $V_h$ (similarly to \Cref{ex:finite-element space d=1})
-    and to the formula
+    after matching shared degrees of freedom and imposing boundary constraints. Since the local nodal maps separate elements, the correct dimension formula is
     \begin{equation*}
-        \dim V_h = \# \left( (\mathcal N_{\mathcal T})\big|_{V \cap C^r(\overline \Omega)}\right).
+        \dim V_h = \dim\spannedby\{N|_{V_h}:N\in\mathcal N_{\mathcal T}\}.
     \end{equation*}
 
 
@@ -499,11 +505,12 @@ This very modest result can be extended to sub-divisions which are not affine eq
     Let $\mathcal T$ be a sub-division of $\Omega$ such that
     \begin{enumerate}
         \item for every $K \in \mathcal T$ we have a suitable finite element $(K,\mathcal P_K, \mathcal N_K)$ satisfying the hypotheses of \Cref{thm:FEM bound interpolation error} with $p = 2$,
-        \item The global interpolant is continuous $\mathcal I_{\mathcal T} : H^m (\Omega) \to H^k (\Omega)$.
+        \item The global interpolant maps $H^m(\Omega)$ continuously into $H^k(\Omega)$, for a fixed $k\in\{0,\dots,m\}$,
+        \item The rescaled interpolation norms satisfy $\sup_K\sigma_K\le\Sigma$, and $\mu_*:=\inf_K\rho_{*,K}/h_K>0$.
     \end{enumerate}
-    Then, we have that for $k \in \{0, \dots, m\}$
+    Then, we have
     \begin{equation*}
-        \left[v - \mathcal I_{\mathcal T} v \right]_{H^k(\Omega)} \le C\left(\Omega, \inf_K \mu_ K\right)  \sup_K{h_{K}^{m-k}}[ v]_{H^m (\Omega)}, \qquad \forall v \in H^m(\Omega).
+        \left[v - \mathcal I_{\mathcal T} v \right]_{H^k(\Omega)} \le C\left(\Omega,m,k,\ell,\mu_*,\Sigma\right)  \sup_K{h_{K}^{m-k}}[ v]_{H^m (\Omega)}, \qquad \forall v \in H^m(\Omega).
     \end{equation*}
 \end{strongtheorem}
 
@@ -529,8 +536,9 @@ This very modest result can be extended to sub-divisions which are not affine eq
 
     \ex Consider a family of triangles with $h_K=1$ and with one angle tending
     to zero. Show that $\rho_K/h_K\to0$. Using the interpolation estimate,
-    explain why the constant in the $H^1$ error bound cannot remain uniform for
-    this family. What geometric condition on a mesh prevents this degeneration?
+    explain why the displayed bound no longer guarantees a uniform $H^1$ error constant.
+    Does this upper bound alone prove that the best interpolation constant diverges?
+    What geometric condition on a mesh prevents the shape ratio from degenerating?
 
     \ex On $\Omega=(0,2)$ with elements $(0,1)$ and $(1,2)$, construct a
     piecewise linear function whose values agree at $x=1$ but whose one-sided
@@ -539,3 +547,4 @@ This very modest result can be extended to sub-divisions which are not affine eq
     conditions across the interface.
 \end{exercises}
 
+\printbibliography[heading=subbibliography]
