@@ -325,24 +325,6 @@
     {\small Uniqueness holds if $a$ is strictly monotone (test with $u - v$).}
 \end{frame}
 
-\begin{frame}{Browder--Minty theorem}
-    The same scheme proves the non-linear version of Lax--Milgram.
-    \begin{theorem}[Browder--Minty]
-        Let $X$ be a real reflexive Banach space and $T: X \to X^*$ such that
-        \begin{enumerate}
-            \item bounded: $T$ maps bounded sets of $X$ into bounded sets of $X^*$;
-            \item continuous;
-            \item monotone: $\langle Tx - Ty, x - y \rangle \ge 0$ for all $x, y \in X$;
-            \item coercive: $\displaystyle \inf_{\|x\|_X = R} \frac{\langle Tx, x\rangle}{\|x\|_X} \longrightarrow \infty$ as $R \to \infty$.
-        \end{enumerate}
-        Then $T$ is surjective: for every $g \in X^*$ there exists $u \in X$ with $Tu = g$.
-    \end{theorem}
-    \begin{itemize}
-        \item Any spaces $V_N$ that approximate $V$ can be used: this is the idea behind the convergence of finite elements for non-linear problems.
-        \item The price: \alert{no rate of convergence}.
-    \end{itemize}
-\end{frame}
-
 \begin{frame}{Summary and practice}
     \begin{itemize}
         \item Parabolic problems: Galerkin in space gives $\mat M \vec u' + \mat K \vec u = \vec b$.
