@@ -1,0 +1,278 @@
+% !TEX root = ../slides.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Session 3: Galerkin for parabolic and non-linear problems
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\session{session03}{Galerkin's method}{Galerkin for parabolic and non-linear problems}
+{Sections 1.2--1.3}
+{\notebook{lectures/galerkin}{FEMlinear1dHeatDirichlet.ipynb}}
+{1.9--1.11}
+
+\begin{frame}{Plan for today}
+    \textbf{Part I: linear parabolic problems} (heat equation)
+    \begin{enumerate}
+        \item Weak formulation and energy estimates.
+        \item Semi-discretisation in space: mass and stiffness matrices.
+        \item Error estimate: a parabolic version of Céa's lemma.
+        \item Full discretisation: the $\theta$-method and the CFL condition.
+    \end{enumerate}
+    \medskip
+    \textbf{Part II: non-linear elliptic problems}
+    \begin{enumerate}
+        \setcounter{enumi}{4}
+        \item Quasi-linear problems, e.g.\ the $p$-Laplacian.
+        \item Convergence by compactness and Minty's trick.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Parabolic problems: weak formulation}
+    Heat-type equations: \quad $\dfrac{\diff u}{\diff t} + Au = f(t)$, \quad $t \in (0,T)$, \quad $u(0) = u_0$.
+    \medskip
+
+    With $\prodH{Au}{v} = a(u,v)$ (Session 1) we get the weak formulation:
+    \[
+        \tag{C}
+        \text{find } u \text{ such that }
+        \begin{cases}
+            \prodH{\frac{\diff u}{\diff t}(t)}{v} + a(u(t), v) = \prodH{f(t)}{v} & \forall v \in V,\ t \in (0,T), \\
+            u(0) = u_0.
+        \end{cases}
+    \]
+    \begin{example}[Heat equation in $(0,1)$]
+        $u_t - u_{xx} = f$, $u(t,0) = u(t,1) = 0$: \ $V = H^1_0(0,1)$, $H = L^2(0,1)$, $a(u,v) = \int_0^1 u_x v_x$.
+    \end{example}
+\end{frame}
+
+\begin{frame}{Energy estimates}
+    \begin{lemma}[A priori estimates]
+        Let $a$ be bilinear, symmetric, continuous and coercive ($\alpha^*$), $\|v\|_H \le \|v\|_V$. Then
+        \[
+            \|u(t)\|_H^2 + \int_0^t \|u(s)\|_a^2 \diff s \le \|u_0\|_H^2 + \frac 1 {\alpha^*} \int_0^t \|f(s)\|_H^2 \diff s,
+        \]
+        \[
+            \|u(t)\|_H^2 \le e^{-\alpha^* t} \|u_0\|_H^2 + \frac{1}{\alpha^*} \int_0^t e^{-\alpha^*(t-s)} \|f(s)\|_H^2 \diff s.
+        \]
+    \end{lemma}
+    \begin{proofsteps}
+        \begin{enumerate}
+            \item Test with $v = u(t)$: \
+                  $\frac 1 2 \frac{\diff}{\diff t}\|u\|_H^2 + a(u,u) = \prodH{f}{u} \le \frac{1}{2\alpha^*} \|f\|_H^2 + \frac{\alpha^*}{2}\|u\|_H^2$.
+            \item Coercivity: $\alpha^* \|u\|_H^2 \le \|u\|_a^2$.
+            \item Integrate in time (first estimate), or use the integrating factor $e^{\alpha^* t}$ (second).
+        \end{enumerate}
+    \end{proofsteps}
+    {\small Testing with $v = \frac{\diff u}{\diff t}$ gives a third estimate for $\int_0^t \|\frac{\diff u}{\diff t}\|_H^2 + \|u(t)\|_a^2$.}
+\end{frame}
+
+\begin{frame}{Semi-discretisation in space}
+    Replace $V$ by $V_h$:
+    \[
+        \tag{C$_h$}
+        \prodH{\tfrac{\diff u_h}{\diff t}(t)}{v_h} + a(u_h(t), v_h) = \prodH{f(t)}{v_h} \quad \forall v_h \in V_h,
+        \qquad u_h(0) = u_{0,h}.
+    \]
+    Write $u_h(t) = \sum_{j=1}^N U_j(t)\, \varphi_j$. We get a \alert{system of linear ODEs}
+    \[
+        \mat M \frac{\diff \vec u}{\diff t} + \mat K \vec u = \vec b(t),
+        \qquad
+        \mat M = \big( \prodH{\varphi_j}{\varphi_i} \big)_{ij},
+        \quad
+        \vec b(t) = \big( \prodH{f(t)}{\varphi_i} \big)_i .
+    \]
+    \begin{itemize}
+        \item $\mat M$ is the \alert{mass matrix}; $\mat K = \big( a(\varphi_j, \varphi_i) \big)_{ij}$ is the stiffness matrix.
+        \item Hat functions on a uniform mesh (\textcolor{mnuaccent}{check it at the board}):
+              \[
+                  \mat M = \frac h 6 \begin{pmatrix} 4 & 1 & & \\ 1 & 4 & \ddots & \\ & \ddots & \ddots & 1 \\ & & 1 & 4\end{pmatrix},
+                  \qquad
+                  \mat K = \frac 1 h \begin{pmatrix} 2 & -1 & & \\ -1 & 2 & \ddots & \\ & \ddots & \ddots & -1 \\ & & -1 & 2\end{pmatrix}.
+              \]
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Parabolic version of Céa's lemma}
+    \small
+    \begin{theorem}
+        Under the assumptions above, let $u$ solve (C) and $u_h$ solve (C$_h$). Then
+        \begin{multline*}
+            \|u(t) - u_h(t)\|_H^2 + \int_0^t \|u(s) - u_h(s)\|_a^2 \diff s \\
+            \le \|u_0 - u_{0,h}\|_H^2 + \inf_{v_h} \int_0^t \Big( C_h(s) \|u(s) - v_h(s)\|_H + \|u(s) - v_h(s)\|_a^2 \Big) \diff s,
+        \end{multline*}
+        where $C_h(t) = 2 \sup_{s \in (0,t)} \big( \|\tfrac{\diff u}{\diff t}(s)\|_H + \|\tfrac{\diff u_h}{\diff t}(s)\|_H\big)$.
+    \end{theorem}
+    \begin{proofsteps}
+        \begin{enumerate}
+            \item Galerkin orthogonality: $e_h = u - u_h$ satisfies $\prodH{\frac{\diff e_h}{\diff t}}{w_h} + a(e_h, w_h) = 0$, $\forall w_h \in V_h$.
+            \item Split $e_h = (u - v_h) + (v_h - u_h)$ and take $w_h = v_h - u_h$.
+            \item Cauchy--Schwarz and Young: $\frac{\diff}{\diff t}\|e_h\|_H^2 + \|e_h\|_a^2 \le C_h \|u - v_h\|_H + \|u - v_h\|_a^2$. Integrate in time.
+        \end{enumerate}
+    \end{proofsteps}
+\end{frame}
+
+\begin{frame}{On the choice of $u_h(0)$}
+    A convenient choice is the \alert{elliptic (Ritz) projection} of $u_0$:
+    \[
+        u_h(0) \in V_h, \qquad a(u_h(0), v_h) = a(u_0, v_h) \quad \forall v_h \in V_h.
+    \]
+    \begin{itemize}
+        \item If $u_0 \in D_H(A)$, then
+              \[
+                  \Big\|\frac{\diff u_h}{\diff t}(0)\Big\|_H \le \|Au_0\|_H + \|f(0)\|_H .
+              \]
+        \item With some extra regularity of $f$ (in time) this gives a bound of $C_h(t)$ \alert{independent of $h$}.
+    \end{itemize}
+    \takeaway{The error of the parabolic problem is controlled by the approximation error in $V_h$, as in the elliptic case.}
+\end{frame}
+
+\begin{frame}{Full discretisation: the $\theta$-method}
+    Time step $\tau$, $u_h^n \approx u_h(n\tau)$, $\theta \in [0,1]$:
+    \[
+        \BigprodH{\frac{u_h^{n+1} - u_h^n}{\tau}}{v_h} + a\big(\theta u_h^{n+1} + (1-\theta) u_h^n, v_h\big)
+        = \BigprodH{\theta f^{n+1} + (1-\theta) f^n}{v_h}.
+    \]
+    \begin{itemize}
+        \item $\theta = 0$: explicit Euler. \ $\theta = 1$: implicit Euler. \ $\theta = \frac12$: Crank--Nicolson.
+    \end{itemize}
+    In matrix form, at each step we solve the linear system
+    \[
+        (\mat M + \tau \theta \mat K)\, \vec u^{n+1} = (\mat M - \tau(1-\theta)\mat K)\, \vec u^n + \tau\big(\theta \vec b^{n+1} + (1-\theta) \vec b^n\big).
+    \]
+    \takeaway{Even for explicit Euler we must solve a system with $\mat M$ (unlike finite differences).}
+\end{frame}
+
+\begin{frame}{Convergence in time}
+    \small
+    \begin{theorem}
+        Let $a$ be symmetric, continuous and coercive, $f \in H^1(0,T;H)$, $u_h^0 = u_h(0)$ and
+        $\lambda_{\max,h} = \max_{v_h \ne 0} \frac{a(v_h,v_h)}{\|v_h\|_H^2} = \lambda_{\max}(\mat M^{-1} \mat K)$.
+        If $0 \le \theta < \frac 12$ assume the \alert{CFL condition}
+        $\tau (1 - 2\theta) \lambda_{\max,h} \le 2$. Then
+        \[
+            \max_{n\tau \le T} \|u_h^n - u_h(n\tau)\|_H \le \max\{\theta, 1-\theta\}\, \tau \int_0^T \|u_h''(s)\|_H \diff s .
+        \]
+        For $\theta = \frac 12$ (and $f \in H^2(0,T;H)$) the error is $\le \frac{\tau^2}{8} \int_0^T \|u_h'''(s)\|_H \diff s$.
+    \end{theorem}
+    \begin{proofsteps}
+        \begin{enumerate}
+            \item Stability: in an eigenbasis of $A_h$, each step multiplies by
+                  $R_\theta(\tau\lambda) = \frac{1 - (1-\theta)\tau\lambda}{1 + \theta\tau\lambda}$, and $|R_\theta| \le 1$ under the CFL condition.
+            \item Consistency: the exact $u_h$ leaves a residual $r_n = O(\tau)$ (or $O(\tau^2)$ if $\theta = \frac12$). Hence error $\le \tau \sum_n \|r_n\|_H$.
+        \end{enumerate}
+    \end{proofsteps}
+\end{frame}
+
+\begin{frame}{Remarks on the CFL condition}
+    \begin{itemize}
+        \item $\theta \ge \frac12$ (implicit Euler, Crank--Nicolson): \alert{unconditionally stable}.
+        \item $\theta < \frac 12$: if $|a(v,w)| \le M_a\|v\|_V\|w\|_V$ then
+              \[
+                  \lambda_{\max,h} \le M_a\, C(h), \qquad C(h) = \sup_{v_h \ne 0} \frac{\|v_h\|_V^2}{\|v_h\|_H^2}.
+              \]
+        \item For hat functions $C(h) \sim h^{-2}$ (inverse inequality), so explicit Euler needs $\tau \lesssim h^2$.
+        \item Total error, by the triangle inequality:
+              \[
+                  \|u(n\tau) - u_h^n\|_H \le \underbrace{\|u(n\tau) - u_h(n\tau)\|_H}_{\text{space}} + \underbrace{\|u_h(n\tau) - u_h^n\|_H}_{\text{time}}.
+              \]
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Non-linear elliptic problems}
+    \begin{itemize}
+        \item \textbf{Semi-linear:} lower-order non-linearities, e.g.\ absorption $-\Delta u + u^q = f$.
+        \item \textbf{Quasi-linear:} non-linearity in the highest-order term, e.g.\ the $p$-Laplacian
+              \[
+                  -\Delta_p u = -\diver\big(|\nabla u|^{p-2}\nabla u\big), \qquad p > 1.
+              \]
+    \end{itemize}
+    General quasi-linear problem:
+    \[
+        \begin{cases}
+            -\diver a(\nabla u) = f & \text{in } \Omega, \\
+            u = 0 & \text{on } \partial\Omega,
+        \end{cases}
+        \qquad
+        \text{weak form: } \int_\Omega a(\nabla u)\cdot \nabla v = \int_\Omega f v \quad \forall v \in W^{1,p}_0(\Omega).
+    \]
+    \takeaway{Céa-type estimates exist for the $p$-Laplacian, but we present a more robust technique: convergence by compactness (no rates).}
+\end{frame}
+
+\begin{frame}{Assumptions}
+    $\Omega$ bounded Lipschitz, $p > 1$, $f \in L^{p'}(\Omega)$ with $p' = \frac{p}{p-1}$, and $a: \R^d \to \R^d$ continuous with
+    \begin{itemize}
+        \item monotone: $(a(\xi) - a(\eta))\cdot(\xi - \eta) \ge 0$,
+        \item coercive: $a(\xi)\cdot\xi \ge A|\xi|^p - B$, \ $A > 0$,
+        \item controlled growth: $|a(\xi)| \le C(1 + |\xi|^{p-1})$.
+    \end{itemize}
+    \medskip
+    \textbf{Galerkin spaces.} $V_N = \spannedby\{e_1, \dots, e_N\} \subset W^{1,p}_0(\Omega)$ such that every $v \in W^{1,p}_0(\Omega)$ is the limit of some $v_N \in V_N$.
+    \[
+        \text{Find } u_N \in V_N: \quad \int_\Omega a(\nabla u_N)\cdot\nabla v = \int_\Omega f v \qquad \forall v \in V_N.
+    \]
+    {\small Example: $p$-Laplacian with hat functions (Exercises 1.10--1.11).}
+\end{frame}
+
+\begin{frame}{Convergence by compactness}
+    \begin{theorem}
+        Under these assumptions, $u_N$ exists for every $N$, and a subsequence converges to a weak solution $u \in W^{1,p}_0(\Omega)$.
+    \end{theorem}
+    \begin{proofsteps}
+        \begin{enumerate}
+            \item \textbf{Discrete existence.} $u_N = \sum_i \alpha_i e_i$ solves $F(\alpha) = 0$, with $F: \R^N \to \R^N$ monotone and coercive.
+                  If $F \ne 0$ on $\overline{B(0,R)}$, then $G = -R\, F/|F|$ has a fixed point (Brouwer) with $|\alpha_0| = R$ and $R^2 = G(\alpha_0)\cdot\alpha_0 \le 0$: contradiction.
+            \item \textbf{Uniform bound.} Test with $u_N$: $A\|\nabla u_N\|_{L^p}^p - B|\Omega| \le C\|f\|_{L^{p'}} \|\nabla u_N\|_{L^p}$.
+            \item \textbf{Compactness.} $u_N \rightharpoonup u$ in $W^{1,p}_0$, $u_N \to u$ in $L^p$, $a(\nabla u_N) \rightharpoonup \xi$ in $L^{p'}$.
+            \item \textbf{Limit.} $\int_\Omega \xi\cdot\nabla\varphi = \int_\Omega f \varphi$ for all $\varphi$ (density of $\bigcup_N V_N$).
+            \item \textbf{Identification} $\xi = a(\nabla u)$: Minty's trick.
+        \end{enumerate}
+    \end{proofsteps}
+\end{frame}
+
+\begin{frame}{Minty's trick}
+    \textbf{Problem.} Weak limits do not commute with non-linear functions: in general $a(\nabla u_N) \not\rightharpoonup a(\nabla u)$.
+    \begin{lemma}[Minty]
+        If $v_n \rightharpoonup v$ in $W^{1,p}_0$, $a(\nabla v_n) \rightharpoonup \xi$ in $L^{p'}$ and
+        $\int_\Omega a(\nabla v_n) \cdot \nabla v_n \to \int_\Omega \xi \cdot \nabla v$, then
+        $\int_\Omega a(\nabla v)\cdot\nabla\varphi = \int_\Omega \xi\cdot\nabla \varphi$ for all $\varphi \in W^{1,p}_0$.
+    \end{lemma}
+    \begin{proofsteps}
+        \begin{enumerate}
+            \item Monotonicity: $\int_\Omega (\xi - a(\nabla\varphi))\cdot\nabla(v - \varphi) = \lim_n \int_\Omega (a(\nabla v_n) - a(\nabla \varphi))\cdot\nabla(v_n - \varphi) \ge 0$.
+            \item Take $\varphi = v - t\psi$, divide by $t > 0$ and let $t \to 0$ (dominated convergence).
+            \item Use $\psi$ and $-\psi$.
+        \end{enumerate}
+    \end{proofsteps}
+    {\small Uniqueness holds if $a$ is strictly monotone (test with $u - v$).}
+\end{frame}
+
+\begin{frame}{Browder--Minty theorem}
+    The same scheme proves the non-linear version of Lax--Milgram.
+    \begin{theorem}[Browder--Minty]
+        Let $X$ be a real reflexive Banach space and $T: X \to X^*$ bounded, continuous, monotone and coercive:
+        \[
+            \lim_{R \to \infty} \inf_{\|x\|_X = R} \frac{\langle Tx, x\rangle}{\|x\|_X} = \infty.
+        \]
+        Then $T$ is surjective: for every $g \in X^*$ there exists $u \in X$ with $Tu = g$.
+    \end{theorem}
+    \begin{itemize}
+        \item Any spaces $V_N$ that approximate $V$ can be used: this is the idea behind the convergence of finite elements for non-linear problems.
+        \item The price: \alert{no rate of convergence}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Summary and practice}
+    \begin{itemize}
+        \item Parabolic problems: Galerkin in space gives $\mat M \vec u' + \mat K \vec u = \vec b$.
+        \item Space error: controlled by the approximation in $V_h$ (parabolic Céa).
+        \item Time error: $\theta$-method, order $1$ (order $2$ for Crank--Nicolson); explicit schemes need $\tau \lesssim h^2$.
+        \item Non-linear monotone problems: existence and convergence by compactness and Minty's trick.
+    \end{itemize}
+    \bigskip
+    \textbf{Practice.}
+    \begin{itemize}
+        \item Notebook \notebook{lectures/galerkin}{FEMlinear1dHeatDirichlet.ipynb}.
+        \item Exercise 1.9: explicit Euler for the heat equation; test with $u = e^{-\pi^2 t}\sin(\pi x)$.
+        \item Exercises 1.10--1.11: $p$-Laplacian with hat functions.
+    \end{itemize}
+    \medskip
+    \textbf{Next session:} the finite-element formalism.
+\end{frame}

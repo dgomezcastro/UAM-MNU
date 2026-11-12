@@ -1,0 +1,81 @@
+\documentclass[aspectratio=169,11pt,notheorems]{beamer}
+
+\usepackage{import}
+\subimport{./}{preamble.tex}
+
+% To compile a single session, uncomment the following line with its label
+% (session01, ..., session11).
+% \includeonlylecture{session01}
+
+\title{Numerical Methods for PDEs II:\\ Finite Elements and Spectral Methods}
+\subtitle{Slides for the lectures}
+\author{D. Gómez-Castro}
+\institute{Universidad Autónoma de Madrid}
+\date{2026--2027}
+
+\begin{document}
+
+\begin{frame}[plain]
+    \titlepage
+    \centering
+    \footnotesize
+    \href{https://creativecommons.org/licenses/by-nc/4.0/}{%
+        \includegraphics[height=1.2em]{../lectures/cc.pdf}\,%
+        \includegraphics[height=1.2em]{../lectures/by.pdf}\,%
+        \includegraphics[height=1.2em]{../lectures/nc.pdf}%
+    }\quad
+    These slides are a guide for the lectures at the blackboard.
+    Details are in the \href{https://github.com/dgomezcastro/UAM-MNU/releases/latest/download/mnu.pdf}{lecture notes}.
+\end{frame}
+
+\begin{frame}{Structure of the course}
+    \centering
+    \footnotesize
+    \begin{tabular}{@{}lcll@{}}
+        \toprule
+        Subject                                       & Session & Description                                & Notes        \\
+        \midrule
+        \multirow{3}{*}{Galerkin's method}            & 1       & Weak formulation                           & 1.1.1--1.1.5 \\
+                                                      & 2       & Lemmas of Céa, Aubin--Nitsche, and Strang  & 1.1.6--1.1.8 \\
+                                                      & 3       & Galerkin for parabolic and non-linear problems & 1.2--1.3 \\
+        \midrule
+        \multirow{4}{*}{The finite-elements method}   & 4       & The finite-element formalism               & 2.1--2.2     \\
+                                                      & 5       & Finite-elements spaces                     & 2.3--2.4     \\
+                                                      & 6       & Finite elements in $d=1$                   & Chapter 3    \\
+                                                      & 7       & Finite elements in $d=2$                   & Chapter 4    \\
+        \midrule
+        \multirow{4}{*}{Spectral methods}             & 8       & Introduction: Galerkin vs collocation      & Chapter 5    \\
+                                                      & 9       & Fourier series                             & 6.1          \\
+                                                      & 10      & Orthogonal polynomials                     & 6.2--6.5     \\
+                                                      & 11      & Applications of spectral methods           & Chapter 7    \\
+        \bottomrule
+    \end{tabular}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Galerkin's method
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subimport{galerkin/}{session01.tex}
+\subimport{galerkin/}{session02.tex}
+\subimport{galerkin/}{session03.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The finite-elements method
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subimport{finite-elements/}{session04.tex}
+\subimport{finite-elements/}{session05.tex}
+\subimport{finite-elements/}{session06.tex}
+\subimport{finite-elements/}{session07.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Spectral methods
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subimport{spectral/}{session08.tex}
+\subimport{spectral/}{session09.tex}
+\subimport{spectral/}{session10.tex}
+\subimport{spectral/}{session11.tex}
+
+\end{document}

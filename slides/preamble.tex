@@ -1,0 +1,119 @@
+% Preamble for the slides of the course
+% Numerical Methods for PDEs II: finite elements and spectral methods
+
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc}
+
+% Shared notation with the lecture notes (\R, \diff, \defeq, \mat, \vec, \prodH, ...)
+\subimport{../header/}{math.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Appearance
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usetheme{default}
+\usefonttheme[onlymath]{serif}
+
+\definecolor{mnublue}{RGB}{31,64,122}
+\definecolor{mnuaccent}{RGB}{190,80,20}
+
+\setbeamercolor{structure}{fg=mnublue}
+\setbeamercolor{frametitle}{fg=mnublue}
+\setbeamercolor{title}{fg=mnublue}
+\setbeamercolor{footline}{fg=gray}
+\setbeamerfont{footline}{size=\tiny}
+\setbeamerfont{frametitle}{series=\bfseries}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{itemize subitem}[triangle]
+\setbeamertemplate{enumerate items}[default]
+
+\setbeamertemplate{footline}{%
+    \leavevmode%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1.2ex,leftskip=1em,rightskip=1em]{footline}%
+        \usebeamerfont{footline}%
+        Numerical Methods for PDEs II%
+        \ifnum\value{lecture}>0
+            \quad\textbar\quad Session~\insertlecturenumber: \insertlecture
+        \fi
+        \hfill\insertframenumber
+    \end{beamercolorbox}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Coloured blocks (same colour code as the lecture notes)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \mnunewblock{environment}{Heading}{colour}
+% Usage: \begin{theorem}[Name] ... \end{theorem}
+\makeatletter
+\newcommand{\mnunewblock}[3]{%
+    \newenvironment{#1}[1][]{%
+        \setbeamercolor{block title}{fg=black,bg=#3!25}%
+        \setbeamercolor{block body}{fg=black,bg=#3!6}%
+        \begin{block}{#2\ifx\relax##1\relax\else\ (##1)\fi}}%
+        {\end{block}}}
+\makeatother
+
+\mnunewblock{definition}{Definition}{blue}
+\mnunewblock{theorem}{Theorem}{orange}
+\mnunewblock{lemma}{Lemma}{orange}
+\mnunewblock{corollary}{Corollary}{orange}
+\mnunewblock{example}{Example}{green!70!black}
+\mnunewblock{remark}{Remark}{gray}
+
+% Main steps of a proof (details are given at the blackboard)
+\newenvironment{proofsteps}[1][Proof: main steps]{%
+    \setbeamercolor{block title}{fg=mnublue,bg=gray!12}%
+    \setbeamercolor{block body}{fg=black,bg=white}%
+    \begin{block}{#1}}%
+    {\end{block}}
+
+% Things to be developed at the blackboard
+\newcommand{\board}[1]{%
+    \par\smallskip
+    {\color{mnuaccent}\textbf{At the board:}}~#1\par}
+
+% Key message of a frame
+\newcommand{\takeaway}[1]{%
+    \par\smallskip
+    {\color{mnublue}\(\blacktriangleright\)~\textbf{#1}}\par}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Sessions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\repourl}{https://github.com/dgomezcastro/UAM-MNU/blob/main/}
+
+% \notebook{path/in/repository}{file.ipynb}
+\newcommand{\notebook}[2]{\href{\repourl #1/#2}{\texttt{#2}}}
+
+% \session{label}{subject}{title}{notes}{notebooks}{exercises}
+% Starts a new lecture (see \includeonlylecture) and prints its title frame.
+\newcommand{\session}[6]{%
+    \lecture{#3}{#1}%
+    \section{Session \thelecture: #3}%
+    \begin{frame}[plain]
+        \vfill
+        {\footnotesize\color{gray}\MakeUppercase{#2}\par}
+        \vspace{.5em}
+        {\usebeamercolor[fg]{title}\Large Session \insertlecturenumber\par}
+        \vspace{.3em}
+        {\usebeamercolor[fg]{title}\usebeamerfont{title}#3\par}
+        \vspace{1em}
+        {\color{mnublue}\rule{.6\textwidth}{.6pt}\par}
+        \vspace{1em}
+        \small
+        \begin{tabular}{@{}ll@{}}
+            Lecture notes: & #4 \\
+            Notebook:      & #5 \\
+            Exercises:     & #6
+        \end{tabular}
+        \vfill
+    \end{frame}}
