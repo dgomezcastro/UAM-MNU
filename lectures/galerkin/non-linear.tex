@@ -68,28 +68,29 @@ More generally we can write the quasi-linear elliptic problem
 \begin{equation}
     \label{eq:cuasilinear}
     \begin{dcases}
-        -\diver a(\nabla u) = f, & \text{in } \Omega           \\
-        u = 0,                   & \text{on } \partial \Omega.
+        -\diver \Phi(\nabla u) = f, & \text{in } \Omega           \\
+        u = 0,                      & \text{on } \partial \Omega.
     \end{dcases}
 \end{equation}
+with a flux $\Phi : \R^d \to \R^d$. The $p$-Laplacian corresponds to $\Phi(\xi) = |\xi|^{p-2}\xi$.
 For the $p$-Laplacian the reader can find in the literature suitable versions of Céa's lemma for this operator (slightly different for $p \in (1,2)$ and $p\in(2,\infty)$).
 However, we want to highlight a common technique known as \emph{convergence by compactness}.
 It is more broadly applicable than Céa-type estimates, but it does not guarantee any rate of convergence.
 For the following example we follow the presentation in \cite[Section 9.14]{Ciarlet2013}.
 \begin{example}[Convergence by compactness for \eqref{eq:cuasilinear}]
-    Let $\Omega$ be a bounded Lipschitz domain. Suppose that $a : {\mathbb R^d} \to {\mathbb R^d}$ is continuous,
+    Let $\Omega$ be a bounded Lipschitz domain. Suppose that $\Phi : {\mathbb R^d} \to {\mathbb R^d}$ is continuous,
     monotone in the sense that
     \begin{equation*}
-        (a(\xi) - a(\eta) ) \cdot (\xi - \eta) \ge 0, \qquad \forall \xi, \eta \in {\mathbb R^d},
+        (\Phi(\xi) - \Phi(\eta) ) \cdot (\xi - \eta) \ge 0, \qquad \forall \xi, \eta \in {\mathbb R^d},
     \end{equation*}
     coercive in $W^{1,p}$ for $p > 1$ in the sense that
     \begin{equation*}
-        a(\xi) \cdot \xi \ge A |\xi|^p - B , \qquad \text{for some }A > 0, B \in \R ,
+        \Phi(\xi) \cdot \xi \ge A |\xi|^p - B , \qquad \text{for some }A > 0, B \in \R ,
     \end{equation*}
     and has controlled growth, that is,
     \begin{equation}
         \label{eq:quasilinear crecimiento a}
-        |a(\xi)| \le C(1+|\xi|^{p-1}).
+        |\Phi(\xi)| \le C(1+|\xi|^{p-1}).
     \end{equation}
     Finally, let $f \in L^{p'}(\Omega)$ with $p'= \frac{p}{p-1}$.
     Under these hypotheses, we will apply compactness techniques.
@@ -100,20 +101,20 @@ For the following example we follow the presentation in \cite[Section 9.14]{Ciar
     \end{equation*}
     have the following property: for every $v \in W^{1,p}_0(\Omega)$, there exist $v_N \in V_N$ such that $v_N \to v$ in $W^{1,p}_0(\Omega)$.
     \begin{enumerate}
-        \item Show that if $v \in W_0^{1,p}(\Omega)$, then $a(\nabla v) \in L^{p'}(\Omega)^d$, so the integral
+        \item Show that if $v \in W_0^{1,p}(\Omega)$, then $\Phi(\nabla v) \in L^{p'}(\Omega)^d$, so the integral
               $$
-                  \int_\Omega a(\nabla v) \cdot \nabla \varphi
+                  \int_\Omega \Phi(\nabla v) \cdot \nabla \varphi
               $$
               is finite for all $\varphi \in W_0^{1,p} (\Omega)$.
 
         \item 	Show that there exists a solution of the weak formulation in $V_N$:
               \begin{equation}
                   \label{eq:Galerkin weak}
-                  u_N \in V_N \text{ such that } \qquad \int_\Omega a(\nabla u_N) \cdot \nabla v = \int_\Omega f v, \qquad 	\forall v \in V_N.
+                  u_N \in V_N \text{ such that } \qquad \int_\Omega \Phi(\nabla u_N) \cdot \nabla v = \int_\Omega f v, \qquad 	\forall v \in V_N.
               \end{equation}
               To do this, write $u_N = \sum_{i=1}^N  \alpha_i e_i$, and study the function $F: \mathbb R^N \to \mathbb R^N$ given by
               \begin{equation*}
-                  F_k (\alpha) = \int_\Omega a\left(\sum_{i=1}^N \alpha_i \nabla e_i\right) \cdot \nabla e_k - \int_\Omega f e_k.
+                  F_k (\alpha) = \int_\Omega \Phi\left(\sum_{i=1}^N \alpha_i \nabla e_i\right) \cdot \nabla e_k - \int_\Omega f e_k.
               \end{equation*}
               \begin{enumerate}
                   \item Show that $F$ is monotone, that is,
@@ -140,28 +141,28 @@ For the following example we follow the presentation in \cite[Section 9.14]{Ciar
 
         \item  Prove that if $v_n$ is a sequence in $W_0^{1,p}(\Omega)$, $v \in W_0^{1,p}(\Omega)$ and $\xi \in L^{p'} (\Omega)^d$ are such that
               $$
-                  v_n \rightharpoonup v \text{ in } W_0^{1,p} (\Omega), \qquad a(\nabla v_n) \rightharpoonup \xi \text{ in } L^{p'} (\Omega)^d, \qquad \int_\Omega a(\nabla v_n) \cdot \nabla v_n \to \int_\Omega \xi \cdot \nabla v
+                  v_n \rightharpoonup v \text{ in } W_0^{1,p} (\Omega), \qquad \Phi(\nabla v_n) \rightharpoonup \xi \text{ in } L^{p'} (\Omega)^d, \qquad \int_\Omega \Phi(\nabla v_n) \cdot \nabla v_n \to \int_\Omega \xi \cdot \nabla v
               $$
-              then $\diver a(\nabla v) = \diver \xi$ in the sense of $W^{-1,p'} (\Omega)$, that is
+              then $\diver \Phi(\nabla v) = \diver \xi$ in the sense of $W^{-1,p'} (\Omega)$, that is
               $$
-                  \int_\Omega a(\nabla v) \cdot \nabla \varphi = \int_\Omega \xi \cdot \nabla \varphi, \qquad \forall \varphi \in W_0^{1,p} (\Omega).
+                  \int_\Omega \Phi(\nabla v) \cdot \nabla \varphi = \int_\Omega \xi \cdot \nabla \varphi, \qquad \forall \varphi \in W_0^{1,p} (\Omega).
               $$
 
         \item Construct a weak solution of \eqref{eq:cuasilinear}.
 
         \item Show that ordinary strict monotonicity,
-              $(a(\xi)-a(\eta))\cdot(\xi-\eta)>0$ for $\xi\ne\eta$, gives uniqueness for every $p>1$.
+              $(\Phi(\xi)-\Phi(\eta))\cdot(\xi-\eta)>0$ for $\xi\ne\eta$, gives uniqueness for every $p>1$.
               If $p\ge2$, assume the stronger quantitative condition, for some $\theta>0$,
-              $$	(a(\xi) - a(\eta) ) \cdot (\xi - \eta) \ge \theta |\xi - \eta|^p , \qquad \forall \xi, \eta \in {\mathbb R^d}, $$
+              $$	(\Phi(\xi) - \Phi(\eta) ) \cdot (\xi - \eta) \ge \theta |\xi - \eta|^p , \qquad \forall \xi, \eta \in {\mathbb R^d}, $$
               then the solution is unique. Moreover, show that the map $f \in L^{p'} (\Omega) \mapsto u \in W_0^{1,p}(\Omega)$ is Hölder continuous with exponent $\frac{1}{p-1}$ (in particular Lipschitz continuous if $p = 2$).
 
-        \item In the case  $a(\nabla u) = \tilde a(|\nabla u|) \nabla u$, observe that the solution can be obtained by the direct method of the Calculus of Variations.
+        \item In the case  $\Phi(\nabla u) = \tilde\Phi(|\nabla u|) \nabla u$, observe that the solution can be obtained by the direct method of the Calculus of Variations.
     \end{enumerate}
 \end{example}
 
 \begin{proof}
     \begin{enumerate}
-        \item We have that $|a( \nabla v) |^{\frac p {p-1}} \le C(1 + |\nabla v| ^{p-1}  )^{\frac p {p-1}} \le C_p (1  + |\nabla v|^{p} ) \in L^1 (\Omega)$
+        \item We have that $|\Phi( \nabla v) |^{\frac p {p-1}} \le C(1 + |\nabla v| ^{p-1}  )^{\frac p {p-1}} \le C_p (1  + |\nabla v|^{p} ) \in L^1 (\Omega)$
 
         \item We split the proof into two items
               \begin{enumerate}
@@ -172,17 +173,17 @@ For the following example we follow the presentation in \cite[Section 9.14]{Ciar
                         $$
                         Note that
                         $$
-                            F_k(\alpha) - F_k(\beta) = \int_\Omega \Big ( a \left(  \nabla u_\alpha   \right)  - a( \nabla u_\beta) \Big) \cdot \nabla e_k.
+                            F_k(\alpha) - F_k(\beta) = \int_\Omega \Big ( \Phi\left(  \nabla u_\alpha   \right)  - \Phi( \nabla u_\beta) \Big) \cdot \nabla e_k.
                         $$
                         Then
                         $$
-                            (F_k(\alpha) - F_k(\beta)) (\alpha_k - \beta_k ) = \int_\Omega \Big ( a \left(  \nabla u_\alpha   \right)  - a( \nabla u_\beta) \Big) \cdot (\alpha_k - \beta_k ) \nabla e_k.
+                            (F_k(\alpha) - F_k(\beta)) (\alpha_k - \beta_k ) = \int_\Omega \Big ( \Phi\left(  \nabla u_\alpha   \right)  - \Phi( \nabla u_\beta) \Big) \cdot (\alpha_k - \beta_k ) \nabla e_k.
                         $$
                         Therefore
                         $$
                             \begin{aligned}
-                                (F(\alpha) - F(\beta)) \cdot (\alpha - \beta ) & = \int_\Omega \Big ( a \left(  \nabla u_\alpha   \right)  - a( \nabla u_\beta) \Big) \cdot \nabla u_{\alpha - \beta}       \\
-                                                                               & = \int_\Omega \Big ( a \left(  \nabla u_\alpha   \right)  - a( \nabla u_\beta) \Big) \cdot \nabla (u_{\alpha} - u_{\beta}) \\
+                                (F(\alpha) - F(\beta)) \cdot (\alpha - \beta ) & = \int_\Omega \Big ( \Phi\left(  \nabla u_\alpha   \right)  - \Phi( \nabla u_\beta) \Big) \cdot \nabla u_{\alpha - \beta}       \\
+                                                                               & = \int_\Omega \Big ( \Phi\left(  \nabla u_\alpha   \right)  - \Phi( \nabla u_\beta) \Big) \cdot \nabla (u_{\alpha} - u_{\beta}) \\
                                                                                & \ge 0.
                                 %				&\ge \alpha \| \nabla (u_\alpha - u_\beta) \|_{L^p}^2 - \beta 
                             \end{aligned}
@@ -191,7 +192,7 @@ For the following example we follow the presentation in \cite[Section 9.14]{Ciar
                         Similarly,
                         $$
                             \begin{aligned}
-                                F(\alpha) \cdot \alpha & = \int_\Omega a \left(  \nabla u_\alpha   \right) \cdot \nabla u_\alpha - \int_\Omega f u_\alpha \\
+                                F(\alpha) \cdot \alpha & = \int_\Omega \Phi\left(  \nabla u_\alpha   \right) \cdot \nabla u_\alpha - \int_\Omega f u_\alpha \\
                                                        & \ge A \| \nabla u_\alpha \|_{L^p}^p - B |\Omega| - \| f \|_{L^{p'}} \|u_\alpha\|_{L^p}                 \\
                                                        & \ge A C_P^p \| u_\alpha \|_{L^p}^p - B |\Omega| - C\| u_\alpha \|_{L^p},
                             \end{aligned}
@@ -215,34 +216,34 @@ For the following example we follow the presentation in \cite[Section 9.14]{Ciar
         \item We have
               $$
                   \begin{aligned}
-                      A \| \nabla u_N\|_{L^p}^p  - B |\Omega| \le \int_\Omega a(\nabla u_N) \cdot \nabla u_N = \int_\Omega f u_N \le \| f \|_{L^{p'}} \| u_N \|_{L^p} \le C \| f \|_{L^{p'}} \| \nabla u_N \|_{L^p}.
+                      A \| \nabla u_N\|_{L^p}^p  - B |\Omega| \le \int_\Omega \Phi(\nabla u_N) \cdot \nabla u_N = \int_\Omega f u_N \le \| f \|_{L^{p'}} \| u_N \|_{L^p} \le C \| f \|_{L^{p'}} \| \nabla u_N \|_{L^p}.
                   \end{aligned}
               $$
               Thus $\| \nabla u_N \|_{L^p} \le C$, with $C$ independent of $N$. The compactness follows from the Banach--Alaoglu and Rellich--Kondrachov theorems.
 
         \item This is the so-called Minty's trick. For $\varphi \in W_0^{1,p}(\Omega)$, by monotonicity we have
               $$
-                  \int_\Omega (\xi - a(\nabla \varphi)) \cdot \nabla (v - \varphi) = \lim_n \int_\Omega (a(\nabla v_n) - a(\nabla \varphi)) \cdot \nabla (v_n - \varphi) \ge 0.
+                  \int_\Omega (\xi - \Phi(\nabla \varphi)) \cdot \nabla (v - \varphi) = \lim_n \int_\Omega (\Phi(\nabla v_n) - \Phi(\nabla \varphi)) \cdot \nabla (v_n - \varphi) \ge 0.
               $$
               Taking $t > 0$, $\psi \in W_0^{1,p}(\Omega)$ and $\varphi = v - t \psi$ we have
               $$
-                  t \int_\Omega (\xi - a(\nabla v - t \nabla \psi)) \cdot \nabla \psi  \ge 0.
+                  t \int_\Omega (\xi - \Phi(\nabla v - t \nabla \psi)) \cdot \nabla \psi  \ge 0.
               $$
               Therefore
               $$
-                  \int_\Omega (\xi - a(\nabla v - t \nabla \psi)) \cdot \nabla \psi  \ge 0.
+                  \int_\Omega (\xi - \Phi(\nabla v - t \nabla \psi)) \cdot \nabla \psi  \ge 0.
               $$
               Using \eqref{eq:quasilinear crecimiento a} and the dominated convergence theorem, we can pass to the limit $t \to 0$ to deduce
               $$
-                  \int_\Omega (\xi - a(\nabla v )) \cdot \nabla \psi  \ge 0.
+                  \int_\Omega (\xi - \Phi(\nabla v )) \cdot \nabla \psi  \ge 0.
               $$
               Since this is also true for $-\psi$, we deduce the statement.
 
-        \item Take a subsequence of $u_N$ that converges weakly in $W^{1,p}_0(\Omega)$ and strongly in $L^p(\Omega)$, and let $v$ be its limit. Let $v_m = u_{N(m)}$ be this subsequence. By the first item, $a(\nabla v_m)$ is bounded in $L^{p'} (\Omega)^d$. Take a further subsequence (not relabelled) such that $a(\nabla v_{m}) \rightharpoonup \xi$ in $L^{p'}(\Omega)^d$.
+        \item Take a subsequence of $u_N$ that converges weakly in $W^{1,p}_0(\Omega)$ and strongly in $L^p(\Omega)$, and let $v$ be its limit. Let $v_m = u_{N(m)}$ be this subsequence. By the first item, $\Phi(\nabla v_m)$ is bounded in $L^{p'} (\Omega)^d$. Take a further subsequence (not relabelled) such that $\Phi(\nabla v_{m}) \rightharpoonup \xi$ in $L^{p'}(\Omega)^d$.
 
               Now, for each $\varphi_N \in V_N$ and $m$ large enough so that $N(m) \ge N$, we have $V_N \subset V_{N(m)}$ and hence
               $$
-                  \int_\Omega a(\nabla v_{m}) \cdot \nabla \varphi_N = \int_\Omega f \varphi_N.
+                  \int_\Omega \Phi(\nabla v_{m}) \cdot \nabla \varphi_N = \int_\Omega f \varphi_N.
               $$
               Passing to the limit $m \to \infty$
               $$
@@ -254,20 +255,20 @@ For the following example we follow the presentation in \cite[Section 9.14]{Ciar
               $$
               In particular, taking $\varphi = v \in W_0^{1,p} (\Omega)$ and using the strong convergence in $L^p(\Omega)$,
               $$
-                  \int_\Omega a(\nabla v_{m}) \cdot \nabla v_{m} = \int_\Omega f v_{m} \to \int_\Omega f v = \int_\Omega \xi \cdot \nabla v.
+                  \int_\Omega \Phi(\nabla v_{m}) \cdot \nabla v_{m} = \int_\Omega f v_{m} \to \int_\Omega f v = \int_\Omega \xi \cdot \nabla v.
               $$
 
               We apply the previous point to deduce that
               $$
-                  \int_\Omega f \varphi  = \int_\Omega \xi \cdot \nabla \varphi = \int_\Omega a(\nabla v) \cdot \nabla \varphi, \qquad \forall \varphi \in W_0^{1,p}(\Omega).
+                  \int_\Omega f \varphi  = \int_\Omega \xi \cdot \nabla \varphi = \int_\Omega \Phi(\nabla v) \cdot \nabla \varphi, \qquad \forall \varphi \in W_0^{1,p}(\Omega).
               $$
 
-        \item For equal data, testing with $u-v$ gives $\int_\Omega(a(\nabla u)-a(\nabla v))\cdot(\nabla u-\nabla v)=0$. Strict monotonicity implies $\nabla u=\nabla v$ almost everywhere, and the zero trace gives $u=v$.
+        \item For equal data, testing with $u-v$ gives $\int_\Omega(\Phi(\nabla u)-\Phi(\nabla v))\cdot(\nabla u-\nabla v)=0$. Strict monotonicity implies $\nabla u=\nabla v$ almost everywhere, and the zero trace gives $u=v$.
               Under the stronger quantitative assumption with $p\ge2$, if $u$ and $v$ have data $f$ and $g$, testing with $u-v$ gives
               $$
                   \begin{aligned}
                       \theta\|\nabla u-\nabla v\|_{L^p}^p
-                      &\le\int_\Omega(a(\nabla u)-a(\nabla v))\cdot\nabla(u-v)
+                      &\le\int_\Omega(\Phi(\nabla u)-\Phi(\nabla v))\cdot\nabla(u-v)
                        =\int_\Omega(f-g)(u-v)\\
                       &\le\|f-g\|_{L^{p'}}\|u-v\|_{L^p}
                        \le C\|f-g\|_{L^{p'}}\|\nabla u-\nabla v\|_{L^p}.
@@ -281,17 +282,17 @@ For the following example we follow the presentation in \cite[Section 9.14]{Ciar
 
         \item The energy of the form
               $$
-                  \mathcal I (u) = \int_\Omega \Phi(  |\nabla u|  ) - \int_\Omega fu
+                  \mathcal I (u) = \int_\Omega \Psi(  |\nabla u|  ) - \int_\Omega fu
               $$
-              has Lagrangian $L(\xi,s,x) = \Phi(|\xi|) - f(x) s$ with
+              has Lagrangian $L(\xi,s,x) = \Psi(|\xi|) - f(x) s$ with
               $$
-                  \frac{\partial L}{\partial \xi_i} = \Phi'(|\xi|) \frac{\xi_i}{|\xi|}.
+                  \frac{\partial L}{\partial \xi_i} = \Psi'(|\xi|) \frac{\xi_i}{|\xi|}.
               $$
               Thus the Euler--Lagrange equation is
               $$
-                  f = -\sum_{i=1}^d \frac{\partial}{\partial x_i} \left(   \frac{\Phi'(|\nabla u|)}{|\nabla u|} \frac{\partial u}{\partial x_i}   \right)  = - \diver \left( \frac{\Phi'(|\nabla u|)}{|\nabla u|} \nabla u \right).
+                  f = -\sum_{i=1}^d \frac{\partial}{\partial x_i} \left(   \frac{\Psi'(|\nabla u|)}{|\nabla u|} \frac{\partial u}{\partial x_i}   \right)  = - \diver \left( \frac{\Psi'(|\nabla u|)}{|\nabla u|} \nabla u \right).
               $$
-              It suffices that $\Phi'(r) = r \tilde a(r)$.
+              It suffices that $\Psi'(r) = r \tilde\Phi(r)$.
 
     \end{enumerate}
 \end{proof}
@@ -319,9 +320,9 @@ The scheme of the proof of the previous result allows us to prove, in general, t
 
 
 \begin{remark}
-    When $a$ does not have natural coercivity on the space $H^1 = W^{1,2}$, one can work in other spaces, for example $W^{1,p}$. This is the case of the $p$-Laplacian operator, where $a(\nabla u) = |\nabla u|^{p-2} \nabla u$. If the situation is even more general, sometimes one can work in the so-called Orlicz spaces, where a Young function $\Phi$ defines the modular $\int_\Omega\Phi(|\nabla u|)$, rather than a norm directly. On the zero-trace space the associated Luxemburg gradient norm is
+    When $\Phi$ does not have natural coercivity on the space $H^1 = W^{1,2}$, one can work in other spaces, for example $W^{1,p}$. This is the case of the $p$-Laplacian operator, where $\Phi(\nabla u) = |\nabla u|^{p-2} \nabla u$. If the situation is even more general, sometimes one can work in the so-called Orlicz spaces, where a Young function $\Psi$ defines the modular $\int_\Omega\Psi(|\nabla u|)$, rather than a norm directly. On the zero-trace space the associated Luxemburg gradient norm is
     \begin{equation*}
-        \|\nabla u\|_{L^\Phi}=\inf\left\{\lambda>0:\int_\Omega\Phi\left(\frac{|\nabla u|}{\lambda}\right)\le1\right\}.
+        \|\nabla u\|_{L^\Psi}=\inf\left\{\lambda>0:\int_\Omega\Psi\left(\frac{|\nabla u|}{\lambda}\right)\le1\right\}.
     \end{equation*}
 \end{remark}
 

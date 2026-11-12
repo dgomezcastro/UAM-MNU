@@ -259,7 +259,7 @@ The following stability and consistency argument gives explicit time-error bound
 \end{remark}
 
 \begin{remark}[The CFL condition is like in finite differences]
-    For piece-wise linear functions, $\lambda_{\max,h}$ scales like $h^{-2}$.
+    For piece-wise linear functions, the mass matrix $\mat M$ scales like $h$ and the stiffness matrix $\mat K$ like $h^{-1}$, so $\lambda_{\max,h} = \lambda_{\max}(\mat M^{-1}\mat K)$ scales like $h^{-2}$.
     Consider the matrices $\mat M$ and $\mat K$ of \Cref{ex:Galerkin heat piece-wise linear} on a uniform mesh. The vectors $\big(\sin(k\pi x_j)\big)_j$, $k = 1, \dots, N-1$, are eigenvectors of both matrices, with eigenvalues $\frac 2 h \big(1 - \cos(k\pi h)\big)$ and $\frac h 3 \big(2 + \cos(k\pi h)\big)$, respectively. Hence the eigenvalues of $\mat M^{-1}\mat K$ are
     \begin{equation*}
         \lambda_k = \frac{6}{h^2}\, \frac{1 - \cos(k\pi h)}{2 + \cos(k\pi h)},
