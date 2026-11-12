@@ -1,0 +1,261 @@
+% !TEX root = ../slides.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Session 2: Lemmas of Céa, Aubin--Nitsche, and Strang
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\session{session02}{Galerkin's method}{Lemmas of Céa, Aubin--Nitsche, and Strang}
+{Sections 1.1.6--1.1.8}
+{\notebook{lectures/galerkin}{linearinterpolation.ipynb}}
+{1.7--1.8}
+
+\begin{frame}{Plan for today}
+    \begin{enumerate}
+        \item Céa's lemma: the Galerkin error is controlled by the best approximation.
+        \item Interpolation error of piece-wise linear functions in $d=1$: rate $h$ in $H^1$.
+        \item Aubin--Nitsche: one more power of $h$ in the weaker norm $L^2$.
+        \item Strang's lemmas: what if we cannot compute $a$ and $\ell$ exactly?
+    \end{enumerate}
+    \bigskip
+    \textbf{Recall.} $a$ continuous ($M$) and coercive ($\alpha^*$) on $V$, $V_h \subset V$.
+    \[
+        \text{(E)}\quad a(u,v) = \ell(v) \quad \forall v \in V,
+        \qquad\qquad
+        \text{(E$_h$)}\quad a(u_h,v_h) = \ell(v_h) \quad \forall v_h \in V_h.
+    \]
+\end{frame}
+
+\begin{frame}{Galerkin orthogonality}
+    Taking $v = v_h \in V_h \subset V$ in (E) and subtracting (E$_h$):
+    \begin{lemma}[Galerkin orthogonality, Exercise 1.7]
+        \[
+            a(u - u_h, v_h) = 0 \qquad \forall v_h \in V_h.
+        \]
+    \end{lemma}
+    \bigskip
+    \begin{columns}
+        \begin{column}{.55\textwidth}
+            If $a$ is symmetric, $a(\cdot,\cdot)$ is a scalar product and
+            \[
+                u_h = \text{orthogonal projection of } u \text{ onto } V_h
+            \]
+            with respect to $a$.
+        \end{column}
+        \begin{column}{.4\textwidth}
+            \centering
+            \begin{tikzpicture}[scale=1.1]
+                \fill[blue!8] (-.5,-.5) -- (2.8,-.5) -- (3.5,.6) -- (.2,.6) -- cycle;
+                \node[blue!60!black] at (2.9,-.25) {$V_h$};
+                \draw[-{Stealth}] (0,0) -- (1.8,1.8) node[above] {$u$};
+                \draw[-{Stealth}] (0,0) -- (1.8,0.1) node[below] {$u_h$};
+                \draw[dashed] (1.8,0.1) -- (1.8,1.8);
+                \node[right] at (1.8,.95) {\small $u-u_h$};
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Céa's lemma}
+    \begin{theorem}[Céa's lemma]
+        Under the assumptions of Lax--Milgram, let $u$ solve (E) and $u_h$ solve (E$_h$). Then
+        \[
+            \|u - u_h\|_V \le \frac{M}{\alpha^*} \inf_{v_h \in V_h} \|u - v_h\|_V .
+        \]
+    \end{theorem}
+    \begin{proofsteps}
+        \begin{enumerate}
+            \item Coercivity: $\alpha^* \|u - u_h\|_V^2 \le a(u-u_h, u-u_h)$.
+            \item Split $u - u_h = (u - v_h) + (v_h - u_h)$ for any $v_h \in V_h$.
+            \item Galerkin orthogonality: $a(u - u_h, v_h - u_h) = 0$.
+            \item Continuity: $\alpha^* \|u - u_h\|_V^2 \le a(u - u_h, u - v_h) \le M \|u - u_h\|_V \|u - v_h\|_V$.
+        \end{enumerate}
+    \end{proofsteps}
+    \takeaway{Error of the method $\le$ constant $\times$ best approximation error. We only need approximation theory!}
+\end{frame}
+
+\begin{frame}{The symmetric case: energy norm}
+    Assume moreover that $a$ is symmetric. Define the \alert{energy norm}
+    \[
+        \|v\|_a \defeq a(v,v)^{\frac 1 2}.
+    \]
+    \begin{corollary}[Exercise 1.7]
+        \begin{itemize}
+            \item Cauchy--Schwarz: $|a(u,v)| \le \|u\|_a \|v\|_a$.
+            \item Best approximation:
+                  \[
+                      \|u - u_h\|_a = \inf_{v_h \in V_h} \|u - v_h\|_a .
+                  \]
+        \end{itemize}
+    \end{corollary}
+    \begin{proofsteps}
+        By Galerkin orthogonality and Pythagoras,
+        $\|u - v_h\|_a^2 = \|u - u_h\|_a^2 + \|u_h - v_h\|_a^2 \ge \|u - u_h\|_a^2$.
+    \end{proofsteps}
+    \takeaway{In the energy norm the constant $M/\alpha^*$ becomes $1$.}
+\end{frame}
+
+\begin{frame}{The piece-wise linear interpolant}
+    Laplace--Dirichlet in $(0,1)$, $V = H^1_0(0,1)$, hat functions $\varphi_i$ on $0 = x_0 < \cdots < x_N = 1$.
+    \begin{definition}[Piece-wise linear interpolant]
+        \[
+            \mathcal I_h u (x) \defeq \sum_{i=0}^N u(x_i)\, \varphi_i(x).
+        \]
+    \end{definition}
+    \begin{itemize}
+        \item $\mathcal I_h u \in V_h$ (if $u(0) = u(1) = 0$), and it is easy to compute.
+        \item By Céa: $\|u - u_h\|_V \le \frac{M}{\alpha^*} \|u - \mathcal I_h u\|_V$.
+    \end{itemize}
+    \begin{lemma}[Naive estimate, Exercise 1.8]
+        For all $u \in H^2(0,1)$: \quad
+        $\displaystyle \| (u - \mathcal I_h u)' \|_{L^2(0,1)} \le h \| u'' \|_{L^2(0,1)}$.
+    \end{lemma}
+    \board{in $(x_{k}, x_{k+1})$, $(\mathcal I_h u)'$ is the slope, which equals $u'(\xi_k)$ (mean value theorem). Then use $u'(x) - u'(\xi_k) = \int_{\xi_k}^x u''$ and Cauchy--Schwarz. Sum over intervals.}
+\end{frame}
+
+\begin{frame}{A sharper interpolation estimate}
+    \begin{lemma}[Piece-wise linear interpolation in $d=1$]
+        For all $u \in H^2(0,1)$,
+        \[
+            \|u - \mathcal I_h u\|_{L^2(0,1)} \le \frac{h^2}{\pi^2} \|u''\|_{L^2(0,1)}, \qquad
+            \|(u - \mathcal I_h u)'\|_{L^2(0,1)} \le \frac{h}{\pi} \|u''\|_{L^2(0,1)}.
+        \]
+    \end{lemma}
+    \begin{proofsteps}
+        \begin{enumerate}
+            \item On $[x_{i-1}, x_i]$, $\zeta = u - \mathcal I_h u$ vanishes at both ends: expand in a sine series
+                  $\zeta(x) = \sum_{k \ge 1} a_k \sin\frac{k\pi(x - x_{i-1})}{h_i}$.
+            \item Parseval: $\int \zeta^2 = \frac{h_i}2\sum |a_k|^2$, \
+                  $\int |\zeta'|^2 = \frac{h_i}2 \sum (\tfrac{k\pi}{h_i})^2 |a_k|^2$, \
+                  $\int |\zeta''|^2 = \frac{h_i}2 \sum (\tfrac{k\pi}{h_i})^4 |a_k|^2$.
+            \item Use $k^4 \ge k^2 \ge 1$, and $\zeta'' = u''$ since $\mathcal I_h u$ is linear on each interval.
+            \item Sum over the intervals.
+        \end{enumerate}
+    \end{proofsteps}
+    \takeaway{Rate $h^2$ in $L^2$ and $h$ in $H^1$ for the interpolant.}
+\end{frame}
+
+\begin{frame}{Error estimate for the Galerkin method}
+    \begin{example}[Laplace--Dirichlet with hat functions]
+        Let $f \in L^2(0,1)$. Then $u'' = -f$, and $\|v\|_a = \|v'\|_{L^2}$. By the best approximation property:
+        \[
+            \|(u - u_h)'\|_{L^2(0,1)} \le \|(u - \mathcal I_h u)'\|_{L^2(0,1)} \le \frac h \pi \|f\|_{L^2(0,1)}.
+        \]
+        With Poincaré's inequality,
+        \[
+            \|u - u_h\|_{H^1(0,1)} \le \frac{h}{\pi}\Big(1 + \frac{1}{\pi^2}\Big)^{\frac 1 2} \|f\|_{L^2(0,1)}.
+        \]
+    \end{example}
+    \bigskip
+    \textbf{Question.} The interpolant converges like $h^2$ in $L^2$. Is it true that
+    \[
+        \|u - u_h\|_{L^2} \le C h^2 \|f\|_{L^2} \quad ?
+    \]
+    Céa only gives $\|u - u_h\|_{L^2} \le \|u - u_h\|_{H^1} \le C h$.
+\end{frame}
+
+\begin{frame}{Aubin--Nitsche: setting}
+    \begin{itemize}
+        \item $a$ symmetric, continuous and coercive; $V \subset H$ (e.g.\ $H = L^2$).
+        \item $A$ the operator associated to $a$ (Session 1): $\prodH{Av}{w} = a(v,w)$.
+        \item \alert{Approximation assumption:} there is $\omega(h) \to 0$ such that
+              \[
+                  \inf_{v_h \in V_h} \|v - v_h\|_a \le \omega(h) \|Av\|_H \qquad \forall v \in D_H(A).
+              \]
+    \end{itemize}
+    \begin{example}
+        Hat functions in $(0,1)$: $\|Av\|_{L^2} = \|v''\|_{L^2}$ and $\omega(h) = h/\pi$.
+    \end{example}
+    By Céa (energy norm): \quad $\|u - u_h\|_a \le \omega(h)\|Au\|_H = \omega(h) \|f\|_H$.
+\end{frame}
+
+\begin{frame}{Aubin--Nitsche's duality argument}
+    \begin{lemma}[Aubin--Nitsche]
+        Let $f \in H$, and let $u$, $u_h$ solve $a(u,v) = \prodH{f}{v}$ in $V$ and $V_h$ respectively. Then
+        \[
+            \|u - u_h\|_H \le \omega(h)^2 \|f\|_H .
+        \]
+    \end{lemma}
+    \begin{proofsteps}
+        \begin{enumerate}
+            \item Duality: $\|e\|_H = \sup_{g \ne 0} \prodH{e}{g}/\|g\|_H$. Fix $g \in H$.
+            \item Dual problem: $w \in V$, $w_h \in V_h$ with $a(w, v) = \prodH{g}{v}$ (in $V$ and $V_h$).
+            \item Using symmetry and both equations: $\prodH{u - u_h}{g} = a(w - w_h, u - u_h)$.
+            \item Cauchy--Schwarz for $a$ $+$ best approximation for $u$ and for $w$:
+                  \[
+                      \prodH{u - u_h}{g} \le \|w - w_h\|_a \|u - u_h\|_a \le \omega(h)\|g\|_H \cdot \omega(h) \|f\|_H.
+                  \]
+        \end{enumerate}
+    \end{proofsteps}
+    \takeaway{Hat functions in $d=1$: $\|u - u_h\|_{L^2} \le \frac{h^2}{\pi^2} \|f\|_{L^2}$. Order $h^2$!}
+\end{frame}
+
+\begin{frame}{Variational crimes}
+    For variable coefficients
+    \[
+        -\diver\big(\mat A(x) \nabla u\big) = f
+    \]
+    the problem is well posed, but the integrals $a(\varphi_j, \varphi_i)$, $\ell(\varphi_i)$ cannot be computed exactly.
+    \medskip
+
+    Using \alert{quadrature} we actually solve
+    \[
+        a_h(u_h, v_h) = \ell_h(v_h) \qquad \forall v_h \in V_h,
+    \]
+    where $a_h \approx a$ and $\ell_h \approx \ell$.
+    \bigskip
+
+    \textbf{Question.} How much do we lose?
+    \takeaway{Error $\lesssim$ approximation error $+$ consistency errors $(a - a_h)$ and $(\ell - \ell_h)$.}
+\end{frame}
+
+\begin{frame}{Strang's first lemma}
+    \begin{lemma}[Strang's first lemma]
+        Let $a$ be continuous ($M$), $a$ and $a_h$ coercive ($\alpha^*$) on $V_h$. Then
+        \begin{align*}
+            \|u - u_h\|_V \le \inf_{w_h \in V_h} \Big[ & \Big(1 + \frac{M}{\alpha^*}\Big) \|u - w_h\|_V
+            + \frac{1}{\alpha^*} \sup_{v_h \in V_h\setminus\{0\}} \frac{|a(w_h,v_h) - a_h(w_h,v_h)|}{\|v_h\|_V} \Big] \\
+                                                       & + \frac{1}{\alpha^*} \sup_{v_h \in V_h\setminus\{0\}} \frac{|\ell(v_h) - \ell_h(v_h)|}{\|v_h\|_V}.
+        \end{align*}
+    \end{lemma}
+    \begin{proofsteps}
+        \begin{enumerate}
+            \item Fix $w_h \in V_h$, let $\delta_h = u_h - w_h$. Coercivity of $a_h$: $\alpha^* \|\delta_h\|_V^2 \le a_h(\delta_h, \delta_h)$.
+            \item Use both equations:
+                  $a_h(\delta_h,\delta_h) = (\ell_h - \ell)(\delta_h) + a(u - w_h, \delta_h) + (a - a_h)(w_h, \delta_h)$.
+            \item Divide by $\|\delta_h\|_V$, and use $\|u - u_h\|_V \le \|u - w_h\|_V + \|\delta_h\|_V$.
+        \end{enumerate}
+    \end{proofsteps}
+\end{frame}
+
+\begin{frame}{Strang's second lemma}
+    \begin{lemma}[Strang's second lemma]
+        Assume also that $a_h$ is continuous with constant $M$ (and $a_h(u, \cdot)$ makes sense). Then
+        \[
+            \|u - u_h\|_V \le \Big(1 + \frac{M}{\alpha^*}\Big) \inf_{w_h \in V_h} \|u - w_h\|_V
+            + \frac{1}{\alpha^*} \sup_{v_h \in V_h \setminus\{0\}} \frac{|a_h(u, v_h) - \ell_h(v_h)|}{\|v_h\|_V}.
+        \]
+    \end{lemma}
+    \begin{itemize}
+        \item First term: \alert{approximation} error (as in Céa).
+        \item Second term: \alert{consistency} error: how well the exact solution satisfies the discrete equation.
+    \end{itemize}
+    \takeaway{Convergence $=$ stability (coercivity) $+$ approximation $+$ consistency.}
+    \medskip
+    {\small Proofs: Quarteroni--Valli, Theorem 5.5.1; Ciarlet, Handbook of Numerical Analysis, pp.~212--213.}
+\end{frame}
+
+\begin{frame}{Summary and practice}
+    \begin{itemize}
+        \item Galerkin orthogonality $\Rightarrow$ Céa: $\|u-u_h\|_V \le \frac{M}{\alpha^*} \inf_{v_h} \|u - v_h\|_V$.
+        \item Hat functions: $\|u - u_h\|_{H^1} = O(h)$.
+        \item Duality (Aubin--Nitsche): $\|u - u_h\|_{L^2} = O(h^2)$.
+        \item Quadrature: Strang's lemmas add consistency errors.
+    \end{itemize}
+    \bigskip
+    \textbf{Practice.}
+    \begin{itemize}
+        \item Notebook \notebook{lectures/galerkin}{linearinterpolation.ipynb}: check the rates $h$ and $h^2$ numerically.
+        \item Exercises 1.7--1.8.
+    \end{itemize}
+    \bigskip
+    \textbf{Next session:} time-dependent and non-linear problems.
+\end{frame}

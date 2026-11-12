@@ -14,3 +14,7 @@ mnu.pdf
 *.tdo
 .DS_Store
 .vscode/settings.json
+*.nav
+*.snm
+*.vrb
+slides/slides.pdf

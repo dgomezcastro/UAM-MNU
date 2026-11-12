@@ -7,6 +7,51 @@ Some problems in the applications present ``lower-order'' non-linearities. For e
     -\Delta u + u^q = f
 \end{equation*}
 is common in chemistry. It is sometimes possible to extend the techniques above to this framework.
+Here $q \ge 1$, and for functions that may change sign we interpret $u^q$ as $|u|^{q-1}u$, so that $s \mapsto s^q$ is continuous and non-decreasing.
+
+\subsubsection{Discretisation with piece-wise linear functions}
+
+For simplicity, let $\Omega = (0,1)$ with homogeneous Dirichlet conditions $u(0) = u(1) = 0$. The weak formulation is: find $u \in H^1_0(0,1)$ such that
+\begin{equation*}
+    \int_0^1 \frac{\diff u}{\diff x} \frac{\diff v}{\diff x} + \int_0^1 u^q v = \int_0^1 f v, \qquad \forall v \in H^1_0(0,1).
+\end{equation*}
+Since $H^1_0(0,1) \subset C([0,1])$, the term $u^q$ is bounded and the integral makes sense.
+
+Let $V_h = \spannedby\{\varphi_1, \dots, \varphi_{N-1}\}$ be the space of piece-wise linear functions of \Cref{ex:piece-wise linear in d=1} and write $u_h = \sum_{j} U_j \varphi_j$. The key property of the hat functions is $\varphi_j(x_i) = \delta_{ij}$, so that
+\begin{equation*}
+    u_h(x_i) = U_i .
+\end{equation*}
+Testing with $v_h = \varphi_i$, the Galerkin method reads
+\begin{equation*}
+    \sum_{j} a(\varphi_j, \varphi_i)\, U_j + \int_0^1 \Big( \sum_j U_j \varphi_j \Big)^q \varphi_i = \int_0^1 f \varphi_i, \qquad i = 1, \dots, N-1.
+\end{equation*}
+The non-linear term is an unpleasant function of the coefficients $U_j$: it has to be computed by quadrature in each element, and it has to be recomputed at every iteration of the non-linear solver.
+
+\paragraph{Interpolation of the non-linearity.}
+A simple and very popular alternative is to replace $u_h^q$ by its piece-wise linear interpolant $\mathcal I_h(u_h^q)$. Since the nodal values of $u_h^q$ are $u_h(x_j)^q = U_j^q$, we have
+\begin{equation*}
+    u_h^q \quad \leadsto \quad \mathcal I_h (u_h^q) = \sum_j U_j^q \varphi_j .
+\end{equation*}
+That is, we look for $u_h \in V_h$ such that
+\begin{equation*}
+    a(u_h, v_h) + \prodH{\mathcal I_h(u_h^q)}{v_h} = \prodH{f}{v_h}, \qquad \forall v_h \in V_h,
+\end{equation*}
+where $H = L^2(0,1)$.
+Testing with $v_h = \varphi_i$ we obtain
+\begin{equation*}
+    \sum_j a(\varphi_j, \varphi_i)\, U_j + \sum_j \Big( \int_0^1 \varphi_j \varphi_i \Big) U_j^q = \int_0^1 f \varphi_i, \qquad i = 1, \dots, N-1.
+\end{equation*}
+With the stiffness matrix $\mat K$ of \Cref{sec:Galerkin elliptic linear algebra} and the mass matrix $\mat M$ of \Cref{sec:Galerkin parabolic linear ODEs}, this is the non-linear algebraic system
+\begin{equation}
+    \label{eq:Galerkin semilinear algebraic system}
+    \mat K \vec u + \mat M \vec u^q = \vec b,
+    \qquad
+    \vec u = (U_j)_j, \quad \vec u^q \defeq (U_j^q)_j, \quad \vec b = \Big(\int_0^1 f \varphi_i\Big)_i ,
+\end{equation}
+where the power $\vec u^q$ is taken component-wise. On a uniform mesh, dividing by $h$,
+\begin{equation*}
+    \frac{-U_{i+1} + 2 U_i - U_{i-1}}{h^2} + \frac{U_{i-1}^q + 4 U_i^q + U_{i+1}^q}{6} = \frac 1 h \int_0^1 f \varphi_i .
+\end{equation*}
 
 \subsection{Quasi-linear problems}
 
@@ -251,15 +296,21 @@ For the following example we follow the presentation in \cite[Section 9.14]{Ciar
     \end{enumerate}
 \end{proof}
 
-The scheme of the proof of the previous result allows us to prove, in general, the extension to the nonlinear framework of the Lax--Milgram theorem:
-\begin{theorem}[Browder--Minty]
+The scheme of the proof of the previous result allows us to prove, in general, the extension of the Lax--Milgram theorem (\Cref{thm:Lax-Milgram}) to the nonlinear framework:
+\begin{strongtheorem}[Browder--Minty]
     \label{thm:Browder-Minty}
-    Let $X$ be a real and reflexive Banach space, and  $T : X \to X^*$ a bounded, continuous, monotone and coercive operator in the sense that
-    \begin{equation*}
-        \lim_{R \to \infty} \inf_{\|x \|_X = R }  \frac{\langle Tx , x \rangle }{\| x \|_X} = \infty .
-    \end{equation*}
-    Then $T$ is surjective. That is, for every $g \in X^*$ there exists $u \in X$ such that $T(u) = g$.
-\end{theorem}
+    Let $X$ be a real reflexive Banach space and let $T : X \to X^*$ be an operator such that
+    \begin{enumerate}
+        \item $T$ is bounded: it maps bounded sets of $X$ into bounded sets of $X^*$;
+        \item $T$ is continuous;
+        \item $T$ is monotone: $\langle Tx - Ty, x - y \rangle \ge 0$ for all $x, y \in X$;
+        \item $T$ is coercive:
+              \begin{equation*}
+                  \inf_{\|x\|_X = R} \frac{\langle Tx, x \rangle}{\|x\|_X} \longrightarrow \infty \qquad \text{as } R \to \infty.
+              \end{equation*}
+    \end{enumerate}
+    Then $T$ is surjective, that is, for every $g \in X^*$ there exists $u \in X$ such that $Tu = g$.
+\end{strongtheorem}
 
 
 \begin{remark}

@@ -1,0 +1,271 @@
+% !TEX root = ../slides.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Session 5: Finite-elements spaces
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\session{session05}{The finite-elements method}{Finite-elements spaces}
+{Sections 2.3--2.4}
+{--}
+{2.7--2.10}
+
+\begin{frame}{Plan for today}
+    \begin{enumerate}
+        \item Sub-divisions of the domain and finite-element spaces.
+        \item Global interpolant and global nodal functions.
+        \item Glueing: when is a piece-wise function in $H^1$?
+        \item Triangulations and reference elements.
+        \item Interpolation error on a sub-division $\Rightarrow$ convergence rates of the Galerkin method.
+    \end{enumerate}
+    \bigskip
+    \takeaway{Last session: one element. Today: glue many elements together to build $V_h$.}
+\end{frame}
+
+\begin{frame}{Sub-divisions and finite-element spaces}
+    \begin{definition}[Sub-division]
+        A sub-division of $\Omega$ is a finite collection $\mathcal T$ of open sets $K$ such that
+        \[
+            \bigcup_{K \in \mathcal T} \overline K = \overline \Omega, \qquad K \cap K' = \emptyset \text{ if } K \ne K'.
+        \]
+    \end{definition}
+    \begin{definition}[Finite-element space]
+        Given a sub-division $\mathcal T$ and a finite element $(K, \mathcal P_K, \mathcal N_K)$ on each $K \in \mathcal T$,
+        \[
+            \mathcal P_{\mathcal T} \defeq \prod_{K \in \mathcal T} \mathcal P_K ,
+        \]
+        identified with piece-wise functions defined almost everywhere in $\Omega$.
+    \end{definition}
+    \begin{itemize}
+        \item No continuity is assumed between elements!
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Global interpolant and nodal functions}
+    \begin{definition}[Global interpolant]
+        \[
+            (\mathcal I_{\mathcal T} v)\big|_K = \mathcal I_K (v|_K) \qquad \forall K \in \mathcal T .
+        \]
+        We often write $\mathcal T_h$ and $\mathcal I_h$.
+    \end{definition}
+    \begin{definition}[Global nodal functions]
+        $N_{K,i}(v) = N_i^{(K)}(v|_K)$ (boundary values are taken as limits from inside $K$), and
+        \[
+            \mathcal N_{\mathcal T} = \{ N_{K,i} : K \in \mathcal T,\ i = 1, \dots, \#\mathcal N_K \}.
+        \]
+    \end{definition}
+    \begin{itemize}
+        \item $\mathcal I_{\mathcal T} v$ may be discontinuous across the boundaries of the elements.
+        \item But we need $V_h \subset V$ (e.g.\ $V = H^1$): this requires some continuity.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Example: two intervals}
+    $\Omega = (-1,1)$, \ $\mathcal T = \{(-1,0), (0,1)\}$, linear elements.
+    \medskip
+
+    \begin{columns}[T]
+        \begin{column}{.5\textwidth}
+            Four local basis functions:
+            \[
+                \varphi_1 = -x, \ \varphi_2 = 1 + x \text{ on } (-1,0),
+            \]
+            \[
+                \varphi_3 = 1 - x, \ \varphi_4 = x \text{ on } (0,1)
+            \]
+            (extended by $0$). $\dim \mathcal P_{\mathcal T} = 4$.
+            \medskip
+
+            Nodal functions: $v(-1^+)$, $v(0^-)$, $v(0^+)$, $v(1^-)$.
+        \end{column}
+        \begin{column}{.45\textwidth}
+            \centering
+            \begin{tikzpicture}[scale=1.3]
+                \draw[-{Stealth}] (-1.2,0) -- (1.3,0);
+                \draw[thick,blue] (-1,1) -- (0,0);
+                \draw[thick,blue!50!cyan] (-1,0) -- (0,1);
+                \draw[thick,red!70!black] (0,1) -- (1,0);
+                \draw[thick,orange] (0,0) -- (1,1);
+                \node[blue,left] at (-1,1) {\scriptsize $\varphi_1$};
+                \node[blue!50!cyan] at (-.3,1.15) {\scriptsize $\varphi_2$};
+                \node[red!70!black] at (.3,1.15) {\scriptsize $\varphi_3$};
+                \node[orange,right] at (1,1) {\scriptsize $\varphi_4$};
+                \foreach \x in {-1,0,1} \fill (\x,0) circle (.8pt) node[below] {\scriptsize $\x$};
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+    \medskip
+    Continuous functions:
+    \[
+        \mathcal P_{\mathcal T} \cap H^1(-1,1) = \mathcal P_{\mathcal T} \cap C([-1,1]) = \spannedby\{\varphi_1,\ \varphi_2 + \varphi_3,\ \varphi_4\}.
+    \]
+    Only three nodal functions survive: $v(-1)$, $v(0)$, $v(1)$. The hat functions are the dual basis.
+\end{frame}
+
+\begin{frame}{Glueing theorem}
+    \small
+    \begin{theorem}[Glueing]
+        Let $\overline\Omega = \overline{\omega_1} \cup \overline{\omega_2}$, $\omega_1 \cap \omega_2 = \emptyset$ (Lipschitz boundaries), $u_i \in C^1(\overline{\omega_i})$, and
+        \[
+            u = u_i \text{ in } \omega_i, \qquad g_k = \tfrac{\partial u_i}{\partial x_k} \text{ in } \omega_i.
+        \]
+        Then, for $\varphi \in C^\infty_c(\Omega)$,
+        \[
+            \int_\Omega u \frac{\partial \varphi}{\partial x_k} = -\int_\Omega g_k \varphi + \int_{\partial\omega_1 \cap \partial\omega_2} (u_1 - u_2)\, \varphi\, n_{\omega_1}\cdot e_k .
+        \]
+        In particular, $u \in H^1(\Omega)$ if and only if $u_1 = u_2$ on $\partial\omega_1 \cap \partial\omega_2$.
+    \end{theorem}
+    \begin{proofsteps}[Idea]
+        Integrate by parts in $\omega_1$ and in $\omega_2$ separately: the boundary terms on the common interface do not cancel unless the traces agree.
+    \end{proofsteps}
+    \takeaway{Piece-wise smooth functions are in $H^1$ iff they are continuous.}
+\end{frame}
+
+\begin{frame}{Choosing $V_h$}
+    If the solution $u \in C^r(\overline \Omega)$, the natural space is
+    \[
+        V_h \defeq V \cap \mathcal I_h C^r(\overline\Omega) \ \subset\ V \cap \mathcal P_{\mathcal T}
+    \]
+    (usually with equality). Then $\mathcal I_h u \in V_h$ and we can use Céa's lemma.
+    \begin{example}
+        On $\Omega = (-1,1)$ with linear elements:
+        \begin{itemize}
+            \item Dirichlet Laplacian: $V_h = H^1_0(\Omega) \cap \mathcal P_{\mathcal T}$.
+            \item Helmholtz with Neumann conditions: $V_h = H^1(\Omega) \cap \mathcal P_{\mathcal T}$.
+        \end{itemize}
+    \end{example}
+    \textbf{Building a basis of $V_h$.}
+    \begin{itemize}
+        \item Choose the nodal functions so that they agree on neighbouring elements ($N_{K,i} = N_{L,j}$).
+        \item Glue the local basis functions sharing a degree of freedom; impose boundary conditions.
+        \item $\dim V_h = \dim \spannedby\{ N|_{V_h} : N \in \mathcal N_{\mathcal T}\}$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Triangulations}
+    \begin{definition}[Triangulation]
+        Let $\Omega \subset \R^2$ be polygonal. A triangulation is a sub-division $\mathcal T$ into triangles such that
+        no vertex of a triangle lies in the interior of an edge of another triangle.
+        \\
+        Equivalently: $\overline K \cap \overline{K'}$ is empty, a common vertex, or a complete common edge.
+    \end{definition}
+    \begin{center}
+        \begin{tikzpicture}[scale=1.5]
+            \draw[thick] (0,0) -- (2,0) -- (2,1) -- (0,1) -- cycle;
+            \draw[thick] (1,0) -- (1,1);
+            \draw[thick] (0,1) -- (1,0) (1,1) -- (2,0);
+            \node at (1,-.35) {\small triangulation};
+            \begin{scope}[xshift=3.2cm]
+                \draw[thick] (0,0) -- (2,0) -- (2,1) -- (0,1) -- cycle;
+                \draw[thick] (0,0) -- (2,1);
+                \draw[thick] (0,1) -- (1,.5);
+                \fill[red] (1,.5) circle (1.5pt);
+                \node at (1,-.35) {\small hanging vertex: \alert{not} a triangulation};
+            \end{scope}
+        \end{tikzpicture}
+    \end{center}
+    \begin{definition}[Reference element]
+        If every element of $\mathcal T$ is affine equivalent to $(\widehat K, \widehat{\mathcal P}, \widehat{\mathcal N})$, we call it the reference element.
+    \end{definition}
+\end{frame}
+
+\begin{frame}{Implementation and mesh generation}
+    \begin{itemize}
+        \item In practice: label the elements $K$ and the local basis functions $\psi_i^{(K)}$, and build a \alert{local-to-global} map to assemble the basis $\varphi_i$ of $V_h$.
+        \item The matrices are computed element by element:
+              \[
+                  a(\varphi_j, \varphi_i) = \sum_{K \in \mathcal T} a_K(\varphi_j|_K, \varphi_i|_K).
+              \]
+        \item We will do this in detail in $d = 1$ (next session) and for linear triangles in $d = 2$.
+    \end{itemize}
+    \bigskip
+    \textbf{Mesh generation.} Given points in the plane, how do we choose the triangles?
+    \begin{itemize}
+        \item The estimates below require control of the \alert{shape ratio} $\mu_K = \rho_K/h_K$.
+        \item A popular choice: Delaunay triangulations (e.g.\ the program \texttt{Triangle}).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Interpolation error on a sub-division}
+    \small
+    \begin{theorem}[Affine-equivalent sub-divisions]
+        Let $\mu_K = \rho_K / h_K$ and assume
+        \begin{enumerate}
+            \item $\mathcal I_{\mathcal T}: H^m(\Omega) \to H^k(\Omega) \cap \mathcal P_{\mathcal T}$;
+            \item every element is affine equivalent to the same reference element $(K_0, \mathcal P_0, \mathcal N_0)$;
+            \item $[v - \mathcal I_{K_0} v]_{H^k(K_0)} \le C_0 [v]_{H^m(K_0)}$ for all $v \in H^m(K_0)$.
+        \end{enumerate}
+        Then
+        \[
+            [v - \mathcal I_{\mathcal T} v]_{H^k(\Omega)} \le C(\Omega, K_0) \sup_{K \in \mathcal T} \frac{h_K^{m-k}}{\mu_K^k}\, [v]_{H^m(\Omega)} \qquad \forall v \in H^m(\Omega).
+        \]
+    \end{theorem}
+    \begin{proofsteps}
+        Square and sum over elements, and use the local estimate (Session 4):
+        \begin{align*}
+            [v - \mathcal I_{\mathcal T} v]_{H^k(\Omega)}^2 = \sum_{K} [v - \mathcal I_K v]^2_{H^k(K)} & \le C^2 \sum_K \frac{h_K^{2m}}{\rho_K^{2k}} [v]^2_{H^m(K)}
+            \le C^2 \sup_K \Big(\frac{h_K^{m-k}}{\mu_K^{k}}\Big)^2 [v]^2_{H^m(\Omega)}.
+        \end{align*}
+    \end{proofsteps}
+\end{frame}
+
+\begin{frame}{General sub-divisions}
+    Using the Bramble--Hilbert estimate on each element (no affine equivalence needed):
+    \begin{theorem}
+        Assume that
+        \begin{enumerate}
+            \item each $(K, \mathcal P_K, \mathcal N_K)$ satisfies the hypotheses of the general interpolation bound (Session 4) with $p = 2$;
+            \item $\mathcal I_{\mathcal T}$ maps $H^m(\Omega)$ continuously into $H^k(\Omega)$;
+            \item the rescaled interpolants are uniformly bounded and the mesh is \alert{shape regular}: $\mu_* = \inf_K \rho_K/h_K > 0$.
+        \end{enumerate}
+        Then
+        \[
+            [v - \mathcal I_{\mathcal T} v]_{H^k(\Omega)} \le C \sup_{K} h_K^{m-k}\, [v]_{H^m(\Omega)} \qquad \forall v \in H^m(\Omega).
+        \]
+    \end{theorem}
+    \takeaway{Error $\lesssim h^{m-k}$, where $h = \max_K h_K$, as long as the elements do not degenerate.}
+\end{frame}
+
+\begin{frame}{Consequences for the Galerkin method}
+    \begin{example}[Linear elements, $u \in H^2(\Omega)$]
+        Linear elements reproduce $\R_1$, so $m = 2$:
+        \[
+            \|u - \mathcal I_h u\|_{H^1(\Omega)} \le C h\, |u|_{H^2(\Omega)} .
+        \]
+        By Céa's lemma,
+        \[
+            \|u - u_h\|_{H^1(\Omega)} \le \frac{M}{\alpha^*} \|u - \mathcal I_h u\|_{H^1(\Omega)} \le C h\, |u|_{H^2(\Omega)} .
+        \]
+        With Aubin--Nitsche (if $\|u\|_{H^2} \le C \|f\|_{L^2}$): \ $\|u - u_h\|_{L^2(\Omega)} \le C h^2 \|f\|_{L^2(\Omega)}$.
+    \end{example}
+    \medskip
+    \begin{columns}[c]
+        \begin{column}{.65\textwidth}
+            \textbf{Degenerate elements (Exercise 2.9).} If one angle of a triangle tends to $0$, then $\rho_K/h_K \to 0$, and the constants in the estimates blow up.
+        \end{column}
+        \begin{column}{.3\textwidth}
+            \centering
+            \begin{tikzpicture}[scale=1.4]
+                \draw[thick] (0,0) -- (2,0) -- (1,.18) -- cycle;
+                \draw[red] (1,.06) circle (.055);
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Summary and practice}
+    \begin{itemize}
+        \item $\mathcal P_{\mathcal T} = \prod_K \mathcal P_K$; global interpolant defined element by element.
+        \item Glueing: piece-wise smooth $+$ continuous $\Rightarrow H^1$. Hence $V_h = V \cap \mathcal P_{\mathcal T}$.
+        \item Triangulations: no hanging vertices. Shape regularity: $\rho_K/h_K \ge \mu_* > 0$.
+        \item Interpolation error $\lesssim h^{m-k}$ $\Rightarrow$ (Céa) Galerkin error $\lesssim h^{m-1}$ in $H^1$.
+    \end{itemize}
+    \bigskip
+    \textbf{Practice.} Exercises 2.7--2.10:
+    \begin{itemize}
+        \item 2.7: a sub-division with a hanging vertex, and how to refine it.
+        \item 2.8: hat functions on a triangulation form a basis; effect of Dirichlet conditions.
+        \item 2.9: degenerate triangles and the shape ratio.
+        \item 2.10: a continuous piece-wise linear function with a kink: in $H^1$? in $H^2$?
+    \end{itemize}
+    \bigskip
+    \textbf{Next session:} finite elements in $d = 1$.
+\end{frame}

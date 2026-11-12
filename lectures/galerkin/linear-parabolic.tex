@@ -60,11 +60,12 @@ The corresponding discretisation in ``space'' can be written as
         u_h(0) = u_{0,h}.
     \end{dcases}
 \end{equation}
+We call $u_h$ the \emph{semi-discrete solution}: it is discrete in space, since $u_h(t) \in V_h$, but continuous in time, since it is defined for every $t \in [0,T]$. This approach is sometimes called the \emph{method of lines}.
 
 \begin{strongtheorem}[Parabolic version of Céa's lemma]
     \label{thm:Galerkin parabolic Cea}
     This result is a small generalisation of the type of result in \cite[Chapter 11]{QuarteroniValli1994}.
-    Under the assumptions of \Cref{lem:Galerkin parabolic a priori estimate}, let $u$ and $u_h$ be the solutions to \eqref{eq:Galerkin parabolic variational} and \eqref{eq:Galerkin parabolic variational space-discrete}, respectively. Then, we have that
+    Under the assumptions of \Cref{lem:Galerkin parabolic a priori estimate}, let $u$ be the solution to \eqref{eq:Galerkin parabolic variational} and $u_h$ the semi-discrete solution (continuous in time) to \eqref{eq:Galerkin parabolic variational space-discrete}. Then, we have that
     \begin{equation}
         \begin{aligned}
              & \| u(t) - u_h(t) \|_H^2  + \int_0^t \|u(s) - u_h(s)\|_a^2 \diff s                                                                                \\
@@ -119,12 +120,25 @@ This gives an $h$-independent bound. The differentiated energy argument is justi
 
 \subsubsection{System of linear ODEs for the coefficients}
 \label{sec:Galerkin parabolic linear ODEs}
-We now look for solutions of the form
+Let $\varphi_1, \dots, \varphi_N$ be a basis of $V_h$.
+We look for solutions of the form
 \begin{equation*}
     u_h(t) = \sum_{j=1}^{N} U_j(t) \varphi_j
 \end{equation*}
-with $U_j \in C^1([0,T];\mathbb R)$.
-This leads to the linear system of ODEs for the basis coefficients
+with $U_j \in C^1([0,T];\mathbb R)$. Since the basis functions do not depend on time,
+\begin{equation*}
+    \frac{\diff u_h}{\diff t}(t) = \sum_{j=1}^N \frac{\diff U_j}{\diff t}(t)\, \varphi_j .
+\end{equation*}
+Both sides of \eqref{eq:Galerkin parabolic variational space-discrete} are linear in $v_h$. Hence, as in \Cref{sec:Galerkin elliptic linear algebra}, the equation holds for every $v_h \in V_h$ if and only if it holds for $v_h = \varphi_i$, $i = 1, \dots, N$. Taking $v_h = \varphi_i$ and using the linearity of $\prodH{\cdot}{\varphi_i}$ and $a(\cdot, \varphi_i)$ we obtain
+\begin{align*}
+    \prodH{\frac{\diff u_h}{\diff t}(t)}{\varphi_i} & = \sum_{j=1}^N \prodH{\varphi_j}{\varphi_i} \frac{\diff U_j}{\diff t}(t), &
+    a(u_h(t), \varphi_i)                            & = \sum_{j=1}^N a(\varphi_j, \varphi_i)\, U_j(t).
+\end{align*}
+Therefore \eqref{eq:Galerkin parabolic variational space-discrete} is equivalent to
+\begin{equation*}
+    \sum_{j=1}^N \prodH{\varphi_j}{\varphi_i} \frac{\diff U_j}{\diff t}(t) + \sum_{j=1}^N a(\varphi_j, \varphi_i)\, U_j(t) = \prodH{f(t)}{\varphi_i}, \qquad i = 1, \dots, N, \quad t \in (0,T).
+\end{equation*}
+This is the linear system of ODEs for the basis coefficients
 \begin{equation}
     \label{eq:Galerkin parabolic linear algebra}
     \mat M \frac{\diff \vec u}{\diff t} (t) + \mat K \vec u (t) = \vec b (t), \qquad
@@ -134,26 +148,67 @@ This leads to the linear system of ODEs for the basis coefficients
 \end{equation}
 Here $\mat K$ is the stiffness matrix introduced in \Cref{sec:Galerkin elliptic linear algebra}.
 Matrix $\mat M$ is known as the \emph{mass matrix}.
+The initial condition is given by the coefficients of $u_{0,h} = \sum_{j} U_{0,j} \varphi_j$, i.e. $\vec u(0) = (U_{0,j})_j$. For example, if $u_{0,h}$ is the Ritz projection of $u_0$, then $\mat K \vec u(0) = \big(a(u_0, \varphi_i)\big)_i$; if it is the $H$-orthogonal projection of $u_0$, then $\mat M \vec u(0) = \big(\prodH{u_0}{\varphi_i}\big)_i$.
+
+The mass matrix is the Gram matrix of a basis in $H$, so it is symmetric and positive definite: for $\vec \xi \ne 0$,
+\begin{equation*}
+    \vec \xi^{\,t} \mat M \vec \xi = \Big\| \sum_{j=1}^N \xi_j \varphi_j \Big\|_H^2 > 0.
+\end{equation*}
+In particular, $\mat M$ is invertible and \eqref{eq:Galerkin parabolic linear algebra} can be written as
+\begin{equation*}
+    \frac{\diff \vec u}{\diff t} = \mat M^{-1} \big( \vec b(t) - \mat K \vec u(t) \big),
+\end{equation*}
+a linear system of ODEs with constant coefficients. If $f \in C([0,T];H)$, it has a unique solution by the Cauchy--Lipschitz (Picard--Lindelöf) theorem, given by the variation of constants formula
+\begin{equation*}
+    \vec u(t) = e^{-t \mat M^{-1}\mat K} \vec u(0) + \int_0^t e^{-(t-s) \mat M^{-1}\mat K} \mat M^{-1} \vec b(s) \diff s.
+\end{equation*}
+\begin{example}[Heat equation in $(0,1)$ with piece-wise linear functions]
+    \label{ex:Galerkin heat piece-wise linear}
+    Consider the heat equation $\frac{\partial u}{\partial t} - \frac{\partial^2 u}{\partial x^2} = f$ in $(0,1)$ with homogeneous Dirichlet conditions, i.e. $V = H^1_0(0,1)$, $H = L^2(0,1)$, $a(u,v) = \int_0^1 \frac{\diff u}{\diff x}\frac{\diff v}{\diff x}$.
+    For the hat functions of \Cref{ex:piece-wise linear in d=1} on the uniform mesh $x_i = ih$, a direct computation gives
+    \begin{equation*}
+        \int_0^1 \varphi_i^2 = \frac{2h}{3}, \qquad \int_0^1 \varphi_i \varphi_{i \pm 1} = \frac{h}{6},
+        \qquad \text{so} \qquad
+        \mat M = \frac h 6
+        \begin{pmatrix}
+            4 & 1      &        &   \\
+            1 & 4      & \ddots &   \\
+              & \ddots & \ddots & 1 \\
+              &        & 1      & 4
+        \end{pmatrix},
+    \end{equation*}
+    and $\mat K$ is the matrix computed in \Cref{sec:Galerkin elliptic linear algebra}. Dividing the $i$-th equation by $h$ we obtain
+    \begin{equation*}
+        \frac{1}{6} \left( \frac{\diff U_{i-1}}{\diff t} + 4 \frac{\diff U_{i}}{\diff t} + \frac{\diff U_{i+1}}{\diff t} \right) + \frac{-U_{i+1} + 2U_i - U_{i-1}}{h^2} = \frac 1 h \int_0^1 f(t) \varphi_i .
+    \end{equation*}
+    Unlike the finite-difference method of lines, the time derivatives of neighbouring nodes are coupled through $\mat M$.
+\end{example}
 
 \subsection{Fully discrete problem}
-Then we must pick a suitable time discretisation, in order to be able to numerically solve our problem. For example, we can use the $\theta$-method with $\theta \in [0,1]$ ($\theta = 0$ is the explicit Euler method, $\theta = 1$ the implicit Euler method and $\theta = \frac 1 2$ the Crank--Nicolson method): given $u_h^n$ (an approximation of $u_h(n \tau)$) we take $u_h^{n+1}$ (an approximation of $u_h ((n+1)\tau)$) as the solution to
+Then we must pick a suitable time discretisation, in order to be able to numerically solve our problem.
+Let $\tau > 0$ be the time step.
+We denote by $u_{h,\tau}^n \in V_h$ the \emph{fully discrete solution} (discrete in space and time), which approximates the semi-discrete solution $u_h(n\tau)$ (continuous in time) and hence $u(n\tau)$.
+For example, we can use the $\theta$-method with $\theta \in [0,1]$ ($\theta = 0$ is the explicit Euler method, $\theta = 1$ the implicit Euler method and $\theta = \frac 1 2$ the Crank--Nicolson method): given $u_{h,\tau}^n$ we take $u_{h,\tau}^{n+1}$ as the solution to
 \begin{equation*}
-    \prodH{\frac{u_h^{n+1} - u_h^n}{\tau}}{v_h} + a\Big(\theta u_h^{n+1} + (1-\theta) u_h^n ,v_h\Big)
+    \prodH{\frac{u_{h,\tau}^{n+1} - u_{h,\tau}^n}{\tau}}{v_h} + a\Big(\theta u_{h,\tau}^{n+1} + (1-\theta) u_{h,\tau}^n ,v_h\Big)
     = \BigprodH{\theta f((n+1)\tau) + (1-\theta) f(n\tau)}{v_h}, \qquad \forall v_h \in V_h
 \end{equation*}
 that can be written as the elliptic problem
-\begin{equation*}
-    \prodH{u_h^{n+1}} {v_h} + \tau \theta a(u_h^{n+1},v_h)
-    = \BigprodH{u_h^n + \tau \theta f((n+1)\tau) + \tau (1-\theta) f(n\tau)}{v_h} - \tau (1-\theta) a(u_h^n , v_h) , \qquad \forall v_h \in V_h.
-\end{equation*}
-Equivalently, in terms of coefficients
+\begin{multline*}
+    \prodH{u_{h,\tau}^{n+1}} {v_h} + \tau \theta a(u_{h,\tau}^{n+1},v_h)
+    \\
+    = \BigprodH{u_{h,\tau}^n + \tau \theta f((n+1)\tau) + \tau (1-\theta) f(n\tau)}{v_h} - \tau (1-\theta) a(u_{h,\tau}^n , v_h) , \qquad \forall v_h \in V_h.
+\end{multline*}
+Equivalently, if $\vec u^n$ denotes the vector of coefficients of $u_{h,\tau}^n$ in the basis $\varphi_1, \dots, \varphi_N$,
 \begin{equation*}
     ( \mat M + \tau \theta \mat K ) \vec u^{n+1} = (\mat M - \tau (1-\theta) \mat K) \vec u^n + \tau \Big( \theta \vec b((n+1)\tau) + (1-\theta) \vec b(n \tau) \Big).
 \end{equation*}
+This is the $\theta$-method applied to the system of ODEs \eqref{eq:Galerkin parabolic linear algebra}.
 The following stability and consistency argument gives explicit time-error bounds; see also \cite[Chapter 11]{QuarteroniValli1994} for estimates in terms of the data.
 \begin{theorem}
     \label{thm:Galerkin parabolic convergence in tau}
-    Assume that $a:V\times V\to\mathbb R$ is bilinear, symmetric, continuous and coercive, that $f\in H^1(0,T;H)$, and that $u_h^0=u_h(0)$. Define
+    Let $u_h$ be the semi-discrete solution (continuous in time) of \eqref{eq:Galerkin parabolic variational space-discrete} and $u_{h,\tau}^n$ the fully discrete solution given by the $\theta$-method.
+    Assume that $a:V\times V\to\mathbb R$ is bilinear, symmetric, continuous and coercive, that $f\in H^1(0,T;H)$, and that $u_{h,\tau}^0=u_h(0)$. Define
     \begin{equation*}
         \lambda_{\max,h}=\max_{v_h\ne0}\frac{a(v_h,v_h)}{\|v_h\|_H^2}
         =\lambda_{\max}(\mat M^{-1}\mat K).
@@ -164,37 +219,66 @@ The following stability and consistency argument gives explicit time-error bound
     \end{equation*}
     For $\frac12\le\theta\le1$ no such restriction is needed. Then
     \begin{equation*}
-        \max_{n\tau\le T}\|u_h^n-u_h(n\tau)\|_H
+        \max_{n\tau\le T}\|u_{h,\tau}^n-u_h(n\tau)\|_H
         \le \max\{\theta,1-\theta\}\,\tau\int_0^T\|u_h''(s)\|_H\diff s.
     \end{equation*}
     If $\theta=\frac12$ and $f\in H^2(0,T;H)$, then
     \begin{equation*}
-        \max_{n\tau\le T}\|u_h^n-u_h(n\tau)\|_H
+        \max_{n\tau\le T}\|u_{h,\tau}^n-u_h(n\tau)\|_H
         \le \frac{\tau^2}{8}\int_0^T\|u_h^{(3)}(s)\|_H\diff s.
     \end{equation*}
     These are first- and second-order estimates for fixed $h$. Uniform estimates as $h\to0$ require uniform bounds on the displayed derivative integrals.
 \end{theorem}
 \begin{proof}
-    Let $A_h:V_h\to V_h$ satisfy $(A_hv_h,w_h)_H=a(v_h,w_h)$. In an $H$-orthonormal eigenbasis its eigenvalues are positive. The amplification factors of the method are
+    Let $A_h:V_h\to V_h$ satisfy $(A_hv_h,w_h)_H=a(v_h,w_h)$, and let $P_h$ be the $H$-orthogonal projection onto $V_h$. In an $H$-orthonormal eigenbasis $A_h$ is diagonal with positive eigenvalues $\lambda \le \lambda_{\max,h}$. The amplification factors of the method are
     \begin{equation*}
         R_\theta(\tau\lambda)=\frac{1-(1-\theta)\tau\lambda}{1+\theta\tau\lambda}.
     \end{equation*}
     Under the stated restriction their absolute values are at most one, and $\|(I+\tau\theta A_h)^{-1}\|_{H\to H}\le1$.
-    Substituting the exact semidiscrete solution into a time step gives the residual
+    Substituting the semi-discrete solution, which satisfies $u_h' + A_h u_h = P_h f$, into a time step gives the residual
     \begin{equation*}
         r_n=\frac1\tau\int_{n\tau}^{(n+1)\tau}u_h'(s)\diff s
         -(1-\theta)u_h'(n\tau)-\theta u_h'((n+1)\tau).
     \end{equation*}
+    Hence the error $e^n = u_{h,\tau}^n - u_h(n\tau)$ satisfies $e^0 = 0$ and
+    \begin{equation*}
+        \frac{e^{n+1} - e^n}{\tau} + A_h\big(\theta e^{n+1} + (1-\theta) e^n\big) = - r_n,
+        \qquad\text{i.e.}\qquad
+        e^{n+1} = R_\theta(\tau A_h) e^n - \tau (I + \tau\theta A_h)^{-1} r_n .
+    \end{equation*}
+    Therefore $\|e^{n+1}\|_H \le \|e^n\|_H + \tau \|r_n\|_H$, and $\|e^n\|_H \le \tau \sum_{k < n} \|r_k\|_H$.
     The fundamental theorem of calculus bounds $\|r_n\|_H$ by
     $\max\{\theta,1-\theta\}\int_{n\tau}^{(n+1)\tau}\|u_h''(s)\|_H\diff s$.
     For $\theta=\frac12$, the trapezoidal-rule remainder instead gives
     $\|r_n\|_H\le(\tau/8)\int_{n\tau}^{(n+1)\tau}\|u_h^{(3)}(s)\|_H\diff s$.
-    The contraction estimate for each step yields an error bounded by $\tau\sum_n\|r_n\|_H$, proving both claims.
+    Adding these bounds proves both claims.
 \end{proof}
 
 \begin{remark}
     If $|a(v,w)|\le M_a\|v\|_V\|w\|_V$, then $\lambda_{\max,h}\le M_a C(h)$, where $C(h)=\sup_{v_h\ne0}\|v_h\|_V^2/\|v_h\|_H^2$. Thus $\tau(1-2\theta)M_aC(h)\le2$ is a sufficient CFL restriction when $\theta<\frac12$. A strict safety margin gives damping of the highest-frequency modes.
-    Combining the spatial and temporal bounds by the triangle inequality estimates $\|u(n\tau)-u_h^n\|_H$.
+\end{remark}
+
+\begin{remark}[The CFL condition is like in finite differences]
+    For piece-wise linear functions, $\lambda_{\max,h}$ scales like $h^{-2}$.
+    Consider the matrices $\mat M$ and $\mat K$ of \Cref{ex:Galerkin heat piece-wise linear} on a uniform mesh. The vectors $\big(\sin(k\pi x_j)\big)_j$, $k = 1, \dots, N-1$, are eigenvectors of both matrices, with eigenvalues $\frac 2 h \big(1 - \cos(k\pi h)\big)$ and $\frac h 3 \big(2 + \cos(k\pi h)\big)$, respectively. Hence the eigenvalues of $\mat M^{-1}\mat K$ are
+    \begin{equation*}
+        \lambda_k = \frac{6}{h^2}\, \frac{1 - \cos(k\pi h)}{2 + \cos(k\pi h)},
+        \qquad \text{so that} \qquad
+        \lambda_{\max,h} = \lambda_{N-1} < \frac{12}{h^2}
+        \quad \text{and} \quad
+        \lambda_{\max,h} \approx \frac{12}{h^2} \text{ as } h \to 0.
+    \end{equation*}
+    More generally, on quasi-uniform meshes the inverse inequality $\|v_h\|_{H^1} \le C h^{-1} \|v_h\|_{L^2}$ for all $v_h \in V_h$ gives $\lambda_{\max,h} \le C h^{-2}$.
+
+    Therefore, for $\theta < \frac 12$ the CFL condition is a restriction of the form $\tau \le C h^2$, as for finite differences. For instance, explicit Euler ($\theta = 0$) with piece-wise linear functions is stable if $\tau \le \frac{h^2}{6}$, while the explicit finite-difference scheme for the heat equation requires $\tau \le \frac{h^2}{2}$. Implicit methods ($\theta \ge \frac12$) avoid this restriction.
+\end{remark}
+
+\begin{remark}[Total error]
+    The error of the fully discrete solution is estimated by the triangle inequality, passing through the semi-discrete solution $u_h$:
+    \begin{equation*}
+        \|u(n\tau)-u_{h,\tau}^n\|_H \le \|u(n\tau)-u_h(n\tau)\|_H + \|u_h(n\tau)-u_{h,\tau}^n\|_H,
+    \end{equation*}
+    where the first term (error in space) is controlled by \Cref{thm:Galerkin parabolic Cea}, and the second (error in time) by \Cref{thm:Galerkin parabolic convergence in tau}.
 \end{remark}
 
 \subsection*{Exercises}

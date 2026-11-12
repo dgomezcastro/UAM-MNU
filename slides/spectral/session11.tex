@@ -1,0 +1,170 @@
+% !TEX root = ../slides.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Session 11: Applications of spectral methods
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\session{session11}{Spectral methods}{Applications of spectral methods}
+{Chapter 7}
+{--}
+{7.1}
+
+\begin{frame}{Plan for today}
+    \begin{enumerate}
+        \item Chebyshev collocation for Laplace's equation: stability.
+        \item Burgers' equation:
+              \begin{itemize}
+                  \item Fourier--Galerkin (periodic),
+                  \item Fourier collocation (periodic),
+                  \item Chebyshev collocation (Dirichlet).
+              \end{itemize}
+        \item Overview of the course.
+    \end{enumerate}
+    \bigskip
+    \takeaway{Convergence $=$ consistency $+$ stability. Quadrature rules are the key tool to analyse collocation methods.}
+\end{frame}
+
+\begin{frame}{Chebyshev collocation for Laplace's equation}
+    Recall (Session 8): $u_N \in \R_N[x]$ and the Chebyshev--Gauss--Lobatto nodes $x_k = \cos\frac{k\pi}{N}$:
+    \[
+        -u_N''(x_k) = f(x_k), \quad k = 1, \dots, N-1, \qquad u_N(x_0) = u_N(x_N) = 0.
+    \]
+    \begin{itemize}
+        \item \textbf{Consistency:} the exact solution almost satisfies the scheme (quite technical, we skip it).
+        \item \textbf{Stability:} the discrete solution is bounded by the data, uniformly in $N$.
+    \end{itemize}
+    \begin{theorem}[Stability]
+        There is $C$ independent of $N$ such that
+        \[
+            \|u_N\|_{H^1(-1,1)} \le C \|f\|_{L^\infty(-1,1)} .
+        \]
+    \end{theorem}
+\end{frame}
+
+\begin{frame}{Proof of stability: main steps}
+    \small
+    Weight $w = (1-x^2)^{-1/2}$, Gauss--Lobatto weights $w_k$ (Session 10).
+    \begin{enumerate}
+        \item Multiply the $k$-th equation by $u_N(x_k) w_k$ and add (the boundary terms vanish since $u_N(\pm1) = 0$):
+              \[
+                  -\sum_{k=0}^N u_N''(x_k)\, u_N(x_k)\, w_k = \sum_{k=0}^N f(x_k)\, u_N(x_k)\, w_k .
+              \]
+        \item $u_N'' u_N \in \R_{2N-2}[x]$, and Gauss--Lobatto is exact on $\R_{2N-1}[x]$: the left-hand side is $-\int_{-1}^1 u_N'' u_N w$.
+        \item Since $u_N(\pm1) = 0$ (Canuto et al., Section 7.1):
+              \[
+                  -\int_{-1}^1 u_N'' u_N w \ge \frac 14 \int_{-1}^1 |u_N'|^2 w \ge \frac14 \int_{-1}^1 |u_N'|^2 .
+              \]
+        \item Right-hand side: $w_k > 0$ and $\sum_k w_k = \int_{-1}^1 w = \pi$, so it is $\le \pi \|f\|_{L^\infty}\|u_N\|_{L^\infty}$.
+        \item $|u_N(x)| = |\int_{-1}^x u_N'| \le \sqrt 2\, \|u_N'\|_{L^2}$. Conclude with Poincaré's inequality.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Burgers' equation}
+    For $\nu > 0$ and periodic boundary conditions in $(0,2\pi)$:
+    \[
+        \frac{\partial u}{\partial t} + u \frac{\partial u}{\partial x} = \nu \frac{\partial^2 u}{\partial x^2}.
+    \]
+    \begin{itemize}
+        \item Simplest model combining non-linear transport and diffusion.
+        \item For small $\nu$, solutions develop steep fronts (close to shocks).
+        \item Non-linear term $u u_x$: how do we treat it in Galerkin and in collocation methods?
+    \end{itemize}
+    \bigskip
+    Real solutions with $N = 2K+1$ symmetric Fourier modes:
+    \[
+        u_N(t,x) = \sum_{k=-K}^K \hat u_k(t)\, e^{ikx}, \qquad \hat u_{-k} = \overline{\hat u_k}, \quad \hat u_0 \in \R .
+    \]
+    The periodic boundary conditions are built into the basis.
+\end{frame}
+
+\begin{frame}{Fourier--Galerkin}
+    \small
+    Impose the equation tested against $e^{-ikx}$, $k = -K, \dots, K$:
+    \[
+        \int_0^{2\pi} \Big( \frac{\partial u_N}{\partial t} + u_N \frac{\partial u_N}{\partial x} - \nu \frac{\partial^2 u_N}{\partial x^2} \Big) e^{-ikx} \diff x = 0.
+    \]
+    By orthogonality, a system of ODEs for the coefficients:
+    \[
+        \frac{\diff \hat u_k}{\diff t} + \widehat{\Big(u_N \frac{\partial u_N}{\partial x}\Big)}_k + \nu k^2 \hat u_k = 0, \qquad k = -K, \dots, K.
+    \]
+    \begin{itemize}
+        \item Products become \alert{convolutions}: \
+              $\widehat{(uv)}_k = \sum_{p + q = k} \hat u_p \hat v_q$, \ so \
+              $\widehat{\big(u_N \partial_x u_N\big)}_k = \sum_{\substack{p+q = k\\ |p|,|q| \le K}} iq\, \hat u_p \hat u_q$.
+        \item Direct cost $O(N^2)$ per evaluation; it can be done faster with transform methods (Canuto et al., Section 3.4).
+        \item Conjugate symmetry is preserved: $u_N$ stays real. Initial datum: $u_N(0) = Q_N u_0$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Fourier collocation}
+    Nodes $x_j = 2\pi j/N$, $j = 0, \dots, N-1$. Impose the equation at the nodes:
+    \[
+        \Big( \frac{\partial u_N}{\partial t} + u_N \frac{\partial u_N}{\partial x} - \nu \frac{\partial^2 u_N}{\partial x^2} \Big)\Big|_{x = x_j} = 0, \qquad t > 0.
+    \]
+    \begin{remark}
+        For the product $u_N \partial_x u_N$ it is easier to work with the \alert{values} $u_N(t, x_j)$ than with the coefficients.
+    \end{remark}
+    With $\vec u(t) = (u_N(t,x_0), \dots, u_N(t,x_{N-1}))^t$ and the Fourier differentiation matrix $\mat D$:
+    \[
+        \frac{\diff \vec u}{\diff t} + \vec u \boxtimes \mat D \vec u - \nu\, \mat D^2 \vec u = 0,
+    \]
+    where $\boxtimes$ is the entry-wise product: $(\vec u \boxtimes \vec v)_j = u_j v_j$.
+    \takeaway{Non-linear terms are trivial in collocation: just multiply the values.}
+\end{frame}
+
+\begin{frame}{Chebyshev collocation with Dirichlet conditions}
+    \small
+    In $(-1,1)$ with boundary data $u(t,-1) = u_L(t)$, $u(t,1) = u_R(t)$, and nodes $x_j = \cos\frac{j\pi}{N}$:
+    \[
+        \Big( \partial_t u_N + u_N \partial_x u_N - \nu \partial_{xx} u_N \Big)\Big|_{x = x_j} = 0, \quad j = 1, \dots, N-1,
+    \]
+    \[
+        u_N(t, x_0) = u_R(t), \qquad u_N(t,x_N) = u_L(t).
+    \]
+    With $\vec u(t) = (u_R(t), u_N(t,x_1), \dots, u_N(t, x_{N-1}), u_L(t))^t$ and $\mat Z_N = (\vec 0 \mid \mat I_{N-1} \mid \vec 0)$:
+    \[
+        \frac{\diff}{\diff t}
+        \begin{pmatrix} u_N(t,x_1) \\ \vdots \\ u_N(t, x_{N-1}) \end{pmatrix}
+        = -\mat Z_N \big( \vec u \boxtimes \mat D_N \vec u - \nu\, \mat D_N^2 \vec u \big).
+    \]
+    \begin{itemize}
+        \item Initial datum: $\vec u(0) = (u_0(x_0), \dots, u_0(x_N))^t$, compatible with the boundary data.
+        \item A system of ODEs: choose a time integrator.
+              Explicit methods need small $\tau$: the eigenvalues of $\mat D_N^2$ grow like $N^2$ (Fourier) or $N^4$ (Chebyshev).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Overview of the course}
+    \begin{center}
+        \footnotesize
+        \begin{tabular}{@{}lll@{}}
+            \toprule
+                                & Finite elements                         & Spectral methods                           \\
+            \midrule
+            Framework           & Galerkin: $a(u_h, v_h) = \ell(v_h)$     & Galerkin or collocation                    \\
+            Basis               & local, piece-wise polynomials           & global: $e^{ikx}$, orthogonal polynomials  \\
+            Parameter           & mesh size $h \to 0$                     & degree $N \to \infty$                      \\
+            Error (smooth $u$)  & $O(h^{p})$ in $H^1$ for degree $p$      & faster than any power of $N$               \\
+            Matrices            & sparse, assembled element by element    & full, but structured (FFT)                 \\
+            Domains             & general (triangulations)                & simple (intervals, boxes)                  \\
+            Key tools           & Céa, Aubin--Nitsche, Bramble--Hilbert   & Parseval, quadrature, interpolation        \\
+            \bottomrule
+        \end{tabular}
+    \end{center}
+    \bigskip
+    \takeaway{The same principle everywhere: convergence $=$ stability (coercivity) $+$ approximation $+$ consistency.}
+\end{frame}
+
+\begin{frame}{Summary and practice}
+    \begin{itemize}
+        \item Chebyshev collocation is stable: proof by Gauss--Lobatto exactness.
+        \item Burgers: Galerkin gives convolutions of coefficients; collocation gives point-wise products of values.
+        \item Dirichlet conditions in collocation: replace the boundary equations by the boundary data.
+    \end{itemize}
+    \bigskip
+    \textbf{Practice.} Exercise 7.1: solve numerically some of the previous systems, e.g.
+    \begin{itemize}
+        \item Burgers' equation by Fourier collocation, with $u_0(x) = \sin x$ and several values of $\nu$;
+        \item Burgers' equation by Chebyshev collocation with Dirichlet data.
+    \end{itemize}
+    Use an ODE solver for the time integration, and compare different values of $N$.
+\end{frame}
