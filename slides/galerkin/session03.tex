@@ -72,7 +72,7 @@
         \qquad u_h(0) = u_{0,h}.
     \]
     \begin{itemize}
-        \item Discrete in space, continuous in time: the \alert{method of lines}.
+        \item $u_h$ is the \alert{semi-discrete solution}: discrete in space ($u_h(t) \in V_h$), continuous in time (defined for all $t \in [0,T]$). This is the \alert{method of lines}.
         \item We look for
               \[
                   u_h(t) = \sum_{j=1}^N U_j(t)\, \varphi_j, \qquad U_j \in C^1([0,T]).
@@ -124,7 +124,7 @@
 \begin{frame}{Parabolic version of Céa's lemma}
     \small
     \begin{theorem}
-        Under the assumptions above, let $u$ solve (C) and $u_h$ solve (C$_h$). Then
+        Let $u$ solve (C) and $u_h$ be the semi-discrete solution (continuous in time) of (C$_h$). Then
         \begin{multline*}
             \|u(t) - u_h(t)\|_H^2 + \int_0^t \|u(s) - u_h(s)\|_a^2 \diff s \\
             \le \|u_0 - u_{0,h}\|_H^2 + \inf_{v_h} \int_0^t \Big( C_h(s) \|u(s) - v_h(s)\|_H + \|u(s) - v_h(s)\|_a^2 \Big) \diff s,
@@ -134,7 +134,7 @@
     \begin{proofsteps}
         \begin{enumerate}
             \item Galerkin orthogonality: $e_h = u - u_h$ satisfies $\prodH{\frac{\diff e_h}{\diff t}}{w_h} + a(e_h, w_h) = 0$, $\forall w_h \in V_h$.
-            \item Split $e_h = (u - v_h) + (v_h - u_h)$ and take $w_h = v_h - u_h$.
+                  Split $e_h = (u - v_h) + (v_h - u_h)$ and take $w_h = v_h - u_h$.
             \item Cauchy--Schwarz and Young: $\frac{\diff}{\diff t}\|e_h\|_H^2 + \|e_h\|_a^2 \le C_h \|u - v_h\|_H + \|u - v_h\|_a^2$. Integrate in time.
         \end{enumerate}
     \end{proofsteps}
@@ -156,7 +156,8 @@
 \end{frame}
 
 \begin{frame}{Full discretisation: the $\theta$-method}
-    Time step $\tau$, $\theta \in [0,1]$. \alert{Fully discrete solution}: $u_{h,\tau}^n \in V_h$, \ $u_{h,\tau}^n \approx u_h(n\tau) \approx u(n\tau)$.
+    Time step $\tau$, $\theta \in [0,1]$. \alert{Fully discrete solution}: $u_{h,\tau}^n \in V_h$, \ $u_{h,\tau}^n \approx u_h(n\tau) \approx u(n\tau)$,
+    where $u_h$ is the semi-discrete solution (continuous in time).
     For all $v_h \in V_h$:
     \[
         \BigprodH{\frac{u_{h,\tau}^{n+1} - u_{h,\tau}^n}{\tau}}{v_h} + a\big(\theta u_{h,\tau}^{n+1} + (1-\theta) u_{h,\tau}^n, v_h\big)
@@ -176,14 +177,15 @@
 \begin{frame}{Convergence in time}
     \small
     \begin{theorem}
-        Let $a$ be symmetric, continuous and coercive, $f \in H^1(0,T;H)$, $u_{h,\tau}^0 = u_h(0)$ and
+        Let $u_h$ be the semi-discrete solution (continuous in time) and $u_{h,\tau}^n$ the fully discrete one,
+        $a$ symmetric, continuous and coercive, $f \in H^1(0,T;H)$, $u_{h,\tau}^0 = u_h(0)$ and
         $\lambda_{\max,h} = \max_{v_h \ne 0} \frac{a(v_h,v_h)}{\|v_h\|_H^2} = \lambda_{\max}(\mat M^{-1} \mat K)$.
         If $0 \le \theta < \frac 12$ assume the \alert{CFL condition}
         $\tau (1 - 2\theta) \lambda_{\max,h} \le 2$. Then
         \[
             \max_{n\tau \le T} \|u_{h,\tau}^n - u_h(n\tau)\|_H \le \max\{\theta, 1-\theta\}\, \tau \int_0^T \|u_h''(s)\|_H \diff s .
         \]
-        For $\theta = \frac 12$ (and $f \in H^2(0,T;H)$) the error is $\le \frac{\tau^2}{8} \int_0^T \|u_h'''(s)\|_H \diff s$.
+        If $\theta = \frac 12$, $f \in H^2(0,T;H)$: the error is $\le \frac{\tau^2}{8} \int_0^T \|u_h'''(s)\|_H \diff s$.
     \end{theorem}
     \begin{proofsteps}
         \begin{enumerate}

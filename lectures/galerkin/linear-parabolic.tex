@@ -60,11 +60,12 @@ The corresponding discretisation in ``space'' can be written as
         u_h(0) = u_{0,h}.
     \end{dcases}
 \end{equation}
+We call $u_h$ the \emph{semi-discrete solution}: it is discrete in space, since $u_h(t) \in V_h$, but continuous in time, since it is defined for every $t \in [0,T]$. This approach is sometimes called the \emph{method of lines}.
 
 \begin{strongtheorem}[Parabolic version of Céa's lemma]
     \label{thm:Galerkin parabolic Cea}
     This result is a small generalisation of the type of result in \cite[Chapter 11]{QuarteroniValli1994}.
-    Under the assumptions of \Cref{lem:Galerkin parabolic a priori estimate}, let $u$ and $u_h$ be the solutions to \eqref{eq:Galerkin parabolic variational} and \eqref{eq:Galerkin parabolic variational space-discrete}, respectively. Then, we have that
+    Under the assumptions of \Cref{lem:Galerkin parabolic a priori estimate}, let $u$ be the solution to \eqref{eq:Galerkin parabolic variational} and $u_h$ the semi-discrete solution (continuous in time) to \eqref{eq:Galerkin parabolic variational space-discrete}. Then, we have that
     \begin{equation}
         \begin{aligned}
              & \| u(t) - u_h(t) \|_H^2  + \int_0^t \|u(s) - u_h(s)\|_a^2 \diff s                                                                                \\
@@ -185,7 +186,7 @@ a linear system of ODEs with constant coefficients. If $f \in C([0,T];H)$, it ha
 \subsection{Fully discrete problem}
 Then we must pick a suitable time discretisation, in order to be able to numerically solve our problem.
 Let $\tau > 0$ be the time step.
-We denote by $u_{h,\tau}^n \in V_h$ the \emph{fully discrete solution} (discrete in space and time), which approximates $u_h(n\tau)$ and hence $u(n\tau)$.
+We denote by $u_{h,\tau}^n \in V_h$ the \emph{fully discrete solution} (discrete in space and time), which approximates the semi-discrete solution $u_h(n\tau)$ (continuous in time) and hence $u(n\tau)$.
 For example, we can use the $\theta$-method with $\theta \in [0,1]$ ($\theta = 0$ is the explicit Euler method, $\theta = 1$ the implicit Euler method and $\theta = \frac 1 2$ the Crank--Nicolson method): given $u_{h,\tau}^n$ we take $u_{h,\tau}^{n+1}$ as the solution to
 \begin{equation*}
     \prodH{\frac{u_{h,\tau}^{n+1} - u_{h,\tau}^n}{\tau}}{v_h} + a\Big(\theta u_{h,\tau}^{n+1} + (1-\theta) u_{h,\tau}^n ,v_h\Big)
@@ -205,6 +206,7 @@ This is the $\theta$-method applied to the system of ODEs \eqref{eq:Galerkin par
 The following stability and consistency argument gives explicit time-error bounds; see also \cite[Chapter 11]{QuarteroniValli1994} for estimates in terms of the data.
 \begin{theorem}
     \label{thm:Galerkin parabolic convergence in tau}
+    Let $u_h$ be the semi-discrete solution (continuous in time) of \eqref{eq:Galerkin parabolic variational space-discrete} and $u_{h,\tau}^n$ the fully discrete solution given by the $\theta$-method.
     Assume that $a:V\times V\to\mathbb R$ is bilinear, symmetric, continuous and coercive, that $f\in H^1(0,T;H)$, and that $u_{h,\tau}^0=u_h(0)$. Define
     \begin{equation*}
         \lambda_{\max,h}=\max_{v_h\ne0}\frac{a(v_h,v_h)}{\|v_h\|_H^2}
@@ -232,7 +234,7 @@ The following stability and consistency argument gives explicit time-error bound
         R_\theta(\tau\lambda)=\frac{1-(1-\theta)\tau\lambda}{1+\theta\tau\lambda}.
     \end{equation*}
     Under the stated restriction their absolute values are at most one, and $\|(I+\tau\theta A_h)^{-1}\|_{H\to H}\le1$.
-    Substituting the exact semidiscrete solution $u_h' + A_h u_h = P_h f$ into a time step gives the residual
+    Substituting the semi-discrete solution, which satisfies $u_h' + A_h u_h = P_h f$, into a time step gives the residual
     \begin{equation*}
         r_n=\frac1\tau\int_{n\tau}^{(n+1)\tau}u_h'(s)\diff s
         -(1-\theta)u_h'(n\tau)-\theta u_h'((n+1)\tau).
@@ -256,7 +258,7 @@ The following stability and consistency argument gives explicit time-error bound
 \end{remark}
 
 \begin{remark}[Total error]
-    The error of the fully discrete solution is estimated by the triangle inequality
+    The error of the fully discrete solution is estimated by the triangle inequality, passing through the semi-discrete solution $u_h$:
     \begin{equation*}
         \|u(n\tau)-u_{h,\tau}^n\|_H \le \|u(n\tau)-u_h(n\tau)\|_H + \|u_h(n\tau)-u_{h,\tau}^n\|_H,
     \end{equation*}
