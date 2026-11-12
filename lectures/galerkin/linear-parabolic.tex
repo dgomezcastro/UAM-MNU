@@ -163,6 +163,7 @@ a linear system of ODEs with constant coefficients. If $f \in C([0,T];H)$, it ha
     \vec u(t) = e^{-t \mat M^{-1}\mat K} \vec u(0) + \int_0^t e^{-(t-s) \mat M^{-1}\mat K} \mat M^{-1} \vec b(s) \diff s.
 \end{equation*}
 \begin{example}[Heat equation in $(0,1)$ with piece-wise linear functions]
+    \label{ex:Galerkin heat piece-wise linear}
     Consider the heat equation $\frac{\partial u}{\partial t} - \frac{\partial^2 u}{\partial x^2} = f$ in $(0,1)$ with homogeneous Dirichlet conditions, i.e. $V = H^1_0(0,1)$, $H = L^2(0,1)$, $a(u,v) = \int_0^1 \frac{\diff u}{\diff x}\frac{\diff v}{\diff x}$.
     For the hat functions of \Cref{ex:piece-wise linear in d=1} on the uniform mesh $x_i = ih$, a direct computation gives
     \begin{equation*}
@@ -255,6 +256,21 @@ The following stability and consistency argument gives explicit time-error bound
 
 \begin{remark}
     If $|a(v,w)|\le M_a\|v\|_V\|w\|_V$, then $\lambda_{\max,h}\le M_a C(h)$, where $C(h)=\sup_{v_h\ne0}\|v_h\|_V^2/\|v_h\|_H^2$. Thus $\tau(1-2\theta)M_aC(h)\le2$ is a sufficient CFL restriction when $\theta<\frac12$. A strict safety margin gives damping of the highest-frequency modes.
+\end{remark}
+
+\begin{remark}[The CFL condition is like in finite differences]
+    For piece-wise linear functions, $\lambda_{\max,h}$ scales like $h^{-2}$.
+    Consider the matrices $\mat M$ and $\mat K$ of \Cref{ex:Galerkin heat piece-wise linear} on a uniform mesh. The vectors $\big(\sin(k\pi x_j)\big)_j$, $k = 1, \dots, N-1$, are eigenvectors of both matrices, with eigenvalues $\frac 2 h \big(1 - \cos(k\pi h)\big)$ and $\frac h 3 \big(2 + \cos(k\pi h)\big)$, respectively. Hence the eigenvalues of $\mat M^{-1}\mat K$ are
+    \begin{equation*}
+        \lambda_k = \frac{6}{h^2}\, \frac{1 - \cos(k\pi h)}{2 + \cos(k\pi h)},
+        \qquad \text{so that} \qquad
+        \lambda_{\max,h} = \lambda_{N-1} < \frac{12}{h^2}
+        \quad \text{and} \quad
+        \lambda_{\max,h} \approx \frac{12}{h^2} \text{ as } h \to 0.
+    \end{equation*}
+    More generally, on quasi-uniform meshes the inverse inequality $\|v_h\|_{H^1} \le C h^{-1} \|v_h\|_{L^2}$ for all $v_h \in V_h$ gives $\lambda_{\max,h} \le C h^{-2}$.
+
+    Therefore, for $\theta < \frac 12$ the CFL condition is a restriction of the form $\tau \le C h^2$, as for finite differences. For instance, explicit Euler ($\theta = 0$) with piece-wise linear functions is stable if $\tau \le \frac{h^2}{6}$, while the explicit finite-difference scheme for the heat equation requires $\tau \le \frac{h^2}{2}$. Implicit methods ($\theta \ge \frac12$) avoid this restriction.
 \end{remark}
 
 \begin{remark}[Total error]

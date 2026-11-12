@@ -205,7 +205,7 @@
               \[
                   \lambda_{\max,h} \le M_a\, C(h), \qquad C(h) = \sup_{v_h \ne 0} \frac{\|v_h\|_V^2}{\|v_h\|_H^2}.
               \]
-        \item For hat functions $C(h) \sim h^{-2}$ (inverse inequality), so explicit Euler needs $\tau \lesssim h^2$.
+        \item Hat functions: $\lambda_{\max,h} \sim h^{-2}$ (uniform mesh in $d=1$: $\lambda_{\max,h} < \frac{12}{h^2}$). So the CFL condition is $\tau \lesssim h^2$, \alert{as in finite differences}: explicit Euler needs $\tau \le \frac{h^2}{6}$ (finite differences: $\tau \le \frac{h^2}{2}$).
         \item Total error of the fully discrete solution, by the triangle inequality:
               \[
                   \|u(n\tau) - u_{h,\tau}^n\|_H \le \underbrace{\|u(n\tau) - u_h(n\tau)\|_H}_{\text{space: parabolic Céa}} + \underbrace{\|u_h(n\tau) - u_{h,\tau}^n\|_H}_{\text{time: $\theta$-method}}.
