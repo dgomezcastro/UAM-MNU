@@ -21,6 +21,14 @@ jobs:
           latexmk_use_lualatex: false
           latexmk_use_xelatex: false
 
+      - name: Compile slides
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: slides
+          root_file: slides.tex
+          latexmk_use_lualatex: false
+          latexmk_use_xelatex: false
+
       - name: Set release date variable
         id: vars
         run: echo "sha=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_OUTPUT
@@ -31,4 +39,6 @@ jobs:
           tag_name: release-${{ steps.vars.outputs.sha }}
           name: "MNU PDF – ${{ steps.vars.outputs.sha }}"
           body: "Auto-generated release for ${{ steps.vars.outputs.sha }}"
-          files: mnu.pdf
+          files: |
+            mnu.pdf
+            slides/slides.pdf

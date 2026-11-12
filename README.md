@@ -4,6 +4,8 @@
 
 ### [PDF of Lectures Notes](https://github.com/dgomezcastro/UAM-MNU/releases/latest/download/mnu.pdf)
 
+### [PDF of Slides](https://github.com/dgomezcastro/UAM-MNU/releases/latest/download/slides.pdf)
+
 ## Structure of the course
 
 <table>
