@@ -20,6 +20,7 @@
     \textbf{Part II: non-linear elliptic problems}
     \begin{enumerate}
         \setcounter{enumi}{4}
+        \item Semi-linear problems: piece-wise linear discretisation.
         \item Quasi-linear problems, e.g.\ the $p$-Laplacian.
         \item Convergence by compactness and Minty's trick.
     \end{enumerate}
@@ -232,6 +233,50 @@
     \takeaway{Céa-type estimates exist for the $p$-Laplacian, but we present a more robust technique: convergence by compactness (no rates).}
 \end{frame}
 
+\begin{frame}{Semi-linear problems with piece-wise linear functions}
+    \[
+        -u'' + u^q = f \ \text{ in } (0,1), \qquad u(0) = u(1) = 0
+        \qquad (q \ge 1, \ u^q \text{ means } |u|^{q-1}u).
+    \]
+    Weak formulation: $u \in H^1_0(0,1)$, \ $\displaystyle\int_0^1 u'v' + \int_0^1 u^q v = \int_0^1 f v$ \ for all $v \in H^1_0(0,1)$.
+    \medskip
+
+    Hat functions: $u_h = \sum_j U_j \varphi_j$ and $\varphi_j(x_i) = \delta_{ij}$, so \alert{$u_h(x_i) = U_i$}.
+    \begin{itemize}
+        \item Galerkin with $v_h = \varphi_i$:
+              \[
+                  \sum_j a(\varphi_j,\varphi_i)\, U_j + \int_0^1 \Big(\sum_j U_j\varphi_j\Big)^q \varphi_i = \int_0^1 f\varphi_i .
+              \]
+        \item The non-linear term needs quadrature on each element, at every iteration of the non-linear solver.
+        \item \textbf{Idea:} replace $u_h^q$ by its piece-wise linear interpolant, using the nodal values $u_h(x_j)^q = U_j^q$:
+              \[
+                  u_h^q \quad\leadsto\quad \mathcal I_h(u_h^q) = \sum_j U_j^q\, \varphi_j .
+              \]
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Interpolation of the non-linearity}
+    \small
+    Find $u_h \in V_h$ such that \ $a(u_h, v_h) + \prodH{\mathcal I_h(u_h^q)}{v_h} = \prodH{f}{v_h}$ \ for all $v_h \in V_h$.
+    \board{test with $v_h = \varphi_i$:}
+    \[
+        \sum_j a(\varphi_j, \varphi_i)\, U_j + \sum_j \Big(\int_0^1 \varphi_j\varphi_i\Big) U_j^q = \int_0^1 f\varphi_i
+        \qquad\Longleftrightarrow\qquad
+        \mat K \vec u + \mat M \vec u^q = \vec b,
+    \]
+    with the stiffness and mass matrices, and $\vec u^q = (U_j^q)_j$ component-wise. On a uniform mesh:
+    \[
+        \frac{-U_{i+1} + 2U_i - U_{i-1}}{h^2} + \frac{U_{i-1}^q + 4U_i^q + U_{i+1}^q}{6} = \frac1h \int_0^1 f\varphi_i .
+    \]
+    \begin{itemize}
+        \item Newton's method: Jacobian $\mat J(\vec u) = \mat K + \mat M \operatorname{diag}\big(q|U_j|^{q-1}\big)$, sparse; $\mat K$, $\mat M$ computed once.
+        \item It is a \alert{variational crime}: analyse it as in Strang's lemmas.
+        \item Existence: Brouwer's theorem (as in the quasi-linear case below), since $\vec u\cdot\mat M\vec u^q \ge 0$.
+        \item Mass lumping ($\mat M \leadsto h\mat I$): finite-difference scheme with $U_i^q$, and uniqueness.
+        \item Same idea for piece-wise linear functions on triangulations ($d = 2$).
+    \end{itemize}
+\end{frame}
+
 \begin{frame}{Assumptions}
     $\Omega$ bounded Lipschitz, $p > 1$, $f \in L^{p'}(\Omega)$ with $p' = \frac{p}{p-1}$, and $a: \R^d \to \R^d$ continuous with
     \begin{itemize}
@@ -300,6 +345,7 @@
         \item Parabolic problems: Galerkin in space gives $\mat M \vec u' + \mat K \vec u = \vec b$.
         \item Space error: controlled by the approximation in $V_h$ (parabolic Céa).
         \item Time error: $\theta$-method, order $1$ (order $2$ for Crank--Nicolson); explicit schemes need $\tau \lesssim h^2$.
+        \item Semi-linear problems: replace $u_h^q$ by $\sum_j U_j^q\varphi_j$ $\Rightarrow$ $\mat K\vec u + \mat M\vec u^q = \vec b$.
         \item Non-linear monotone problems: existence and convergence by compactness and Minty's trick.
     \end{itemize}
     \bigskip
