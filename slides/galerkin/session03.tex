@@ -12,7 +12,7 @@
     \textbf{Part I: linear parabolic problems} (heat equation)
     \begin{enumerate}
         \item Weak formulation and energy estimates.
-        \item Semi-discretisation in space: mass and stiffness matrices.
+        \item Semi-discretisation in space: deduction of the system of ODEs.
         \item Error estimate: a parabolic version of Céa's lemma.
         \item Full discretisation: the $\theta$-method and the CFL condition.
     \end{enumerate}
@@ -65,29 +65,60 @@
 \end{frame}
 
 \begin{frame}{Semi-discretisation in space}
-    Replace $V$ by $V_h$:
+    Replace $V$ by a finite-dimensional $V_h = \spannedby\{\varphi_1, \dots, \varphi_N\} \subset V$:
     \[
         \tag{C$_h$}
         \prodH{\tfrac{\diff u_h}{\diff t}(t)}{v_h} + a(u_h(t), v_h) = \prodH{f(t)}{v_h} \quad \forall v_h \in V_h,
         \qquad u_h(0) = u_{0,h}.
     \]
-    Write $u_h(t) = \sum_{j=1}^N U_j(t)\, \varphi_j$. We get a \alert{system of linear ODEs}
-    \[
-        \mat M \frac{\diff \vec u}{\diff t} + \mat K \vec u = \vec b(t),
-        \qquad
-        \mat M = \big( \prodH{\varphi_j}{\varphi_i} \big)_{ij},
-        \quad
-        \vec b(t) = \big( \prodH{f(t)}{\varphi_i} \big)_i .
-    \]
     \begin{itemize}
-        \item $\mat M$ is the \alert{mass matrix}; $\mat K = \big( a(\varphi_j, \varphi_i) \big)_{ij}$ is the stiffness matrix.
-        \item Hat functions on a uniform mesh (\textcolor{mnuaccent}{check it at the board}):
+        \item Discrete in space, continuous in time: the \alert{method of lines}.
+        \item We look for
               \[
-                  \mat M = \frac h 6 \begin{pmatrix} 4 & 1 & & \\ 1 & 4 & \ddots & \\ & \ddots & \ddots & 1 \\ & & 1 & 4\end{pmatrix},
-                  \qquad
-                  \mat K = \frac 1 h \begin{pmatrix} 2 & -1 & & \\ -1 & 2 & \ddots & \\ & \ddots & \ddots & -1 \\ & & -1 & 2\end{pmatrix}.
+                  u_h(t) = \sum_{j=1}^N U_j(t)\, \varphi_j, \qquad U_j \in C^1([0,T]).
               \]
+        \item Goal: equations for the coefficients $U_1(t), \dots, U_N(t)$.
     \end{itemize}
+    \takeaway{The basis functions do not depend on time: only the coefficients evolve.}
+\end{frame}
+
+\begin{frame}{Deduction of the system of ODEs}
+    \small
+    \begin{enumerate}
+        \item Since the $\varphi_j$ do not depend on $t$: \ $\dfrac{\diff u_h}{\diff t}(t) = \displaystyle\sum_{j=1}^N \frac{\diff U_j}{\diff t}(t)\, \varphi_j$.
+        \item (C$_h$) is linear in $v_h$: it holds for all $v_h \in V_h$ iff it holds for $v_h = \varphi_i$, $i = 1, \dots, N$.
+        \item Take $v_h = \varphi_i$ and use linearity in the first argument:
+              \[
+                  \sum_{j=1}^N \prodH{\varphi_j}{\varphi_i} \frac{\diff U_j}{\diff t}(t) + \sum_{j=1}^N a(\varphi_j,\varphi_i)\, U_j(t) = \prodH{f(t)}{\varphi_i}, \qquad i = 1, \dots, N.
+              \]
+        \item In matrix form, with $\vec u(t) = (U_i(t))_i$ and $\vec u(0)$ the coefficients of $u_{0,h}$:
+              \[
+                  \mat M \frac{\diff \vec u}{\diff t} + \mat K \vec u = \vec b(t),
+                  \qquad
+                  \mat M = \big( \prodH{\varphi_j}{\varphi_i} \big)_{ij},
+                  \ \
+                  \mat K = \big( a(\varphi_j, \varphi_i) \big)_{ij},
+                  \ \
+                  \vec b(t) = \big( \prodH{f(t)}{\varphi_i} \big)_i .
+              \]
+        \item $\mat M$ (\alert{mass matrix}) is a Gram matrix: $\vec\xi^{\,t}\mat M\vec\xi = \|\sum_j \xi_j\varphi_j\|_H^2 > 0$. So
+              $\frac{\diff \vec u}{\diff t} = \mat M^{-1}\big(\vec b(t) - \mat K \vec u\big)$: linear ODEs with a unique solution.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Example: heat equation with hat functions}
+    $u_t - u_{xx} = f$ in $(0,1)$, $u = 0$ at $x = 0,1$: \ $V = H^1_0(0,1)$, $H = L^2(0,1)$, hat functions on $x_i = ih$.
+    \board{compute $\int_0^1 \varphi_i^2 = \frac{2h}{3}$ and $\int_0^1 \varphi_i\varphi_{i\pm1} = \frac h6$.}
+    \[
+        \mat M = \frac h 6 \begin{pmatrix} 4 & 1 & & \\ 1 & 4 & \ddots & \\ & \ddots & \ddots & 1 \\ & & 1 & 4\end{pmatrix},
+        \qquad
+        \mat K = \frac 1 h \begin{pmatrix} 2 & -1 & & \\ -1 & 2 & \ddots & \\ & \ddots & \ddots & -1 \\ & & -1 & 2\end{pmatrix}.
+    \]
+    Dividing the $i$-th equation by $h$:
+    \[
+        \frac16\Big(U_{i-1}' + 4U_i' + U_{i+1}'\Big) + \frac{-U_{i+1} + 2U_i - U_{i-1}}{h^2} = \frac1h \int_0^1 f(t)\,\varphi_i .
+    \]
+    \takeaway{Unlike finite differences, the time derivatives of neighbouring nodes are coupled through $\mat M$.}
 \end{frame}
 
 \begin{frame}{Parabolic version of Céa's lemma}
@@ -125,38 +156,41 @@
 \end{frame}
 
 \begin{frame}{Full discretisation: the $\theta$-method}
-    Time step $\tau$, $u_h^n \approx u_h(n\tau)$, $\theta \in [0,1]$:
+    Time step $\tau$, $\theta \in [0,1]$. \alert{Fully discrete solution}: $u_{h,\tau}^n \in V_h$, \ $u_{h,\tau}^n \approx u_h(n\tau) \approx u(n\tau)$.
+    For all $v_h \in V_h$:
     \[
-        \BigprodH{\frac{u_h^{n+1} - u_h^n}{\tau}}{v_h} + a\big(\theta u_h^{n+1} + (1-\theta) u_h^n, v_h\big)
+        \BigprodH{\frac{u_{h,\tau}^{n+1} - u_{h,\tau}^n}{\tau}}{v_h} + a\big(\theta u_{h,\tau}^{n+1} + (1-\theta) u_{h,\tau}^n, v_h\big)
         = \BigprodH{\theta f^{n+1} + (1-\theta) f^n}{v_h}.
     \]
     \begin{itemize}
         \item $\theta = 0$: explicit Euler. \ $\theta = 1$: implicit Euler. \ $\theta = \frac12$: Crank--Nicolson.
     \end{itemize}
-    In matrix form, at each step we solve the linear system
+    With $\vec u^n$ the coefficients of $u_{h,\tau}^n$, at each step we solve the linear system
     \[
-        (\mat M + \tau \theta \mat K)\, \vec u^{n+1} = (\mat M - \tau(1-\theta)\mat K)\, \vec u^n + \tau\big(\theta \vec b^{n+1} + (1-\theta) \vec b^n\big).
+        (\mat M + \tau \theta \mat K)\, \vec u^{n+1} = (\mat M - \tau(1-\theta)\mat K)\, \vec u^n + \tau\big(\theta \vec b^{n+1} + (1-\theta) \vec b^n\big)
     \]
+    (the $\theta$-method for the system of ODEs $\mat M \vec u' + \mat K \vec u = \vec b$).
     \takeaway{Even for explicit Euler we must solve a system with $\mat M$ (unlike finite differences).}
 \end{frame}
 
 \begin{frame}{Convergence in time}
     \small
     \begin{theorem}
-        Let $a$ be symmetric, continuous and coercive, $f \in H^1(0,T;H)$, $u_h^0 = u_h(0)$ and
+        Let $a$ be symmetric, continuous and coercive, $f \in H^1(0,T;H)$, $u_{h,\tau}^0 = u_h(0)$ and
         $\lambda_{\max,h} = \max_{v_h \ne 0} \frac{a(v_h,v_h)}{\|v_h\|_H^2} = \lambda_{\max}(\mat M^{-1} \mat K)$.
         If $0 \le \theta < \frac 12$ assume the \alert{CFL condition}
         $\tau (1 - 2\theta) \lambda_{\max,h} \le 2$. Then
         \[
-            \max_{n\tau \le T} \|u_h^n - u_h(n\tau)\|_H \le \max\{\theta, 1-\theta\}\, \tau \int_0^T \|u_h''(s)\|_H \diff s .
+            \max_{n\tau \le T} \|u_{h,\tau}^n - u_h(n\tau)\|_H \le \max\{\theta, 1-\theta\}\, \tau \int_0^T \|u_h''(s)\|_H \diff s .
         \]
         For $\theta = \frac 12$ (and $f \in H^2(0,T;H)$) the error is $\le \frac{\tau^2}{8} \int_0^T \|u_h'''(s)\|_H \diff s$.
     \end{theorem}
     \begin{proofsteps}
         \begin{enumerate}
-            \item Stability: in an eigenbasis of $A_h$, each step multiplies by
-                  $R_\theta(\tau\lambda) = \frac{1 - (1-\theta)\tau\lambda}{1 + \theta\tau\lambda}$, and $|R_\theta| \le 1$ under the CFL condition.
-            \item Consistency: the exact $u_h$ leaves a residual $r_n = O(\tau)$ (or $O(\tau^2)$ if $\theta = \frac12$). Hence error $\le \tau \sum_n \|r_n\|_H$.
+            \item Consistency: the exact $u_h$ leaves a residual $r_n = O(\tau)$ (or $O(\tau^2)$ if $\theta = \frac12$).
+            \item Error $e^n = u_{h,\tau}^n - u_h(n\tau)$: $e^0 = 0$, \
+                  $e^{n+1} = R_\theta(\tau A_h)\, e^n - \tau (I + \tau\theta A_h)^{-1} r_n$.
+                  Stability: $|R_\theta(\tau\lambda)| = \big|\frac{1 - (1-\theta)\tau\lambda}{1 + \theta\tau\lambda}\big| \le 1$ under the CFL condition, so $\|e^n\|_H \le \tau \sum_{k<n} \|r_k\|_H$.
         \end{enumerate}
     \end{proofsteps}
 \end{frame}
@@ -169,9 +203,9 @@
                   \lambda_{\max,h} \le M_a\, C(h), \qquad C(h) = \sup_{v_h \ne 0} \frac{\|v_h\|_V^2}{\|v_h\|_H^2}.
               \]
         \item For hat functions $C(h) \sim h^{-2}$ (inverse inequality), so explicit Euler needs $\tau \lesssim h^2$.
-        \item Total error, by the triangle inequality:
+        \item Total error of the fully discrete solution, by the triangle inequality:
               \[
-                  \|u(n\tau) - u_h^n\|_H \le \underbrace{\|u(n\tau) - u_h(n\tau)\|_H}_{\text{space}} + \underbrace{\|u_h(n\tau) - u_h^n\|_H}_{\text{time}}.
+                  \|u(n\tau) - u_{h,\tau}^n\|_H \le \underbrace{\|u(n\tau) - u_h(n\tau)\|_H}_{\text{space: parabolic Céa}} + \underbrace{\|u_h(n\tau) - u_{h,\tau}^n\|_H}_{\text{time: $\theta$-method}}.
               \]
     \end{itemize}
 \end{frame}
