@@ -4,23 +4,15 @@
 \subsection{The linear Lagrange element}
 
 If we want to use linear functions, then we must pick $K$ as a triangle.
-Let $z_1, z_2, z_3 \in \mathbb R^2$ be non-collinear, and take $K$ as the (interior of the) triangle
-\begin{equation}
-    \label{eq:FEM d=2 K triangle}
-    \trianglegenerated(z_1,z_2,z_3) \defeq \left\{ \sum_{i=1}^3 \theta_i z_i : \theta_i > 0 \text{ and } \sum_{i=1}^3 \theta_i = 1\right\}.
-\end{equation}
-We take $\mathcal P = \mathbb R_1[x,y]$ (polynomials of degree at most $1$ in two variables) and the nodal functions  $N_i (v) = v(z_i)$.
+This is the linear Lagrange triangle that we introduced in \Cref{ex:Lagrange linear triangle}: $K$ is the triangle \eqref{eq:FEM d=2 K triangle} with non-collinear vertices $z_1, z_2, z_3 \in \mathbb R^2$,
+we take $\mathcal P = \mathbb R_1[x,y]$ (polynomials of degree at most $1$ in two variables) and the nodal functions  $N_i (v) = v(z_i)$.
 
 \begin{example}
-    Let us take
-    \begin{align}
-        \label{eq:FEM d=2 K triangle corners}
-        z_1 = (0,0) \qquad z_2 = (1,0) \qquad z_3 = (0,1).
-    \end{align}
-    With this choice we produce the basis of piece-wise linear functions
+    On the reference triangle $\widehat K$ with vertices \eqref{eq:FEM d=2 K triangle corners}, the nodal basis is
     \begin{equation*}
-        \psi_1 = 1-x-y, \qquad \psi_2 = x, \qquad \psi_3 = y.
+        \widehat\psi_1 = 1-x-y, \qquad \widehat\psi_2 = x, \qquad \widehat\psi_3 = y.
     \end{equation*}
+    Every other linear Lagrange triangle is affine equivalent to this one (see \Cref{sec:FEM affine equivalence d=2}).
 \end{example}
 
 \subsection{Quadratic Lagrange elements}
@@ -71,18 +63,18 @@ An excellent reference is \cite{ciarletFiniteElementMethod2002}.
 
 \section{The Dirichlet Laplacian with piece-wise linear basis}
 
-Let $K_0$ be the triangle \eqref{eq:FEM d=2 K triangle} and recall the notation \eqref{eq:FEM d=2 K triangle corners}.
+Let $\widehat K$ be the reference triangle with vertices $\widehat z_1, \widehat z_2, \widehat z_3$ given by \eqref{eq:FEM d=2 K triangle corners}, and $\widehat \psi_1, \widehat \psi_2, \widehat \psi_3$ its nodal basis.
 Let $\mathcal T$ be a triangulation of $\Omega$, and let $x_i$ be the vertices of the triangles. For each triangle $K \in \mathcal T$ there exists an affine map
 \begin{equation*}
-    F_K : {K_0} \to  K.
+    F_K : {\widehat K} \to  K.
 \end{equation*}
 The space of continuous functions that are linear in each $K$ is generated precisely by the unique continuous piece-wise linear functions $\varphi_i$ with values $\varphi_i(x_j) = \delta_{ij}$.
 In a triangulation, $\varphi_i \in H^1 (\Omega)$ due to \Cref{thm:H1 glueing}.
 In other words, a basis of $\mathcal P_{\mathcal T} \cap C (\overline \Omega)$ is given precisely by
 \begin{equation*}
     \varphi_i \Big|_K = \begin{dcases}
-        \psi_j \circ F_K^{-1} & \text{if } x_i \in \overline K \text{ and } x_i = F_K z_j \\
-        0                     & \text{if } x_i \notin \overline K.
+        \widehat\psi_j \circ F_K^{-1} & \text{if } x_i \in \overline K \text{ and } x_i = F_K \widehat z_j \\
+        0                             & \text{if } x_i \notin \overline K.
     \end{dcases}
 \end{equation*}
 It is not difficult to see that these functions are continuous across each $\partial K$, since they are linear on each edge and agree at the vertices.
@@ -201,11 +193,11 @@ Also if $K$ is a triangle of sides with lengths $a,b,c$ then Heron's formula all
 \end{equation*}
 
 \paragraph{Via the reference triangle}
-For example, for the mass matrix we can compute, if $F_K z_{j_k} = x_{i_k}$ that
+For example, for the mass matrix we can compute, if $F_K \widehat z_{j_k} = x_{i_k}$ that
 \begin{align*}
     \int_K \varphi_{i_1} \varphi_{i_2}
-     & = \int_{F_K(K_0)} (\psi_{j_1} \circ F_K^{-1}) (\psi_{j_2} \circ F_K^{-1}) \\
-     & = |\det DF_K| \int_{K_0} \psi_{j_1} \psi_{j_2}.
+     & = \int_{F_K(\widehat K)} (\widehat\psi_{j_1} \circ F_K^{-1}) (\widehat\psi_{j_2} \circ F_K^{-1}) \\
+     & = |\det DF_K| \int_{\widehat K} \widehat\psi_{j_1} \widehat\psi_{j_2}.
 \end{align*}
 The computation of the stiffness matrix is a little more involved, since it will involve multiplying by the constant matrix $DF_K^{-1}$. It is a straight-forward computation with linear functions. This approach is more extensible to general settings.
 

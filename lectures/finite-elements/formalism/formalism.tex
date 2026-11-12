@@ -1,7 +1,143 @@
 \chapter{The finite-element formalism}
 
+In the previous chapter we saw that Galerkin's method needs a finite-dimensional space $V_h \subset V$ and that, by \namedCref{lem:cea}, the error of the method is controlled by how well the functions of $V_h$ approximate the solution:
+\begin{equation*}
+    \|u - u_h\|_V \le \frac{M}{\alpha^*} \|u - \mathcal I_h u\|_V,
+\end{equation*}
+where $\mathcal I_h u \in V_h$ is, for example, an interpolant of $u$.
+For the hat functions in $d = 1$ we built $V_h$ in \Cref{ex:piece-wise linear in d=1} and we estimated $u - \mathcal I_h u$ by hand in \Cref{ex:Galerkin Laplace piecewise linear Cea}.
+
+The \emph{finite-element method} is a systematic way of doing the same in any dimension, and with polynomials of any degree.
+The idea is to build everything from small and simple pieces, the \emph{finite elements}.
+We proceed in four steps:
+\begin{enumerate}
+    \item \textbf{One piece} (\Cref{sec:FEM finite element}).
+          We describe the functions on a single piece $K$ of the domain: a basis, an interpolant, and the numbers that determine each function (the degrees of freedom).
+          We start with two examples, an interval in $d = 1$ and a triangle in $d = 2$.
+    \item \textbf{The error on one piece} (\Cref{sec:FEM affine equivalence}).
+          How large is the interpolation error on a piece of size $h$?
+          We compute it once, on a \emph{reference} piece of size one, and we transport the result by an affine change of variables.
+    \item \textbf{Many pieces} (\Cref{sec:FEM finite-element space}).
+          We glue the pieces together to build the space $V_h$.
+    \item \textbf{The global error} (\Cref{sec:FEM interpolation error subdivision}).
+          We add the errors of all the pieces, and we obtain the rate of convergence of the method.
+\end{enumerate}
+
 \section{Finite element}
+\label{sec:FEM finite element}
 For this section we follow \cite[Section 2.3]{ciarletFiniteElementMethod2002}, \cite[Chapter 3]{Suli}.
+Before the general definition we study two examples.
+
+\begin{example}[The linear Lagrange element in $d = 1$]
+    \label{ex:Lagrange element in an interval}
+    Consider the hat functions of \Cref{ex:piece-wise linear in d=1}, but let us look at only one interval of the mesh, $K = (x_1, x_2)$.
+
+    \medskip
+    \noindent\textbf{Nodal basis.}
+    Only two hat functions do not vanish in $K$. Their restrictions to $K$ are
+    \begin{equation*}
+        \psi_1(x) = \frac{x_2 - x}{x_2-x_1},
+        \qquad
+        \psi_2(x) = \frac{x-x_1}{x_2-x_1} .
+    \end{equation*}
+    \begin{center}
+        \subimport{figures/}{hat-element.tex}
+    \end{center}
+    They form a basis of the space of linear functions on $K$, that we denote by $\mathcal P = \mathbb R_1[x]$, and they satisfy
+    \begin{equation*}
+        \psi_i(x_j) = \delta_{ij}, \qquad i, j \in \{1, 2\}.
+    \end{equation*}
+
+    \medskip
+    \noindent\textbf{Interpolant.}
+    Given a continuous function $v$ on $[x_1,x_2]$ we define
+    \begin{equation*}
+        \mathcal I_K v (x) = v(x_1) \frac{x_2-x}{x_2-x_1} + v(x_2) \frac{x - x_1}{x_2-x_1} = v(x_1) \psi_1(x) + v(x_2) \psi_2(x).
+    \end{equation*}
+    Its graph is the straight line through the points $(x_1, v(x_1))$ and $(x_2, v(x_2))$.
+    This is the piece-wise linear approximation of \Cref{ex:piece-wise linear in d=1 interpolation}, in one interval.
+    If $v$ is already a linear function, then $\mathcal I_K v = v$.
+
+    \medskip
+    \noindent\textbf{Degrees of freedom.}
+    The interpolant only uses two numbers taken from $v$,
+    \begin{equation*}
+        N_1(v) = v(x_1), \qquad N_2(v) = v(x_2).
+    \end{equation*}
+    We call them the \emph{degrees of freedom}. Notice that:
+    \begin{itemize}
+        \item They are linear maps $v \mapsto N_i(v) \in \mathbb R$, and they are defined for every continuous function $v$, not only for linear functions.
+        \item They determine a linear function completely: if $p \in \mathcal P$ and $N_1(p) = N_2(p) = 0$, then $p = 0$.
+              Hence every $p \in \mathcal P$ is described by two numbers, through $p = N_1(p) \psi_1 + N_2(p) \psi_2$.
+        \item They are linked to the basis by $N_i(\psi_j) = \delta_{ij}$.
+        \item They give the interpolant: $\mathcal I_K v = N_1(v) \psi_1 + N_2(v) \psi_2$ is the only function of $\mathcal P$ that has the same degrees of freedom as $v$.
+    \end{itemize}
+    The end points are shared with the neighbouring intervals. This is what will allow us to glue the pieces into a continuous function in \Cref{sec:FEM finite-element space}.
+\end{example}
+
+\begin{example}[The linear Lagrange triangle in $d = 2$]
+    \label{ex:Lagrange linear triangle}
+    In $d = 2$ the simplest pieces are triangles.
+    Let $z_1, z_2, z_3 \in \mathbb R^2$ be non-collinear, and take $K$ as the (interior of the) triangle with these vertices,
+    \begin{equation}
+        \label{eq:FEM d=2 K triangle}
+        \trianglegenerated(z_1,z_2,z_3) \defeq \left\{ \sum_{i=1}^3 \theta_i z_i : \theta_i > 0 \text{ and } \sum_{i=1}^3 \theta_i = 1\right\}.
+    \end{equation}
+    The role of the linear functions is now played by the polynomials of degree at most $1$ in two variables,
+    \begin{equation*}
+        \mathcal P = \mathbb R_1[x,y] = \{ a + b x + c y : a, b, c \in \mathbb R \},
+    \end{equation*}
+    whose graphs are planes. This space has dimension $3$, the number of vertices.
+
+    \medskip
+    \noindent\textbf{Nodal basis.}
+    There is exactly one plane with given heights over the three vertices (we check it below).
+    Hence there are unique $\psi_1, \psi_2, \psi_3 \in \mathcal P$ such that
+    \begin{equation*}
+        \psi_i(z_j) = \delta_{ij}, \qquad i, j \in \{1, 2, 3\}.
+    \end{equation*}
+    \begin{center}
+        \subimport{figures/}{linear-triangle.tex}
+    \end{center}
+    For example, for the triangle with vertices
+    \begin{align}
+        \label{eq:FEM d=2 K triangle corners}
+        z_1 = (0,0), \qquad z_2 = (1,0), \qquad z_3 = (0,1),
+    \end{align}
+    the nodal basis is
+    \begin{equation*}
+        \psi_1 = 1-x-y, \qquad \psi_2 = x, \qquad \psi_3 = y.
+    \end{equation*}
+
+    \medskip
+    \noindent\textbf{Interpolant.}
+    Given a continuous function $v$ on $\overline K$ we define
+    \begin{equation*}
+        \mathcal I_K v = v(z_1) \psi_1 + v(z_2) \psi_2 + v(z_3) \psi_3 .
+    \end{equation*}
+    Its graph is the plane through the three points $(z_i, v(z_i))$.
+    Again, if $v \in \mathcal P$ then $\mathcal I_K v = v$.
+
+    \medskip
+    \noindent\textbf{Degrees of freedom.}
+    The degrees of freedom are the values at the vertices,
+    \begin{equation*}
+        N_i(v) = v(z_i), \qquad i \in \{1, 2, 3\}.
+    \end{equation*}
+    They determine the functions of $\mathcal P$: let $p \in \mathcal P$ be such that $p(z_1) = p(z_2) = p(z_3) = 0$.
+    Since $\nabla p$ is a constant vector, we have $p(x) = p(z_1) + \nabla p \cdot (x - z_1)$. Therefore
+    \begin{equation*}
+        \nabla p \cdot (z_2 - z_1) = p(z_2) - p(z_1) = 0, \qquad \nabla p \cdot (z_3 - z_1) = p(z_3) - p(z_1) = 0.
+    \end{equation*}
+    Since $z_2 - z_1$ and $z_3 - z_1$ are linearly independent, we deduce $\nabla p = 0$ and hence $p = p(z_1) = 0$.
+    As in $d = 1$, we have $N_i(\psi_j) = \delta_{ij}$ and $\mathcal I_K v = \sum_{i} N_i(v) \psi_i$.
+
+    The values at the vertices also allow us to glue triangles: on a common edge of two triangles, the two linear polynomials are linear functions of one variable, so they coincide on the whole edge if they coincide at its two end points.
+\end{example}
+
+In both examples we have found the same three ingredients: a piece $K$ of the domain, a space $\mathcal P$ of simple functions on $K$, and a list $\mathcal N$ of degrees of freedom that determine the functions of $\mathcal P$.
+This is the general definition.
+
 \begin{definition}[The finite element]
     A finite element is a triplet $(K, \mathcal P, \mathcal N)$ where
     \begin{enumerate}
@@ -16,6 +152,25 @@ For this section we follow \cite[Section 2.3]{ciarletFiniteElementMethod2002}, \
 \end{definition}
 We usually expect that the nodal functions in $\mathcal N$ are defined on some infinite-dimensional space $X \supset \mathcal P$, typically $X = C^k(\overline K)$.
 
+In practice, $\mathcal P$ is a space of polynomials, and the degrees of freedom are values of the function, or of its derivatives, at some points of $\overline K$ (the \emph{nodes}).
+The condition that $\mathcal N$ is a basis of $\mathcal P^*$ says that the degrees of freedom describe the functions of $\mathcal P$ exactly: for any choice of numbers $\alpha_1, \dots, \alpha_N$ there is one and only one $p \in \mathcal P$ such that $N_i(p) = \alpha_i$ for all $i$.
+It can be checked as we did in the examples.
+\begin{lemma}[How to check that $\mathcal N$ is a basis of $\mathcal P^*$]
+    \label{lem:FEM unisolvence}
+    Let $\mathcal P$ be a space of dimension $N$ and let $N_1, \dots, N_N$ be linear functionals on $\mathcal P$.
+    Then $\{N_1, \dots, N_N\}$ is a basis of $\mathcal P^*$ if and only if
+    \begin{equation*}
+        p \in \mathcal P \text{ and } N_i(p) = 0 \text{ for all } i \in \{1, \dots, N\} \implies p = 0.
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    Consider the linear map $\Phi : \mathcal P \to \mathbb R^N$ given by $\Phi(p) = (N_1(p), \dots, N_N(p))$.
+    The condition of the statement says that $\Phi$ is injective.
+    Since both spaces have dimension $N$, this is equivalent to $\Phi$ being bijective, i.e., to the fact that for every $\alpha \in \mathbb R^N$ there is a unique $p \in \mathcal P$ with $N_i(p) = \alpha_i$.
+    Taking $\alpha$ in the canonical basis we obtain $\psi_j \in \mathcal P$ with $N_i(\psi_j) = \delta_{ij}$, and this implies that $N_1, \dots, N_N$ are linearly independent in $\mathcal P^*$, which has dimension $N$.
+    Conversely, if $\{N_i\}$ is a basis of $\mathcal P^*$ and $N_i(p) = 0$ for all $i$, then $\ell(p) = 0$ for all $\ell \in \mathcal P^*$, and hence $p = 0$.
+\end{proof}
+
 \begin{definition}[Basis functions of a finite element]
     Let $(K, \mathcal P, \mathcal N) $ be a finite element with $\mathcal N = \{N_1, \dots, N_N\}$, where $N = \# \mathcal N$.
     The \emph{nodal basis} is the unique basis $\{\psi_1, \dots, \psi_N\}$ of $\mathcal P$ such that
@@ -24,6 +179,12 @@ We usually expect that the nodal functions in $\mathcal N$ are defined on some i
     \end{equation*}
     These functions are also called \emph{nodal basis functions} or \emph{local basis functions}.
 \end{definition}
+The degrees of freedom are the coordinates in the nodal basis: every $p \in \mathcal P$ can be written as
+\begin{equation}
+    \label{eq:FEM coordinates in nodal basis}
+    p = \sum_{i=1}^N N_i(p) \psi_i .
+\end{equation}
+To compute the nodal basis in practice, we write $\psi_j$ in any basis of $\mathcal P$ (for example, the monomials) and we solve the linear system $N_i(\psi_j) = \delta_{ij}$ for its coefficients.
 
 \begin{definition}[Local interpolant]
     Let $(K, \mathcal P, \mathcal N)$ be a finite element,
@@ -33,6 +194,13 @@ We usually expect that the nodal functions in $\mathcal N$ are defined on some i
     \end{equation*}
 \end{definition}
 Notice that the interpolant can be extended to any functional space $X$ such that $N_i : X \to \mathbb R$ for all $i$.
+The interpolant $\mathcal I_K v$ is the only function of $\mathcal P$ with the same degrees of freedom as $v$, since $N_i(\mathcal I_K v) = \sum_{j} N_j(v) N_i(\psi_j) = N_i(v)$.
+In particular, by \eqref{eq:FEM coordinates in nodal basis}, the interpolant does not change the functions of $\mathcal P$:
+\begin{equation}
+    \label{eq:FEM interpolant reproduces P}
+    \mathcal I_K p = p \qquad \text{for all } p \in \mathcal P.
+\end{equation}
+This simple property is the key to the error estimates of \Cref{sec:FEM affine equivalence}.
 
 \begin{remark}
     \label{rem:FEM formalism local interpolator at boundary}
@@ -40,16 +208,10 @@ Notice that the interpolant can be extended to any functional space $X$ such tha
     Then, we require $\mathcal P \subset C^{r}(\overline K)$, i.e., the functions whose derivatives up to order $r$ can be continuously extended to the boundary, and the evaluation is done in the sense of limits.
 \end{remark}
 
-\begin{example}[The one-dimensional Lagrange element in $(x_1,x_2)$]
-    \label{ex:Lagrange element in an interval}
-    \Cref{ex:piece-wise linear in d=1} corresponds to the element $K = (x_1,x_2)$, $\mathcal P = \mathbb R_1[x]$ (linear functions), and  $N_1(v) = v(x_1)$ and $N_2(v) = v(x_2)$. The nodal basis is precisely $\psi_1(x) = \frac{x_2 - x}{x_2-x_1}$ and $\psi_2(x) = \frac{x-x_1}{x_2-x_1}$.
-    Then, we have the local interpolant
-    \begin{equation*}
-        \mathcal I_K v (x) = v(x_1) \frac{x_2-x}{x_2-x_1} + v(x_2) \frac{x - x_1}{x_2-x_1}.
-    \end{equation*}
-    This is the piece-wise linear approximation.
-    We made the one-interval estimate in \Cref{ex:Galerkin Laplace piecewise linear Cea}.
-\end{example}
+\begin{remark}
+    The degrees of freedom do not need to be values of the function.
+    In the next exercise, and later in \Cref{sec:Hermite cubics}, we use the values of the function \emph{and of its derivative} at the end points of an interval. This requires polynomials of degree $3$.
+\end{remark}
 
 \subsection*{Exercises}
 \begin{exercises}
@@ -62,114 +224,472 @@ Notice that the interpolant can be extended to any functional space $X$ such tha
     For historical reasons they are usually named $\theta_0, \dots, \theta_3$.
 \end{exercises}
 
-\section{Affine equivalence}
+\section{The local interpolation error and affine equivalence}
+\label{sec:FEM affine equivalence}
 
-For convenience, we will typically work with finite elements in $d=1$ with the element domain $K = (0,1)$; and in $d=2$ we usually take $K$ a triangle of vertices $(0,0), (1,0), (0,1)$; or a square of vertices $(0,0),(1,0),(0,1), (1,1)$.
-In order to transfer the information from these \emph{reference} finite elements, we use affine transformations of these elements.
-\begin{definition}[Affine equivalence]
-    Let $(K, \mathcal P, \mathcal N)$ and $(\widehat K, \widehat{\mathcal P}, \widehat{\mathcal N})$ be finite elements.
-    We say they are affine equivalent if there exists an affine map  $F(x) = \mat Ax + \vec b$ where $\mat A$ is a non-singular $d \times d$-matrix and $\vec b$ is a $d$-dimensional vector and
-    \begin{enumerate}
-        \item $F(K) = \widehat K$,
-        \item $F^* \widehat {\mathcal P} = \mathcal P$, in the pull-back notation $F^* : \widehat v \mapsto \widehat v \circ F$
-        \item $F_* \mathcal N = \widehat {\mathcal N}$, in the push-forward notation $(F_* N) \widehat v = N (F^* \widehat v) = N(\widehat v \circ F)$.
-    \end{enumerate}
-\end{definition}
+Let $(K, \mathcal P, \mathcal N)$ be a finite element and let $v$ be a function defined on $K$.
+The \emph{local interpolation error} is the function
+\begin{equation*}
+    v - \mathcal I_K v \qquad \text{in } K.
+\end{equation*}
+In \Cref{sec:FEM interpolation error subdivision} we will see that the error of the finite-element method is controlled by the sum of the local errors over all the elements of the mesh.
+Therefore, the question of this section is:
+\begin{quote}
+    How large is $v - \mathcal I_K v$ in terms of the size of $K$?
+\end{quote}
+We measure the size of $K$ by its diameter $h_K = \operatorname{diam}(K)$, and we think of $h_K$ as a small number.
 
+\subsection{The idea of the local error}
+\label{sec:FEM idea local error}
 
-\begin{example}[Piece-wise linear elements in $d=1$]
-    Consider $(K, \mathcal P, \mathcal N)$ given in \Cref{ex:Lagrange element in an interval} in $(x_1,x_2)$ and $(\widehat K, \widehat {\mathcal P}, \widehat {\mathcal N})$ given in \Cref{ex:Lagrange element in an interval} in $(\widehat x_1,\widehat x_2)$.
-    The natural affine map $F: (x_1,x_2) \to (\widehat x_1, \widehat x_2)$ given by
+Let us first understand what we should expect.
+Consider the linear Lagrange element of \Cref{ex:Lagrange element in an interval} on an interval $K = (a,b)$ of length $h = b - a$.
+\begin{center}
+    \subimport{figures/}{local-error.tex}
+\end{center}
+\begin{lemma}[Point-wise local error of the linear interpolant in $d = 1$]
+    \label{lem:FEM local error pointwise}
+    Let $K = (a,b)$, $h = b - a$ and $v \in C^2([a,b])$. Then, for all $x \in [a,b]$,
     \begin{equation*}
-        F(x) = (\widehat x_2 - \widehat x_1) \frac{x - x_1}{x_2 - x_1} + \widehat x_1
-    \end{equation*}
-    gives the affine equivalence between the elements. In particular, it is natural to do all computations in $(x_1,x_2) = (0,1)$.
-\end{example}
-
-We can estimate the effect of affine transformations on the $H^m$ norms
-
-\begin{lemma}[{\cite[Proposition 3.4.1 and 3.4.2]{QuarteroniValli1994}}]
-    \label{lem:FEM affine equivalence Hm norm}
-    Let $(K, \mathcal P, \mathcal N)$ and $(\widehat K, \widehat{\mathcal P}, \widehat{\mathcal N})$ be affine-equivalent finite elements with map $F: K \to \widehat K$ given by $F(x) = \mat A x + \vec b$. Then, for every $\widehat v \in H^m(\widehat K)$, letting $v = \widehat v \circ F \in H^m(K)$, we have that
-    \begin{equation*}
-        [\widehat v ]_{H^m (\widehat K)} \le C \|\mat A^{-1}\|^m |\det \mat A|^{\frac 1 2} [v]_{H^m (K)},
-    \end{equation*}
-    where $\| \mat A \|$ is the matrix norm associated to the Euclidean norm in $\mathbb R^d$ and $C$ depends only on $d$ and $m$.
-    Furthermore, let
-    \begin{equation*}
-        h_K = \operatorname{diam}(K) , \qquad \rho_K = \sup \{\operatorname{diam}(B) :  B \text{ is a ball contained in } K \}.
-    \end{equation*}
-    Then
-    \begin{equation*}
-        \| \mat A^{-1} \| \le \frac{h_{K}}{\rho_{\widehat K}}.
+        | v(x) - \mathcal I_K v(x) | \le h^2 \max_{[a,b]} |v''|,
+        \qquad
+        \left| \frac{\diff v}{\diff x}(x) - \frac{\diff \mathcal I_K v}{\diff x}(x) \right| \le h \max_{[a,b]} |v''|.
     \end{equation*}
 \end{lemma}
 \begin{proof}
-    The first part follows from the change of variable formula
+    Let $e = v - \mathcal I_K v$. Since $\mathcal I_K v$ is linear, $e'' = v''$. Since $e(a) = e(b) = 0$, by Rolle's theorem there exists $\xi \in (a,b)$ such that $e'(\xi) = 0$. Hence
     \begin{equation*}
-        \int_{F(K)} \widehat w (\widehat x) d\widehat x = \int_K \widehat w \circ F (x) |\det DF (x)| dx = |\det \mat A| \int_K \widehat w \circ F (x)  dx
+        |e'(x)| = \left| \int_\xi^x v''(s) \diff s \right| \le h \max_{[a,b]} |v''|,
+        \qquad
+        |e(x)| = \left| \int_a^x e'(s) \diff s \right| \le h^2 \max_{[a,b]} |v''|. \qedhere
     \end{equation*}
-    and the chain rule. For the second part let us write the norm as
-    \begin{equation*}
-        \| \mat A^{-1} \| = \frac 1 {\rho_{\widehat K}} \sup_{|\vec \xi| = \rho_{\widehat K}} |\mat A^{-1} \vec \xi|.
-    \end{equation*}
-    For each such $\vec \xi$ there exist $\widehat x, \widehat y \in \overline{\widehat K}$ such that $\widehat x - \widehat y = \vec \xi$ (take them on the boundary of a ball of diameter $\rho_{\widehat K}$ contained in $\widehat K$). Thus $\mat A^{-1} \vec \xi = F^{-1}\widehat x - F^{-1}\widehat y$, and we deduce $|\mat A^{-1} \vec \xi| \le h_K$.
 \end{proof}
+These two bounds\footnote{The constants are not sharp. For instance, the first bound holds with $\frac{h^2}{8}$ instead of $h^2$.} contain the two ideas behind all the interpolation estimates of this chapter.
+
+\paragraph{First idea: the interpolant does not change polynomials.}
+The right-hand sides only contain the second derivative of $v$: the values of $v$ and its slope do not matter.
+The reason is \eqref{eq:FEM interpolant reproduces P}. If $p$ is a linear function then $\mathcal I_K p = p$ and, since $\mathcal I_K$ is linear,
+\begin{equation*}
+    (v - p) - \mathcal I_K (v - p) = v - \mathcal I_K v.
+\end{equation*}
+That is, we can subtract from $v$ any linear function, and the error does not change.
+Therefore, the error can only depend on how far $v$ is from being a linear function, and this is what the second derivative measures.
+In general, if $\mathcal P$ contains the polynomials of degree $m-1$, the error only depends on the derivatives of order $m$ of $v$.
+
+\paragraph{Second idea: each derivative is worth a power of $h$.}
+The error is of size $h^2$, and the error of the derivative is of size $h$.
+This is a matter of scales: for a function that varies over a length $h$, taking a derivative is like dividing by $h$.
+One can even guess the powers of $h$ without any proof, by counting units.
+If $x$ is measured in metres, then $v''$ has the units of $v$ divided by square metres.
+The only way to obtain the units of $v$ from $v''$ and $h$ is the product $h^2 v''$, and the only way to obtain the units of $v'$ is $h v''$.
+
+\paragraph{The estimates that we need.}
+The analysis of Galerkin's method works with integral norms. For $v \in H^2(K)$ we use the seminorms
+\begin{equation*}
+    [v]_{H^1(K)} = \left( \int_K |\nabla v|^2 \right)^{\frac 1 2},
+    \qquad
+    [v]_{H^2(K)} = \left( \int_K |D^2 v|^2 \right)^{\frac 1 2},
+    \qquad \text{where }
+    |D^2 v|^2 = \sum_{i,j=1}^d \left| \frac{\partial^2 v}{\partial x_i \partial x_j} \right|^2 .
+\end{equation*}
+In view of the two ideas above, we expect that
+\begin{equation}
+    \label{eq:FEM local error expected}
+    \| v - \mathcal I_K v \|_{L^2(K)} \le C h_K^2 [v]_{H^2(K)},
+    \qquad
+    [ v - \mathcal I_K v ]_{H^1(K)} \le C h_K [v]_{H^2(K)},
+\end{equation}
+where $C$ depends neither on $v$ nor on the size of $K$.
+The aim of this section is to prove these estimates for the linear elements in $d = 1$ and $d = 2$.
+
+\paragraph{The strategy: a reference element.}
+The proof always has three steps:
+\begin{enumerate}
+    \item \emph{Go to a reference element.} We write $K = F(\widehat K)$, where $\widehat K$ is a fixed element of size one and $F$ is an affine change of variables. A function $v$ on $K$ becomes the function $\widehat v = v \circ F$ on $\widehat K$.
+    \item \emph{Estimate on the reference element.} There we only need an estimate like \eqref{eq:FEM local error expected} without powers of $h$: the element $\widehat K$ is fixed, so the constant is a number that is computed once and for all.
+    \item \emph{Come back.} The powers of $h$ appear by themselves when we change variables in the derivatives (chain rule) and in the integrals.
+\end{enumerate}
+For this to work, interpolating in $K$ must correspond to interpolating in $\widehat K$. This is the notion of \emph{affine equivalence} that we define in \Cref{sec:FEM affine equivalence definition}.
+We first do the complete computation in the two examples of \Cref{sec:FEM finite element}.
+
+\subsection{First example: the linear element in \texorpdfstring{$d = 1$}{d=1}}
+\label{sec:FEM affine equivalence d=1}
+
+The reference element is the linear Lagrange element on $\widehat K = (0,1)$, with the nodal basis $\widehat \psi_1 (\widehat x) = 1 - \widehat x$ and $\widehat \psi_2 (\widehat x) = \widehat x$.
+We denote its interpolant by $\mathcal I_{\widehat K}$.
+Let $K = (a,b)$ be any interval, $h = b - a$, and consider the affine map
+\begin{equation*}
+    F : \widehat K \to K, \qquad F(\widehat x) = a + h \widehat x.
+\end{equation*}
+\begin{center}
+    \subimport{figures/}{affine-1d.tex}
+\end{center}
+To each function $v$ defined on $K$ we associate the function $\widehat v = v \circ F$ defined on $\widehat K$, that is, $\widehat v (\widehat x) = v(a + h \widehat x)$.
+
+\paragraph{Step 0: the elements correspond.}
+The nodal basis and the degrees of freedom of $K$ are those of $\widehat K$ after the change of variables:
+\begin{equation*}
+    \psi_i (F(\widehat x)) = \widehat \psi_i (\widehat x),
+    \qquad
+    N_1(v) = v(a) = \widehat v (0) = \widehat N_1 (\widehat v),
+    \qquad
+    N_2(v) = v(b) = \widehat v (1) = \widehat N_2 (\widehat v).
+\end{equation*}
+Hence, the interpolants also correspond:
+\begin{equation}
+    \label{eq:FEM interpolant commutes d=1}
+    (\mathcal I_K v) (F(\widehat x)) = v(a) \psi_1(F(\widehat x)) + v(b) \psi_2(F(\widehat x)) = \widehat v(0) \widehat \psi_1(\widehat x) + \widehat v(1) \widehat \psi_2(\widehat x) = (\mathcal I_{\widehat K} \widehat v) (\widehat x).
+\end{equation}
+In words: interpolating and then changing variables is the same as changing variables and then interpolating.
+
+\paragraph{Step 1: how the norms change.}
+By the chain rule,
+\begin{equation*}
+    \frac{\diff \widehat v}{\diff \widehat x} (\widehat x) = h \frac{\diff v}{\diff x} (F(\widehat x)),
+    \qquad
+    \frac{\diff^2 \widehat v}{\diff \widehat x^2} (\widehat x) = h^2 \frac{\diff^2 v}{\diff x^2} (F(\widehat x)).
+\end{equation*}
+Using the change of variables $x = F(\widehat x)$, $\diff x = h \diff \widehat x$, in the integrals we obtain
+\begin{equation}
+    \label{eq:FEM scaling d=1}
+    \| \widehat v \|_{L^2(\widehat K)} = h^{-\frac 1 2} \| v \|_{L^2(K)},
+    \qquad
+    [ \widehat v ]_{H^1(\widehat K)} = h^{\frac 1 2} [ v ]_{H^1(K)},
+    \qquad
+    [ \widehat v ]_{H^2(\widehat K)} = h^{\frac 3 2} [ v ]_{H^2(K)}.
+\end{equation}
+For example, $\int_0^1 |\widehat v'|^2 \diff \widehat x = \int_0^1 h^2 |v'(F(\widehat x))|^2 \diff \widehat x = h \int_a^b |v'|^2 \diff x$.
+Each derivative gives a factor $h$, and the integral gives a factor $h^{-\frac 1 2}$.
+
+\paragraph{Step 2: the estimate on the reference element.}
+Applying \Cref{ex:Galerkin Laplace piecewise linear Cea} with the mesh $\{0, 1\}$ we have that, for all $\widehat v \in H^2(0,1)$,
+\begin{equation}
+    \label{eq:FEM reference estimate d=1}
+    \| \widehat v - \mathcal I_{\widehat K} \widehat v \|_{L^2(\widehat K)} \le \frac{1}{\pi^2} [ \widehat v ]_{H^2(\widehat K)},
+    \qquad
+    [ \widehat v - \mathcal I_{\widehat K} \widehat v ]_{H^1(\widehat K)} \le \frac{1}{\pi} [ \widehat v ]_{H^2(\widehat K)}.
+\end{equation}
+There is no $h$ here.
+
+\paragraph{Step 3: come back.}
+By \eqref{eq:FEM interpolant commutes d=1}, the function associated to $v - \mathcal I_K v$ is $\widehat v - \mathcal I_{\widehat K} \widehat v$. We apply \eqref{eq:FEM scaling d=1} to this function, then \eqref{eq:FEM reference estimate d=1}, and then \eqref{eq:FEM scaling d=1} to $v$:
+\begin{align*}
+    [ v - \mathcal I_K v ]_{H^1(K)}
+     & = h^{-\frac 1 2} [ \widehat v - \mathcal I_{\widehat K} \widehat v ]_{H^1(\widehat K)}
+    \le h^{-\frac 1 2}\, \frac 1 \pi\, [ \widehat v ]_{H^2(\widehat K)}
+    = h^{-\frac 1 2}\, \frac 1 \pi\, h^{\frac 3 2} [ v ]_{H^2(K)}
+    = \frac{h}{\pi} [ v ]_{H^2(K)},
+    \\
+    \| v - \mathcal I_K v \|_{L^2(K)}
+     & = h^{\frac 1 2} \| \widehat v - \mathcal I_{\widehat K} \widehat v \|_{L^2(\widehat K)}
+    \le h^{\frac 1 2}\, \frac 1 {\pi^2}\, [ \widehat v ]_{H^2(\widehat K)}
+    = h^{\frac 1 2}\, \frac 1 {\pi^2}\, h^{\frac 3 2} [ v ]_{H^2(K)}
+    = \frac{h^2}{\pi^2} [ v ]_{H^2(K)}.
+\end{align*}
+This is \eqref{eq:FEM local error expected}.
+Notice that the only place where we needed an actual estimate is the reference interval: the powers of $h$ came from the change of variables.
+
+\subsection{Second example: the linear triangle in \texorpdfstring{$d = 2$}{d=2}}
+\label{sec:FEM affine equivalence d=2}
+
+The reference element is the linear Lagrange triangle of \Cref{ex:Lagrange linear triangle} on the \emph{reference triangle} $\widehat K$ with vertices
+\begin{equation*}
+    \widehat z_1 = (0,0), \qquad \widehat z_2 = (1,0), \qquad \widehat z_3 = (0,1),
+\end{equation*}
+whose nodal basis is $\widehat \psi_1 = 1 - \widehat x - \widehat y$, $\widehat \psi_2 = \widehat x$, $\widehat \psi_3 = \widehat y$.
+Let $K$ be any triangle, with vertices $z_1, z_2, z_3$. Consider the affine map
+\begin{equation*}
+    F : \widehat K \to K,
+    \qquad
+    F(\widehat x) = z_1 + \mat A \widehat x,
+    \qquad \text{where }
+    \mat A = \big( z_2 - z_1 \mid z_3 - z_1 \big)
+\end{equation*}
+is the $2 \times 2$ matrix whose columns are the vectors $z_2 - z_1$ and $z_3 - z_1$.
+\begin{center}
+    \subimport{figures/}{affine-2d.tex}
+\end{center}
+It satisfies $F(\widehat z_i) = z_i$ and it is invertible, because the vertices are not collinear.
+As before, to each function $v$ on $K$ we associate $\widehat v = v \circ F$ on $\widehat K$.
+
+\paragraph{Step 0: the elements correspond.}
+If $p$ is a polynomial of degree at most $1$ then so is $p \circ F$, and
+\begin{equation*}
+    N_i (v) = v(z_i) = \widehat v (\widehat z_i) = \widehat N_i (\widehat v).
+\end{equation*}
+Therefore $\psi_i \circ F = \widehat \psi_i$ and, exactly as in \eqref{eq:FEM interpolant commutes d=1},
+\begin{equation}
+    \label{eq:FEM interpolant commutes d=2}
+    (\mathcal I_K v) \circ F = \mathcal I_{\widehat K} \widehat v.
+\end{equation}
+
+\paragraph{Step 1: how the norms change.}
+The chain rule now involves the matrix $\mat A$. For the gradient and the Hessian matrix we have
+\begin{equation}
+    \label{eq:FEM chain rule}
+    \widehat \nabla \widehat v (\widehat x) = \mat A^t\, \nabla v (F (\widehat x)),
+    \qquad
+    \widehat D^2 \widehat v (\widehat x) = \mat A^t\, D^2 v (F (\widehat x))\, \mat A,
+\end{equation}
+and the change of variables $x = F(\widehat x)$ in the integrals gives $\diff x = |\det \mat A| \diff \widehat x$.
+The role that $h$ played in $d = 1$ is now played by the matrix norm $\|\mat A\|$ (for the derivatives) and by $|\det \mat A|$ (for the integrals).
+\begin{lemma}[Change of variables in the seminorms]
+    \label{lem:FEM affine equivalence Hm norm}
+    Let $\widehat K, K \subset \mathbb R^d$ be open sets and let $F(\widehat x) = \mat A \widehat x + \vec b$ be an invertible affine map such that $F(\widehat K) = K$.
+    Let $v \in H^2(K)$ and $\widehat v = v \circ F$. Then $\widehat v \in H^2(\widehat K)$ and
+    \begin{align*}
+        \| \widehat v \|_{L^2(\widehat K)}  & = |\det \mat A|^{-\frac 1 2} \| v \|_{L^2(K)},
+        \\
+        [ \widehat v ]_{H^1(\widehat K)} & \le \|\mat A\|\, |\det \mat A|^{-\frac 1 2} [ v ]_{H^1(K)},
+                                         &
+        [ v ]_{H^1(K)}                   & \le \|\mat A^{-1}\|\, |\det \mat A|^{\frac 1 2} [ \widehat v ]_{H^1(\widehat K)},
+        \\
+        [ \widehat v ]_{H^2(\widehat K)} & \le \|\mat A\|^2\, |\det \mat A|^{-\frac 1 2} [ v ]_{H^2(K)},
+                                         &
+        [ v ]_{H^2(K)}                   & \le \|\mat A^{-1}\|^2\, |\det \mat A|^{\frac 1 2} [ \widehat v ]_{H^2(\widehat K)},
+    \end{align*}
+    where $\| \mat A \|$ is the matrix norm associated to the Euclidean norm in $\mathbb R^d$.
+\end{lemma}
+\begin{proof}
+    From \eqref{eq:FEM chain rule} we get $| \widehat \nabla \widehat v (\widehat x) | \le \| \mat A \|\, | \nabla v (F(\widehat x)) |$ and $| \widehat D^2 \widehat v (\widehat x) | \le \| \mat A \|^2\, | D^2 v (F(\widehat x)) |$.
+    We square, integrate in $\widehat K$, and use the change of variables formula
+    \begin{equation*}
+        \int_{\widehat K} g (F(\widehat x)) \diff \widehat x = |\det \mat A|^{-1} \int_K g(x) \diff x .
+    \end{equation*}
+    This proves the estimates on the left. The estimates on the right follow by exchanging the roles of $K$ and $\widehat K$, since $F^{-1}$ is an affine map with matrix $\mat A^{-1}$.
+\end{proof}
+In $d = 1$ we have $\mat A = h$ and we recover \eqref{eq:FEM scaling d=1}.
+It remains to relate $\mat A$ to the geometry of the triangle. This is where the \emph{shape} of the element appears.
+\begin{definition}[Size and shape of an element]
+    \label{def:FEM size and shape}
+    For a bounded open set $K \subset \mathbb R^d$ we define
+    \begin{equation*}
+        h_K = \operatorname{diam}(K) ,
+        \qquad
+        \rho_K = \sup \{\operatorname{diam}(B) :  B \text{ is a ball contained in } K \},
+        \qquad
+        \mu_K = \frac{\rho_K}{h_K} \in (0,1].
+    \end{equation*}
+    For a triangle, $h_K$ is the length of its longest side and $\rho_K$ is the diameter of its inscribed circle.
+\end{definition}
+\begin{center}
+    \subimport{figures/}{h-rho.tex}
+\end{center}
+\begin{lemma}[The size of the matrix $\mat A$]
+    \label{lem:FEM affine matrix norm}
+    Let $\widehat K, K \subset \mathbb R^d$ be bounded open sets and $F(\widehat x) = \mat A \widehat x + \vec b$ an invertible affine map with $F(\widehat K) = K$. Then
+    \begin{equation*}
+        \| \mat A \| \le \frac{h_{K}}{\rho_{\widehat K}},
+        \qquad
+        \| \mat A^{-1} \| \le \frac{h_{\widehat K}}{\rho_{K}}.
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    Let us write the norm as
+    \begin{equation*}
+        \| \mat A \| = \frac 1 {\rho_{\widehat K}} \sup_{|\vec \xi| = \rho_{\widehat K}} |\mat A \vec \xi|.
+    \end{equation*}
+    For each such $\vec \xi$ there exist $\widehat x, \widehat y \in \overline{\widehat K}$ such that $\widehat x - \widehat y = \vec \xi$ (take them on the boundary of a ball of diameter $\rho_{\widehat K}$ contained in $\widehat K$). Thus $\mat A \vec \xi = F(\widehat x) - F(\widehat y)$ is the difference of two points of $\overline K$, and we deduce $|\mat A \vec \xi| \le h_K$.
+    The second estimate follows by exchanging the roles of $K$ and $\widehat K$.
+\end{proof}
+
+\paragraph{Step 2: the estimate on the reference element.}
+We will prove in \Cref{lem:FEM reference estimate} that there exists a constant $\widehat C$ such that, for all $\widehat v \in H^2(\widehat K)$,
+\begin{equation}
+    \label{eq:FEM reference estimate d=2}
+    \| \widehat v - \mathcal I_{\widehat K} \widehat v \|_{L^2(\widehat K)} \le \widehat C\, [ \widehat v ]_{H^2(\widehat K)},
+    \qquad
+    [ \widehat v - \mathcal I_{\widehat K} \widehat v ]_{H^1(\widehat K)} \le \widehat C\, [ \widehat v ]_{H^2(\widehat K)}.
+\end{equation}
+Recall that in $d = 2$ the functions of $H^2(\widehat K)$ are continuous, so their values at the vertices make sense.
+
+\paragraph{Step 3: come back.}
+By \eqref{eq:FEM interpolant commutes d=2}, the function associated to $v - \mathcal I_K v$ is $\widehat v - \mathcal I_{\widehat K} \widehat v$.
+We apply \Cref{lem:FEM affine equivalence Hm norm} to this function, then \eqref{eq:FEM reference estimate d=2}, then \Cref{lem:FEM affine equivalence Hm norm} to $v$, and finally \Cref{lem:FEM affine matrix norm}:
+\begin{align*}
+    [ v - \mathcal I_K v ]_{H^1(K)}
+     & \le \|\mat A^{-1}\|\, |\det \mat A|^{\frac 1 2} [ \widehat v - \mathcal I_{\widehat K} \widehat v ]_{H^1(\widehat K)}
+    \le \widehat C\, \|\mat A^{-1}\|\, |\det \mat A|^{\frac 1 2} [ \widehat v ]_{H^2(\widehat K)}
+    \\
+     & \le \widehat C\, \|\mat A^{-1}\|\, \|\mat A\|^2 [ v ]_{H^2(K)}
+    \le \widehat C\, \frac{h_{\widehat K}}{\rho_K} \left( \frac{h_K}{\rho_{\widehat K}} \right)^2 [ v ]_{H^2(K)},
+    \\
+    \| v - \mathcal I_K v \|_{L^2(K)}
+     & = |\det \mat A|^{\frac 1 2} \| \widehat v - \mathcal I_{\widehat K} \widehat v \|_{L^2(\widehat K)}
+    \le \widehat C\, |\det \mat A|^{\frac 1 2} [ \widehat v ]_{H^2(\widehat K)}
+    \\
+     & \le \widehat C\, \|\mat A\|^2 [ v ]_{H^2(K)}
+    \le \widehat C \left( \frac{h_K}{\rho_{\widehat K}} \right)^2 [ v ]_{H^2(K)}.
+\end{align*}
+Notice how the determinants cancel.
+Since $\widehat K$ is fixed, $h_{\widehat K}$ and $\rho_{\widehat K}$ are just numbers, and we have proved that, for every triangle $K$,
+\begin{equation}
+    \label{eq:FEM local error linear triangle}
+    \| v - \mathcal I_K v \|_{L^2(K)} \le C h_K^2 [ v ]_{H^2(K)},
+    \qquad
+    [ v - \mathcal I_K v ]_{H^1(K)} \le C \frac{h_K^2}{\rho_K} [ v ]_{H^2(K)} = \frac{C}{\mu_K} h_K [ v ]_{H^2(K)},
+\end{equation}
+where $C$ does not depend on $K$.
+This is \eqref{eq:FEM local error expected}, with one new feature with respect to $d = 1$: the constant of the $H^1$ estimate depends on the shape of the triangle through $\mu_K$.
+For an equilateral triangle $\mu_K = \frac{1}{\sqrt 3}$, but for a very flat triangle $\mu_K$ is very small and the estimate is useless.
+
+\subsection{Affine equivalence}
+\label{sec:FEM affine equivalence definition}
+
+For convenience, we will typically work with finite elements in $d=1$ with the element domain $\widehat K = (0,1)$; and in $d=2$ we usually take $\widehat K$ a triangle of vertices $(0,0), (1,0), (0,1)$; or a square of vertices $(0,0),(1,0),(0,1), (1,1)$.
+In order to transfer the information from these \emph{reference} finite elements, we use affine transformations of these elements.
+The two examples above only used the following property.
+\begin{definition}[Affine equivalence]
+    Let $(\widehat K, \widehat{\mathcal P}, \widehat{\mathcal N})$ and $(K, \mathcal P, \mathcal N)$ be finite elements.
+    We say they are affine equivalent if there exists an affine map  $F(\widehat x) = \mat A \widehat x + \vec b$ where $\mat A$ is a non-singular $d \times d$-matrix and $\vec b$ is a $d$-dimensional vector and
+    \begin{enumerate}
+        \item $F(\widehat K) = K$,
+        \item $\mathcal P = \{ \widehat p \circ F^{-1} : \widehat p \in \widehat{\mathcal P} \}$, i.e., $v \in \mathcal P$ if and only if $v \circ F \in \widehat{\mathcal P}$,
+        \item $\mathcal N = \{ N_1, \dots, N_N\}$ and $\widehat{\mathcal N} = \{ \widehat N_1, \dots, \widehat N_N \}$ with $N_i (v) = \widehat N_i (v \circ F)$.
+    \end{enumerate}
+\end{definition}
+In the usual notation of pull-backs and push-forwards, the last two conditions read $F^* \mathcal P = \widehat{\mathcal P}$ and $F_* \widehat{\mathcal N} = \mathcal N$, where $F^* v = v \circ F$ and $(F_* \widehat N) (v) = \widehat N (F^* v)$.
+
+\begin{example}[Linear elements]
+    We have checked in Step 0 of \Cref{sec:FEM affine equivalence d=1} that the linear Lagrange element on any interval $(a,b)$ is affine equivalent to the one on $(0,1)$, and in Step 0 of \Cref{sec:FEM affine equivalence d=2} that the linear Lagrange element on any triangle is affine equivalent to the one on the reference triangle. In particular, it is natural to do all computations on the reference element.
+\end{example}
+
+\begin{lemma}[Interpolation and affine maps commute]
+    \label{lem:FEM interpolation commutes}
+    Let $(\widehat K, \widehat{\mathcal P}, \widehat{\mathcal N})$ and $(K, \mathcal P, \mathcal N)$ be affine-equivalent finite elements with map $F$, and let $\widehat \psi_i$ and $\psi_i$ be their nodal bases. Then
+    \begin{equation*}
+        \psi_i = \widehat \psi_i \circ F^{-1}
+        \qquad \text{and} \qquad
+        (\mathcal I_K v) \circ F = \mathcal I_{\widehat K} (v \circ F).
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    The functions $\widehat \psi_j \circ F^{-1}$ belong to $\mathcal P$ and $N_i (\widehat \psi_j \circ F^{-1}) = \widehat N_i (\widehat \psi_j) = \delta_{ij}$. By the uniqueness of the nodal basis, $\psi_j = \widehat \psi_j \circ F^{-1}$. Therefore
+    \begin{equation*}
+        (\mathcal I_K v) \circ F = \sum_{i=1}^N N_i(v)\, \psi_i \circ F = \sum_{i=1}^N \widehat N_i (v \circ F)\, \widehat \psi_i = \mathcal I_{\widehat K} (v \circ F). \qedhere
+    \end{equation*}
+\end{proof}
+
+With this lemma, the computation of \Cref{sec:FEM affine equivalence d=2} can be repeated word by word for any pair of affine-equivalent elements, in any dimension.
+\begin{strongtheorem}[Local interpolation error]
+    \label{thm:FEM local interpolation error}
+    Let $(\widehat K, \widehat{\mathcal P}, \widehat{\mathcal N})$ be a finite element such that, for some constant $\widehat C$,
+    \begin{equation}
+        \label{eq:FEM reference estimate}
+        \| \widehat v - \mathcal I_{\widehat K} \widehat v \|_{L^2(\widehat K)} + [ \widehat v - \mathcal I_{\widehat K} \widehat v ]_{H^1(\widehat K)} \le \widehat C\, [ \widehat v ]_{H^2(\widehat K)},
+        \qquad \forall \widehat v \in H^2(\widehat K).
+    \end{equation}
+    Let $(K, \mathcal P, \mathcal N)$ be a finite element which is affine equivalent to it. Then, for all $v \in H^2(K)$,
+    \begin{equation*}
+        \| v - \mathcal I_K v \|_{L^2(K)} \le C h_K^2\, [ v ]_{H^2(K)},
+        \qquad
+        [ v - \mathcal I_K v ]_{H^1(K)} \le C \frac{h_K^2}{\rho_K}\, [ v ]_{H^2(K)} = \frac{C}{\mu_K} h_K\, [ v ]_{H^2(K)},
+    \end{equation*}
+    where $C$ depends only on $\widehat C$, $h_{\widehat K}$ and $\rho_{\widehat K}$, and not on $K$.
+\end{strongtheorem}
+\begin{proof}
+    Let $\widehat v = v \circ F$. By \Cref{lem:FEM interpolation commutes}, $(v - \mathcal I_K v) \circ F = \widehat v - \mathcal I_{\widehat K} \widehat v$.
+    Now we repeat Step 3 of \Cref{sec:FEM affine equivalence d=2}, which only uses \Cref{lem:FEM affine equivalence Hm norm}, the estimate on the reference element \eqref{eq:FEM reference estimate}, and \Cref{lem:FEM affine matrix norm}.
+\end{proof}
+
+It only remains to prove the estimate on the reference element.
+Here we use the first idea of \Cref{sec:FEM idea local error}: the interpolant does not change polynomials of degree one, so the error only sees the second derivatives.
+The rigorous version of this idea is the Bramble--Hilbert lemma (\Cref{lem:Bramble-Hilbert}): a linear functional that vanishes on the polynomials of degree one is controlled by the second derivatives.
+\begin{lemma}[Estimate on the reference element]
+    \label{lem:FEM reference estimate}
+    Let $d \le 3$ and let $(\widehat K, \widehat{\mathcal P}, \widehat{\mathcal N})$ be a finite element such that
+    \begin{enumerate}
+        \item $\widehat K$ is convex,
+        \item $\widehat{\mathcal P}$ is a space of polynomials that contains the polynomials of degree at most $1$,
+        \item the degrees of freedom are values at points of $\overline{\widehat K}$, i.e., $\widehat N_i (\widehat v) = \widehat v (\widehat z_i)$.
+    \end{enumerate}
+    Then \eqref{eq:FEM reference estimate} holds. In particular, it holds for the linear Lagrange element in the reference interval and in the reference triangle.
+\end{lemma}
+\begin{proof}
+    Since $d \le 3$, the functions of $H^2(\widehat K)$ are continuous in $\overline{\widehat K}$ and $\max |\widehat v| \le C \| \widehat v \|_{H^2(\widehat K)}$.
+    Hence $|\widehat N_i (\widehat v)| \le C \| \widehat v \|_{H^2(\widehat K)}$, and the error operator
+    \begin{equation*}
+        E (\widehat v) = \widehat v - \mathcal I_{\widehat K} \widehat v = \widehat v - \sum_{i=1}^N \widehat N_i (\widehat v)\, \widehat \psi_i
+    \end{equation*}
+    is linear and continuous from $H^2(\widehat K)$ to $H^1(\widehat K)$.
+    By \eqref{eq:FEM interpolant reproduces P}, $E(p) = 0$ for all polynomials $p$ of degree at most $1$.
+    Therefore, applying \Cref{lem:Bramble-Hilbert} (with $m = 2$) to the linear functionals $F_w (\widehat v) = \langle E(\widehat v), w \rangle_{H^1(\widehat K)}$, for each fixed $w$ with $\| w \|_{H^1(\widehat K)} \le 1$, and taking the supremum over $w$, we have that
+    \begin{equation*}
+        \| E (\widehat v) \|_{H^1(\widehat K)} \le \widehat C\, [ \widehat v ]_{H^2(\widehat K)}. \qedhere
+    \end{equation*}
+\end{proof}
+
+Together, \Cref{thm:FEM local interpolation error} and \Cref{lem:FEM reference estimate} prove the estimates \eqref{eq:FEM local error expected} for the linear elements on intervals and triangles, and also for any other element which is affine equivalent to a reference element satisfying the hypotheses of \Cref{lem:FEM reference estimate}.
+
+\subsection{Other norms and other elements}
+
+The three steps of the proof work in the same way for derivatives of higher order, and for elements with polynomials of higher degree.
+We state the results for completeness.
+For any integer $m \ge 0$, the change of variables of \Cref{lem:FEM affine equivalence Hm norm} reads (see \cite[Proposition 3.4.1 and 3.4.2]{QuarteroniValli1994})
+\begin{equation}
+    \label{eq:FEM affine equivalence Hm norm general}
+    [\widehat v ]_{H^m (\widehat K)} \le C \|\mat A\|^m |\det \mat A|^{-\frac 1 2} [v]_{H^m (K)},
+    \qquad
+    [v ]_{H^m (K)} \le C \|\mat A^{-1}\|^m |\det \mat A|^{\frac 1 2} [\widehat v]_{H^m (\widehat K)},
+\end{equation}
+where $C$ depends only on $d$ and $m$.
 \begin{remark}
     There is a similar formula in terms of $W^{k,p}$ norms. But the proof is slightly more involved, see \cite[Section 3.3]{Suli}.
 \end{remark}
 
-We can use this result to convert the interpolation error from a \emph{reference element} (for example the one given in \Cref{thm:FEM bound interpolation error}) to a general element. In the following result $K$ plays the role of the (fixed) reference element and $\widehat K$ of a generic element.
-
-\begin{strongtheorem}[Affine equivalence and interpolation estimates]
+\begin{theorem}[Affine equivalence and interpolation estimates]
     \label{thm:FEM affine equivalence and interpolation estimate}
-    Let $(K, \mathcal P, \mathcal N)$ and $(\widehat K, \widehat{\mathcal P}, \widehat{\mathcal N})$ be affine-equivalent finite elements and assume that
+    Let $(\widehat K, \widehat{\mathcal P}, \widehat{\mathcal N})$ and $(K, \mathcal P, \mathcal N)$ be affine-equivalent finite elements, let $0 \le k \le m$, and assume that
     \begin{equation*}
-        \left[ v - \mathcal I_{K} v \right]_{H^k(K)} \le C_1(K) [v]_{H^m (K)}, \qquad \forall v \in H^m(K).
+        \left[ \widehat v - \mathcal I_{\widehat K} \widehat v \right]_{H^k(\widehat K)} \le C_1(\widehat K) [\widehat v]_{H^m (\widehat K)}, \qquad \forall \widehat v \in H^m(\widehat K).
     \end{equation*}
     Then we have that
     \begin{equation*}
-        \left[\widehat v - \mathcal I_{\widehat K} \widehat v \right]_{H^k(\widehat K)} \le C_2(K) \frac{h_{\widehat K}^{m}}{\rho_{\widehat K}^k} [\widehat v]_{H^m (\widehat K)}.
+        \left[v - \mathcal I_{K} v \right]_{H^k(K)} \le C_2(\widehat K) \frac{h_{K}^{m}}{\rho_{K}^k} [v]_{H^m (K)}, \qquad \forall v \in H^m(K),
     \end{equation*}
-    where $C_2$ does not depend on $\widehat K$.
-\end{strongtheorem}
+    where $C_2$ does not depend on $K$.
+\end{theorem}
 
 \begin{proof}
-    Let $v = \widehat v \circ F$. It is easy to see that $(\mathcal I_{\widehat K} \widehat v) \circ F = \mathcal I_K v$.
-    We apply the assumption and \Cref{lem:FEM affine equivalence Hm norm} (first with $F$, and then with $F^{-1}$) to show that
+    Let $\widehat v = v \circ F$. By \Cref{lem:FEM interpolation commutes}, $(\mathcal I_{K} v) \circ F = \mathcal I_{\widehat K} \widehat v$.
+    We apply \eqref{eq:FEM affine equivalence Hm norm general} (first with $F^{-1}$, and then with $F$), the assumption, and \Cref{lem:FEM affine matrix norm} to show that
     \begin{align*}
-        \left[\widehat v - \mathcal I_{\widehat K} \widehat v \right]_{H^k(\widehat K)}
-         & \le C \left( \frac{h_{ K}}{\rho_{\widehat K}} \right)^k |\det \mat A|^{\frac 1 2} \left[v - \mathcal I_{ K} v \right]_{H^k(K)}
+        \left[v - \mathcal I_{K} v \right]_{H^k(K)}
+         & \le C \|\mat A^{-1}\|^k |\det \mat A|^{\frac 1 2} \left[\widehat v - \mathcal I_{\widehat K} \widehat v \right]_{H^k(\widehat K)}
         \\
-         & \le C(K) \left( \frac{h_{ K}}{\rho_{\widehat K}} \right)^k |\det \mat A|^{\frac 1 2} [v]_{H^m}
+         & \le C(\widehat K) \|\mat A^{-1}\|^k |\det \mat A|^{\frac 1 2} [\widehat v]_{H^m(\widehat K)}
         \\
-         & \le C(K) \left( \frac{h_{ K}}{\rho_{\widehat K}} \right)^k |\det \mat A|^{\frac 1 2} \left( \frac{h_{\widehat K}}{\rho_{K}} \right)^m |\det \mat A^{-1}|^{\frac 1 2}  [\widehat v]_{H^m}.
+         & \le C(\widehat K) \|\mat A^{-1}\|^k \|\mat A\|^m  [v]_{H^m(K)}
+        \\
+         & \le C(\widehat K) \left( \frac{h_{\widehat K}}{\rho_{K}} \right)^k \left( \frac{h_{K}}{\rho_{\widehat K}} \right)^m  [v]_{H^m(K)}.
     \end{align*}
-    We conclude the proof by pointing out that $\det (\mat A^{-1}) = (\det \mat A)^{-1}$.
+    This completes the proof.
 \end{proof}
+For example, for elements that contain the polynomials of degree $2$ one can take $m = 3$, and the error in $H^1$ is of order $h_K^2$ for functions in $H^3(K)$.
 
 This kind of affine-equivalence results work well when the nodal functions $N_i(v)$ are evaluations of $v$ at different points. We construct an example showing difficulties with affine equivalence in other cases
 \begin{example}[Affine equivalence for Hermite cubics]
     \label{ex:FEM affine equivalence Hermite cubics}
-    Let $K = (0,1)$, $\mathcal P = \mathbb R_3[x]$ and the nodal functions
+    Let $\widehat K = (0,1)$, $\widehat{\mathcal P} = \mathbb R_3[x]$ and the nodal functions
     \begin{equation*}
-        N_1(v) = v(0),
-        \quad N_2(v) = v(1),
-        \quad N_3(v) = \frac{dv}{dx}(0),
-        \quad N_4(v) = \frac{dv}{dx}(1).
+        \widehat N_1(\widehat v) = \widehat v(0),
+        \quad \widehat N_2(\widehat v) = \widehat v(1),
+        \quad \widehat N_3(\widehat v) = \frac{\diff \widehat v}{\diff x}(0),
+        \quad \widehat N_4(\widehat v) = \frac{\diff \widehat v}{\diff x}(1).
     \end{equation*}
     This is the Hermite cubic element which we will discuss in \Cref{sec:Hermite cubics}.
 
     Let us consider an affine map $F: (0,1) \to (a,b)$
-    and let $\widehat K = (a,b)$.
-    There are only two possible $F$, one increasing and one decreasing. For simplicity let us take the increasing one, $F(x) = a + (b-a)x$.
-    We have that $\widehat{\mathcal P} = \mathbb R_3[x]$. Lastly, notice that $\frac{\diff F}{\diff x} = b-a$, so
+    and let $K = (a,b)$.
+    There are only two possible $F$, one increasing and one decreasing. For simplicity let us take the increasing one, $F(\widehat x) = a + (b-a)\widehat x$.
+    We have that $\mathcal P = \mathbb R_3[x]$. Lastly, notice that $\frac{\diff F}{\diff \widehat x} = b-a$, so the element on $(a,b)$ which is affine equivalent to the reference one has the nodal functions $N_i (v) = \widehat N_i (v \circ F)$, that is,
     \begin{equation*}
-        \widehat N_1(\widehat v) = \widehat v(a),
-        \quad \widehat N_2(\widehat v) = \widehat v(b),
-        \quad \widehat N_3(\widehat v) = (b-a)\frac{\diff \widehat v}{\diff x}(a) ,
-        \quad \widehat N_4(\widehat v) = (b-a)\frac{\diff \widehat v}{\diff x}(b).
+        N_1(v) = v(a),
+        \quad N_2(v) = v(b),
+        \quad N_3(v) = (b-a)\frac{\diff v}{\diff x}(a) ,
+        \quad N_4(v) = (b-a)\frac{\diff v}{\diff x}(b).
     \end{equation*}
+    These are not the natural nodal functions on $(a,b)$, which are the values of $v$ and $\frac{\diff v}{\diff x}$ at $a$ and $b$, without the factor $(b-a)$.
     The case of $F$ decreasing is similar.
 \end{example}
 \begin{remark}
@@ -223,8 +743,9 @@ The following estimate uses the Bramble--Hilbert lemma (\Cref{lem:Bramble-Hilber
 
 
 \section{Finite-element space}
+\label{sec:FEM finite-element space}
 
-To make a mesh, our aim is to ``glue together'' many finite elements.
+So far we have studied a single element. To build the space $V_h$ of Galerkin's method, our aim is to ``glue together'' many finite elements.
 The usual procedure to build finite element meshes of a domain $\Omega$ is the following.
 \begin{definition}[Sub-division of the computational domain]
     A \emph{sub-division} of $\Omega$ is a finite collection $\mathcal T$ of open sets $K_i$ such that
@@ -233,6 +754,18 @@ The usual procedure to build finite element meshes of a domain $\Omega$ is the f
         \item $K_i \cap K_j = \emptyset$ if $i \ne j$.
     \end{enumerate}
 \end{definition}
+
+An important particular case of sub-division in $d=2$ is
+\begin{definition}[Triangulation]
+    Let $\Omega \subset \mathbb R^2$ be a polygonal domain. A \emph{triangulation} is a subdivision $\mathcal T$ such that every $K \in \mathcal T$ is a triangle and
+    \begin{quote}
+        No vertex of any triangle lies in the interior of an edge of another triangle.
+    \end{quote}
+    This means that $\overline K_i \cap \overline K_j$ is either empty, a common vertex, or a complete shared edge.
+\end{definition}
+\begin{center}
+    \subimport{figures/}{triangulation.tex}
+\end{center}
 
 \begin{definition}[Finite-elements space]
     Let $\Omega \subset \mathbb R^d$. A finite-elements space in $\Omega$ is given by: a sub-division $\mathcal T$ of $\Omega$ and a finite element $(K, \mathcal P_K, \mathcal N_K)$ in each $K \in \mathcal T$.
@@ -342,6 +875,49 @@ Notice that, since $K$ is open, we have not defined the interpolant over $\parti
 
 \end{example}
 
+\begin{example}[Two triangles]
+    \label{ex:finite-element space d=2}
+    In $d = 2$ we can take $\Omega = (0,1) \times (0,1)$ and the triangulation $\mathcal T = \{K_1, K_2\}$ with
+    \begin{equation*}
+        K_1 = \trianglegenerated\big((0,0),(1,0),(0,1)\big),
+        \qquad
+        K_2 = \trianglegenerated\big((1,1),(0,1),(1,0)\big),
+    \end{equation*}
+    which share the edge $E$ that joins $(1,0)$ and $(0,1)$.
+    On each triangle we take the linear Lagrange element of \Cref{ex:Lagrange linear triangle}.
+    \begin{center}
+        \subimport{figures/}{two-triangles.tex}
+    \end{center}
+    An element of $\mathcal P_{\mathcal T}$ is a pair of polynomials of degree at most $1$, one in $K_1$ and one in $K_2$, so $\dim \mathcal P_{\mathcal T} = 3 + 3 = 6$.
+    There are also six global nodal functions: the values at the three vertices of $K_1$, taken from inside $K_1$, and the values at the three vertices of $K_2$, taken from inside $K_2$.
+    The vertices $(1,0)$ and $(0,1)$ appear twice, because we are not assuming any continuity.
+
+    Let us compute $\mathcal P_{\mathcal T} \cap C(\overline \Omega)$.
+    Let $v \in \mathcal P_{\mathcal T}$ with $v = p_1$ in $K_1$ and $v = p_2$ in $K_2$.
+    Along the edge $E$, both $p_1$ and $p_2$ are linear functions of one variable.
+    Hence, they coincide on $E$ if and only if they coincide at its two end points.
+    This means that $v$ is continuous if and only if the two values at $(1,0)$ coincide and the two values at $(0,1)$ coincide.
+    Therefore
+    \begin{equation*}
+        \dim \big( \mathcal P_{\mathcal T} \cap C(\overline \Omega) \big) = 6 - 2 = 4,
+    \end{equation*}
+    which is the number of vertices, and the degrees of freedom that remain are the values at the four vertices.
+    The dual basis is made of four continuous functions, one per vertex. For example, for the vertices $(0,0)$ and $(1,0)$ they are
+    \begin{equation*}
+        \varphi_{(0,0)} (x,y) = \begin{dcases}
+            1 - x - y & \text{in } K_1, \\
+            0         & \text{in } K_2,
+        \end{dcases}
+        \qquad
+        \varphi_{(1,0)} (x,y) = \begin{dcases}
+            x     & \text{in } K_1, \\
+            1 - y & \text{in } K_2.
+        \end{dcases}
+    \end{equation*}
+    They are obtained by glueing the local basis functions that share a degree of freedom, as in \Cref{ex:finite-element space d=1}.
+    Finally, by \namedCref{thm:H1 glueing} we have that $\mathcal P_{\mathcal T} \cap H^1(\Omega) = \mathcal P_{\mathcal T} \cap C(\overline \Omega)$.
+\end{example}
+
 % \begin{definition}[$C^r$-finite element space]
 %     Let $\mathcal T$ be a sub-division such that and for every $K \in \mathcal T$ we have a suitable finite element $(K,\mathcal P, \mathcal N)$.
 %     We say that the interpolant has continuity of order $r$ (or is $C^r$) if for some $m \ge r$
@@ -359,16 +935,6 @@ Notice that, since $K$ is open, we have not defined the interpolant over $\parti
 % \begin{example}
 %     The piece-wise linear interpolant is $C^0$.
 % \end{example}
-
-An important particular case of sub-division in $d=2$ is
-\begin{definition}[Triangulation]
-    Let $\Omega \subset \mathbb R^2$ be a polygonal domain. A \emph{triangulation} is a subdivision $\mathcal T$ such that every $K \in \mathcal T$ is a triangle and
-    \begin{quote}
-        No vertex of any triangle lies in the interior of an edge of another triangle.
-    \end{quote}
-    This means that $\overline K_i \cap \overline K_j$ is either empty, a common vertex, or a complete shared edge.
-\end{definition}
-
 
 A very standard approach to sub-divisions passes by decomposing $\Omega$ into subdomains that are all equivalent, in the following sense.
 \begin{definition}[Reference element]
@@ -463,7 +1029,96 @@ We will see this effect clearly in some bases in dimension $d=1$, and then again
     % empty, a vertex, or a complete common edge.
 \end{exercises}
 \section{Interpolation error on a sub-division}
+\label{sec:FEM interpolation error subdivision}
 
+We can now go back to the question of the beginning of the chapter: how well does the global interpolant $\mathcal I_{\mathcal T} v$ approximate $v$ in the whole domain $\Omega$?
+The answer is obtained by adding the local errors of \Cref{sec:FEM affine equivalence}.
+Indeed, since the integral over $\Omega$ is the sum of the integrals over the elements, for every $w \in H^1(\Omega)$ we have that
+\begin{equation}
+    \label{eq:FEM localisation}
+    \| w \|_{L^2(\Omega)}^2 = \sum_{K \in \mathcal T} \| w \|_{L^2(K)}^2,
+    \qquad
+    [ w ]_{H^1(\Omega)}^2 = \sum_{K \in \mathcal T} [ w ]_{H^1(K)}^2 .
+\end{equation}
+We apply this to $w = v - \mathcal I_{\mathcal T} v$, which in each element $K$ is the local error $v - \mathcal I_K v$.
+Given a sub-division $\mathcal T$, we denote
+\begin{equation*}
+    h = \max_{K \in \mathcal T} h_K,
+    \qquad
+    \mu_* = \min_{K \in \mathcal T} \mu_K = \min_{K \in \mathcal T} \frac{\rho_K}{h_K}.
+\end{equation*}
+The number $h$ is called the \emph{mesh size}.
+
+\begin{strongtheorem}[Interpolation error for linear elements]
+    \label{thm:FEM interpolation error linear elements}
+    Let $\Omega$ be an interval in $d = 1$ or a polygon in $d = 2$. Let $\mathcal T$ be a sub-division of $\Omega$ into intervals in $d = 1$, or a triangulation in $d = 2$, and take the linear Lagrange element in each $K \in \mathcal T$.
+    Then, for every $v \in H^2(\Omega)$, the global interpolant $\mathcal I_{\mathcal T} v$ is continuous, it belongs to $H^1(\Omega)$, and
+    \begin{equation*}
+        \| v - \mathcal I_{\mathcal T} v \|_{L^2(\Omega)} \le C h^2\, [ v ]_{H^2(\Omega)},
+        \qquad
+        [ v - \mathcal I_{\mathcal T} v ]_{H^1(\Omega)} \le \frac{C}{\mu_*} h\, [ v ]_{H^2(\Omega)},
+    \end{equation*}
+    where $C$ depends only on the dimension. In $d = 1$ we have $\mu_* = 1$.
+\end{strongtheorem}
+\begin{proof}
+    Since $d \le 2$, the function $v$ is continuous in $\overline \Omega$.
+    In two neighbouring elements the local interpolants take the same values at the common vertices, so $\mathcal I_{\mathcal T} v$ is continuous (see \Cref{ex:finite-element space d=1} and \Cref{ex:finite-element space d=2}). By \namedCref{thm:H1 glueing}, $\mathcal I_{\mathcal T} v \in H^1(\Omega)$.
+
+    Every element is affine equivalent to the linear Lagrange element on the reference interval or on the reference triangle, where the estimate \eqref{eq:FEM reference estimate} holds due to \Cref{lem:FEM reference estimate}.
+    Hence, by \eqref{eq:FEM localisation} and \Cref{thm:FEM local interpolation error},
+    \begin{align*}
+        [ v - \mathcal I_{\mathcal T} v ]_{H^1(\Omega)}^2
+         & = \sum_{K \in \mathcal T} [ v - \mathcal I_K v ]_{H^1(K)}^2
+        \le \sum_{K \in \mathcal T} \frac{C^2}{\mu_K^2} h_K^2\, [ v ]_{H^2(K)}^2
+        \\
+         & \le \frac{C^2}{\mu_*^2} h^2 \sum_{K \in \mathcal T} [ v ]_{H^2(K)}^2
+        = \frac{C^2}{\mu_*^2} h^2\, [ v ]_{H^2(\Omega)}^2 .
+    \end{align*}
+    The estimate in $L^2(\Omega)$ is analogous.
+\end{proof}
+
+Combining this result with Céa's lemma we obtain the convergence of the finite-element method.
+\begin{strongtheorem}[Convergence of the finite-element method with linear elements]
+    \label{thm:FEM convergence linear elements}
+    Let $\Omega \subset \mathbb R^2$ be a polygon and $f \in L^2(\Omega)$. Let $u \in H^1_0(\Omega)$ be the weak solution of
+    \begin{equation*}
+        -\Delta u = f \text{ in } \Omega, \qquad u = 0 \text{ on } \partial \Omega,
+    \end{equation*}
+    and assume that $u \in H^2(\Omega)$.
+    Let $\mathcal T$ be a triangulation of $\Omega$, let
+    \begin{equation*}
+        V_h = \mathcal P_{\mathcal T} \cap H^1_0(\Omega)
+    \end{equation*}
+    be the space of continuous piece-wise linear functions that vanish on $\partial \Omega$, and let $u_h \in V_h$ be the solution of Galerkin's method \eqref{eq:Galerkin elliptic variational discrete}. Then
+    \begin{equation*}
+        \| u - u_h \|_{H^1(\Omega)} \le \frac{C}{\mu_*} h\, [ u ]_{H^2(\Omega)},
+    \end{equation*}
+    where $C$ depends only on $\Omega$.
+\end{strongtheorem}
+\begin{proof}
+    The bilinear form $a(u,v) = \int_\Omega \nabla u \cdot \nabla v$ is continuous and, by Poincaré's inequality, coercive in $V = H^1_0(\Omega)$. By \namedCref{lem:cea},
+    \begin{equation*}
+        \| u - u_h \|_{H^1(\Omega)} \le \frac{M}{\alpha^*} \| u - v_h \|_{H^1(\Omega)} \qquad \text{for all } v_h \in V_h.
+    \end{equation*}
+    We choose $v_h = \mathcal I_{\mathcal T} u$. It belongs to $V_h$: it is continuous and piece-wise linear by \Cref{thm:FEM interpolation error linear elements}, and it vanishes on $\partial \Omega$ because $u$ vanishes at the vertices that lie on $\partial \Omega$ and $\mathcal I_{\mathcal T} u$ is linear on each edge.
+    Using \Cref{thm:FEM interpolation error linear elements}, $h \le \operatorname{diam}(\Omega)$ and $\mu_* \le 1$, we conclude that
+    \begin{equation*}
+        \| u - \mathcal I_{\mathcal T} u \|_{H^1(\Omega)}
+        \le \| u - \mathcal I_{\mathcal T} u \|_{L^2(\Omega)} + [ u - \mathcal I_{\mathcal T} u ]_{H^1(\Omega)}
+        \le C \Big( h^2 + \frac{h}{\mu_*} \Big) [ u ]_{H^2(\Omega)}
+        \le \frac{C}{\mu_*} h\, [ u ]_{H^2(\Omega)}. \qedhere
+    \end{equation*}
+\end{proof}
+\begin{remark}
+    \begin{enumerate}
+        \item The assumption $u \in H^2(\Omega)$ holds, for example, if $\Omega$ is convex. In that case, the duality argument of \namedCref{lem:Aubin-Nietsche} gives the better rate $\| u - u_h \|_{L^2(\Omega)} \le \frac{C}{\mu_*^2} h^2 \| f \|_{L^2(\Omega)}$.
+        \item The constant blows up if the triangles become flat. A family of triangulations such that $\mu_* \ge \mu > 0$, with $\mu$ independent of $h$, is called \emph{shape regular}. For such a family the method converges with order $h$ in $H^1(\Omega)$.
+        \item The same proof works in $d = 1$, where $\mu_* = 1$.
+    \end{enumerate}
+\end{remark}
+
+\paragraph{Other elements and other norms.}
+The same argument works for other elements and for other norms.
 Using affine equivalence we can prove the following theorem
 \begin{theorem}
     \label{thm:FEM interpolation error subdivision affine equivalence}
@@ -475,16 +1130,16 @@ Using affine equivalence we can prove the following theorem
     \begin{enumerate}
         \item The global interpolation $\mathcal I_{\mathcal T} : H^m (\Omega) \to H^k (\Omega) \cap \mathcal P_{\mathcal T}$.
         \item
-              Each finite element is affine-equivalent to the same reference finite element $(K_0,\mathcal P_0, \mathcal N_0)$
+              Each finite element is affine-equivalent to the same reference finite element $(\widehat K,\widehat{\mathcal P}, \widehat{\mathcal N})$
         \item
-              A bound of the interpolant error in $K_0$
+              A bound of the interpolant error in $\widehat K$
               \begin{equation*}
-                  \left[ v - \mathcal I_{K_0} v \right]_{H^k(K_0)} \le C_0 [ v]_{H^m (K_0)}, \qquad \forall v \in H^m (K_0).
+                  \left[ v - \mathcal I_{\widehat K} v \right]_{H^k(\widehat K)} \le C_0 [ v]_{H^m (\widehat K)}, \qquad \forall v \in H^m (\widehat K).
               \end{equation*}
     \end{enumerate}
     Then, we have that
     \begin{equation*}
-        \left[v - \mathcal I_{\mathcal T} v \right]_{H^k(\Omega)} \le C(\Omega, K_0)  \sup_{K \in \mathcal T} \frac{h_{K}^{m-k}}{\mu_K^k} [ v]_{H^m (\Omega)}, \qquad \forall v \in H^m(\Omega).
+        \left[v - \mathcal I_{\mathcal T} v \right]_{H^k(\Omega)} \le C(\Omega, \widehat K)  \sup_{K \in \mathcal T} \frac{h_{K}^{m-k}}{\mu_K^k} [ v]_{H^m (\Omega)}, \qquad \forall v \in H^m(\Omega).
     \end{equation*}
 \end{theorem}
 

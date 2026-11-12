@@ -1,0 +1,21 @@
+% The diameter h_K and the inscribed diameter rho_K of a triangle.
+% Shared by the lecture notes and the slides.
+\begin{tikzpicture}[>={Stealth}]
+    % a well-shaped triangle
+    \fill[blue!6] (0,0) -- (4,0) -- (1.2,2.4) -- cycle;
+    \draw[thick] (0,0) -- (4,0) -- (1.2,2.4) -- cycle;
+    \draw[red!75!black] (1.4978,0.9257) circle (0.9257);
+    \draw[<->,red!75!black] (0.5721,0.9257) -- (2.4235,0.9257) node[midway,above] {$\rho_K$};
+    \draw[<->] (0,-.3) -- (4,-.3) node[midway,fill=white] {$h_K$};
+    \node at (2,-.95) {$\mu_K = \rho_K/h_K$ not small};
+    % a flat triangle
+    \begin{scope}[xshift=5.6cm]
+        \fill[blue!6] (0,0) -- (4,0) -- (2.5,0.5) -- cycle;
+        \draw[thick] (0,0) -- (4,0) -- (2.5,0.5) -- cycle;
+        \draw[red!75!black] (2.484,0.246) circle (0.246);
+        \node[red!75!black] (rho) at (1.6,1.3) {$\rho_K$};
+        \draw[red!75!black,->] (rho) -- (2.42,0.5);
+        \draw[<->] (0,-.3) -- (4,-.3) node[midway,fill=white] {$h_K$};
+        \node at (2,-.95) {$\mu_K = \rho_K/h_K$ small: flat triangle};
+    \end{scope}
+\end{tikzpicture}

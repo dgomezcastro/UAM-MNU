@@ -1,0 +1,26 @@
+% Hat functions on a mesh, with one interval K highlighted.
+% Shared by the lecture notes and the slides.
+\begin{tikzpicture}[x=1.5cm,y=1.6cm,>={Stealth}]
+    \def\xa{0}\def\xb{1}\def\xc{2.1}\def\xd{3.5}\def\xe{4.4}\def\xf{5.4}
+    % the element K = (x_k, x_{k+1})
+    \fill[blue!6] (\xc,0) rectangle (\xd,1.12);
+    % hat functions outside K
+    \draw[gray!70] (\xa,1) -- (\xb,0);
+    \draw[gray!70] (\xa,0) -- (\xb,1) -- (\xc,0);
+    \draw[gray!70] (\xb,0) -- (\xc,1);
+    \draw[gray!70] (\xd,1) -- (\xe,0);
+    \draw[gray!70] (\xd,0) -- (\xe,1) -- (\xf,0);
+    \draw[gray!70] (\xe,0) -- (\xf,1);
+    % the two pieces inside K
+    \draw[very thick,blue] (\xc,1) -- (\xd,0) node[pos=.2,above right=-2pt] {$\psi_1$};
+    \draw[very thick,red!75!black] (\xc,0) -- (\xd,1) node[pos=.8,above left=-2pt] {$\psi_2$};
+    \draw[dotted] (\xc,0) -- (\xc,1) (\xd,0) -- (\xd,1);
+    % axis and nodes
+    \draw[->] (-.3,0) -- (5.8,0);
+    \foreach \x in {\xa,\xb,\xc,\xd,\xe,\xf} \fill (\x,0) circle (1.2pt);
+    \node[below] at (\xc,0) {$x_k$};
+    \node[below] at (\xd,0) {$x_{k+1}$};
+    \node[below] at ({(\xc+\xd)/2},-.03) {$K$};
+    \node[blue,above] at (\xc,1.12) {$\varphi_k$};
+    \node[red!75!black,above] at (\xd,1.12) {$\varphi_{k+1}$};
+\end{tikzpicture}

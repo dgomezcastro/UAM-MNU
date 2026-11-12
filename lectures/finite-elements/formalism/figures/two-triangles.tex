@@ -1,0 +1,19 @@
+% The unit square split into two triangles sharing the edge E.
+% Shared by the lecture notes and the slides.
+\begin{tikzpicture}[>={Stealth}]
+    \coordinate (a) at (0,0);
+    \coordinate (b) at (2.4,0);
+    \coordinate (c) at (2.4,2.4);
+    \coordinate (d) at (0,2.4);
+    \fill[blue!6] (a) -- (b) -- (d) -- cycle;
+    \fill[orange!12] (c) -- (d) -- (b) -- cycle;
+    \draw[thick] (a) -- (b) -- (c) -- (d) -- cycle;
+    \draw[very thick,red!75!black] (b) -- (d);
+    \node at (.75,.75) {$K_1$};
+    \node at (1.65,1.65) {$K_2$};
+    \fill (a) circle (1.5pt) node[below left] {\small $(0,0)$};
+    \fill (b) circle (1.5pt) node[below right] {\small $(1,0)$};
+    \fill (c) circle (1.5pt) node[above right] {\small $(1,1)$};
+    \fill (d) circle (1.5pt) node[above left] {\small $(0,1)$};
+    \node[red!75!black] at (1.38,1.38) {\small $E$};
+\end{tikzpicture}
