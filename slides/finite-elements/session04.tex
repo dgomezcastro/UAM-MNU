@@ -8,22 +8,87 @@
 {--}
 {2.1--2.4}
 
-\begin{frame}{Plan for today}
-    \begin{enumerate}
-        \item What is a finite element? Ciarlet's triplet $(K, \mathcal P, \mathcal N)$.
-        \item Nodal basis and local interpolant.
-        \item Reference elements and affine equivalence.
-        \item Interpolation estimates: scaling arguments and the Bramble--Hilbert lemma.
-    \end{enumerate}
-    \bigskip
-    \textbf{Motivation.} Céa's lemma reduces the error analysis to
+\begin{frame}{The finite-element method: road map}
+    Galerkin's method needs a space $V_h \subset V$, and by Céa's lemma
     \[
-        \inf_{v_h \in V_h} \|u - v_h\|_V \le \|u - \mathcal I_h u\|_V .
+        \|u - u_h\|_V \le \frac{M}{\alpha^*} \|u - \mathcal I_h u\|_V .
     \]
-    We want a systematic way to build spaces $V_h$ (and interpolants $\mathcal I_h$) from \alert{local pieces}, and to estimate the interpolation error.
+    For hat functions in $d=1$ we did everything by hand. Finite elements do it systematically, in any dimension, from \alert{small and simple pieces}.
+    \begin{enumerate}
+        \item \textbf{One piece}: basis, interpolant and degrees of freedom on a piece $K$. \hfill {\color{mnuaccent}today}
+        \item \textbf{The error on one piece}: how large is $v - \mathcal I_K v$ if $K$ has size $h$? \hfill {\color{mnuaccent}today}
+        \item \textbf{Many pieces}: glue them to build $V_h$. \hfill Session 5
+        \item \textbf{The global error}: add the errors of all the pieces. \hfill Session 5
+    \end{enumerate}
+    \takeaway{We start with two examples: an interval in $d=1$ and a triangle in $d=2$.}
+\end{frame}
+
+\begin{frame}{Example: the linear Lagrange element in $d = 1$}
+    Take the hat functions, but look at only one interval of the mesh, $K = (x_1, x_2)$.
+    \begin{center}
+        \femfigure[.8]{hat-element}
+    \end{center}
+    \textbf{1. Nodal basis.} Only two hat functions do not vanish in $K$:
+    \[
+        \psi_1(x) = \frac{x_2 - x}{x_2 - x_1}, \qquad \psi_2(x) = \frac{x - x_1}{x_2 - x_1},
+        \qquad\qquad \psi_i(x_j) = \delta_{ij}.
+    \]
+    They are a basis of the linear functions on $K$: \ $\mathcal P = \R_1[x]$.
+    \medskip
+
+    \textbf{2. Interpolant.} For $v$ continuous on $[x_1, x_2]$:
+    \[
+        \mathcal I_K v(x) = v(x_1)\, \psi_1(x) + v(x_2)\, \psi_2(x).
+    \]
+    The straight line through $(x_1, v(x_1))$ and $(x_2, v(x_2))$. If $v$ is linear, $\mathcal I_K v = v$.
+\end{frame}
+
+\begin{frame}{Example: the linear Lagrange element in $d = 1$}
+    \textbf{3. Degrees of freedom.} The interpolant only uses two numbers taken from $v$:
+    \[
+        N_1(v) = v(x_1), \qquad N_2(v) = v(x_2).
+    \]
+    \begin{itemize}
+        \item They are linear maps $v \mapsto N_i(v) \in \R$, defined for every continuous $v$.
+        \item They determine a linear function: if $p \in \mathcal P$ and $N_1(p) = N_2(p) = 0$, then $p = 0$.
+        \item Every $p \in \mathcal P$ is described by two numbers: \ $p = N_1(p)\, \psi_1 + N_2(p)\, \psi_2$.
+        \item They are linked to the basis: \ $N_i(\psi_j) = \delta_{ij}$.
+        \item They give the interpolant: \ $\mathcal I_K v = N_1(v)\, \psi_1 + N_2(v)\, \psi_2$.
+    \end{itemize}
+    \bigskip
+    \takeaway{Three ingredients: a piece $K$, a space of functions $\mathcal P$, and degrees of freedom $\mathcal N = \{N_1, N_2\}$.}
+    \medskip
+    {\small The end points are shared with the neighbours: this will allow us to glue the pieces (Session 5).}
+\end{frame}
+
+\begin{frame}{Example: the linear Lagrange triangle in $d = 2$}
+    \begin{columns}[c]
+        \begin{column}{.5\textwidth}
+            $K$ a triangle with vertices $z_1, z_2, z_3$, and
+            \[
+                \mathcal P = \R_1[x,y] = \{a + bx + cy\}
+            \]
+            (planes; dimension $3$).
+        \end{column}
+        \begin{column}{.48\textwidth}
+            \centering
+            \femfigure[.62]{linear-triangle}
+        \end{column}
+    \end{columns}
+    \medskip
+    \textbf{1. Nodal basis.} $\psi_1, \psi_2, \psi_3 \in \mathcal P$ with $\psi_i(z_j) = \delta_{ij}$. For $z_1 = (0,0)$, $z_2 = (1,0)$, $z_3 = (0,1)$:
+    \[
+        \psi_1 = 1 - x - y, \qquad \psi_2 = x, \qquad \psi_3 = y.
+    \]
+    \textbf{2. Interpolant.} $\mathcal I_K v = v(z_1)\psi_1 + v(z_2)\psi_2 + v(z_3)\psi_3$: the plane through the three points $(z_i, v(z_i))$.
+    \medskip
+
+    \textbf{3. Degrees of freedom.} $N_i(v) = v(z_i)$. Again $N_i(\psi_j) = \delta_{ij}$ and $\mathcal I_K v = \sum_i N_i(v)\psi_i$.
+    \board{if $p \in \mathcal P$ vanishes at the three vertices then $p = 0$ \ (use $p(x) = p(z_1) + \nabla p\cdot(x - z_1)$).}
 \end{frame}
 
 \begin{frame}{The finite element}
+    In both examples: a piece $K$, simple functions $\mathcal P$, and numbers $\mathcal N$ that determine them.
     \begin{definition}[Finite element (Ciarlet)]
         A finite element is a triplet $(K, \mathcal P, \mathcal N)$ where
         \begin{enumerate}
@@ -33,19 +98,15 @@
         \end{enumerate}
     \end{definition}
     \begin{itemize}
-        \item Typical nodal functions: $N_i(v) = v(x_i)$, or $N_i(v) = \frac{\partial v}{\partial x_k}(x_i)$.
-        \item They are usually defined on a larger space, e.g.\ $C^k(\overline K)$.
-        \item If $x_i \in \partial K$ we need $\mathcal P \subset C^r(\overline K)$, and evaluate by limits.
-        \item ``$\mathcal N$ is a basis of $\mathcal P^*$'' is also called \emph{$\mathcal P$-unisolvence}: $v \in \mathcal P$ and $N_i(v) = 0$ for all $i$ $\Rightarrow$ $v = 0$.
+        \item In practice: $\mathcal P$ polynomials; $N_i$ values of $v$ (or of its derivatives) at some points, the \emph{nodes}.
+        \item ``Basis of $\mathcal P^*$'': for any numbers $\alpha_1, \dots, \alpha_N$ there is exactly one $p \in \mathcal P$ with $N_i(p) = \alpha_i$.
+        \item How to check it: \ $\dim \mathcal P = N$ \ and \ $\big( N_i(p) = 0 \ \forall i \Rightarrow p = 0 \big)$.
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Nodal basis and local interpolant}
     \begin{definition}[Nodal basis]
-        The nodal basis of $(K,\mathcal P,\mathcal N)$ is the unique basis $\{\psi_1, \dots, \psi_N\}$ of $\mathcal P$ such that
-        \[
-            N_i(\psi_j) = \delta_{ij}, \qquad i,j = 1, \dots, N.
-        \]
+        The unique basis $\{\psi_1, \dots, \psi_N\}$ of $\mathcal P$ such that \ $N_i(\psi_j) = \delta_{ij}$.
     \end{definition}
     \begin{definition}[Local interpolant]
         \[
@@ -53,54 +114,22 @@
         \]
     \end{definition}
     \begin{itemize}
-        \item $\mathcal I_K$ is defined on any space where all the $N_i$ make sense.
-        \item $N_i(\mathcal I_K v) = N_i(v)$, and $\mathcal I_K p = p$ for all $p \in \mathcal P$ (Exercise 2.3).
+        \item The degrees of freedom are the coordinates in the nodal basis: $p = \sum_i N_i(p)\, \psi_i$ for $p \in \mathcal P$.
+        \item $\mathcal I_K v$ is the only function of $\mathcal P$ with the same degrees of freedom as $v$.
+        \item \alert{$\mathcal I_K p = p$ for all $p \in \mathcal P$}: the interpolant does not change the functions of $\mathcal P$.
     \end{itemize}
-    \board{how to compute $\psi_j$: write $\psi_j$ in any basis of $\mathcal P$ and solve a linear system.}
+    \board{how to compute $\psi_j$: write it in any basis of $\mathcal P$ and solve the linear system $N_i(\psi_j) = \delta_{ij}$.}
 \end{frame}
 
-\begin{frame}{Example: the linear Lagrange element in $d = 1$}
-    \begin{columns}[c]
-        \begin{column}{.6\textwidth}
-            \begin{itemize}
-                \item $K = (x_1, x_2)$,
-                \item $\mathcal P = \R_1[x]$ (linear functions),
-                \item $N_1(v) = v(x_1)$, $N_2(v) = v(x_2)$.
-            \end{itemize}
-            Nodal basis:
-            \[
-                \psi_1(x) = \frac{x_2 - x}{x_2 - x_1}, \qquad \psi_2(x) = \frac{x - x_1}{x_2 - x_1}.
-            \]
-        \end{column}
-        \begin{column}{.38\textwidth}
-            \centering
-            \begin{tikzpicture}[scale=1.6]
-                \draw[-{Stealth}] (-.2,0) -- (2.3,0);
-                \draw[thick,blue] (0,1) -- (2,0) node[pos=.15,above right] {$\psi_1$};
-                \draw[thick,red!70!black] (0,0) -- (2,1) node[pos=.85,above left] {$\psi_2$};
-                \fill (0,0) circle (1pt) node[below] {$x_1$};
-                \fill (2,0) circle (1pt) node[below] {$x_2$};
-                \draw[dotted] (0,0) -- (0,1) (2,0) -- (2,1);
-            \end{tikzpicture}
-        \end{column}
-    \end{columns}
-    \medskip
-    Local interpolant:
-    \[
-        \mathcal I_K v(x) = v(x_1)\frac{x_2 - x}{x_2 - x_1} + v(x_2) \frac{x - x_1}{x_2 - x_1}.
-    \]
-    This is the piece-wise linear interpolation of Session 2 on one interval.
-\end{frame}
-
-\begin{frame}{Example: Hermite cubics (Exercise 2.1)}
+\begin{frame}{Degrees of freedom can be derivatives: Hermite cubics}
     \begin{columns}[c]
         \begin{column}{.55\textwidth}
             $K = (0,1)$, \ $\mathcal P = \R_3[x]$ ($\dim = 4$),
             \begin{align*}
-                N_1(v) & = v(0), & N_2(v) & = v(1),  \\
+                N_1(v) & = v(0),  & N_2(v) & = v(1),  \\
                 N_3(v) & = v'(0), & N_4(v) & = v'(1).
             \end{align*}
-            \board{find the nodal basis $\theta_0, \dots, \theta_3$:}
+            Nodal basis (Exercise 2.1):
             \begin{align*}
                 \theta_0(\xi) & = 1 - 3\xi^2 + 2\xi^3, & \theta_1(\xi) & = 3\xi^2 - 2\xi^3, \\
                 \theta_2(\xi) & = \xi - 2\xi^2 + \xi^3, & \theta_3(\xi) & = -\xi^2 + \xi^3.
@@ -111,159 +140,279 @@
         \end{column}
     \end{columns}
     \medskip
-    $\mathcal I_K v = v(0)\theta_0 + v(1)\theta_1 + v'(0)\theta_2 + v'(1)\theta_3$ \ matches values \emph{and} derivatives at the end points.
+    $\mathcal I_K v = v(0)\theta_0 + v(1)\theta_1 + v'(0)\theta_2 + v'(1)\theta_3$ \ matches values \emph{and} derivatives at the end points. We come back to it in Session 6.
 \end{frame}
 
-\begin{frame}{Reference elements}
-    It is convenient to do all computations on a few \alert{reference} element domains:
+\begin{frame}{The local interpolation error}
+    \textbf{Question.} How large is $v - \mathcal I_K v$ on an element $K$ of size $h$?
+    \begin{columns}[c]
+        \begin{column}{.45\textwidth}
+            \centering
+            \femfigure[.72]{local-error}
+        \end{column}
+        \begin{column}{.53\textwidth}
+            \begin{lemma}[Linear interpolant in $K = (a,b)$]
+                For $v \in C^2([a,b])$ and $h = b - a$:
+                \begin{align*}
+                    |v - \mathcal I_K v|       & \le h^2 \max |v''|, \\
+                    |v' - (\mathcal I_K v)'|   & \le h \max |v''|.
+                \end{align*}
+            \end{lemma}
+        \end{column}
+    \end{columns}
+    \begin{proofsteps}[Proof]
+        $e = v - \mathcal I_K v$ satisfies $e(a) = e(b) = 0$ and $e'' = v''$. By Rolle, $e'(\xi) = 0$ for some $\xi$. Then
+        $|e'(x)| = \big|\int_\xi^x v''\big| \le h \max|v''|$ \ and \ $|e(x)| = \big|\int_a^x e'\big| \le h^2 \max |v''|$.
+    \end{proofsteps}
+\end{frame}
+
+\begin{frame}{The two ideas behind the local error}
+    \textbf{1. The interpolant does not change polynomials.} If $p$ is linear, $\mathcal I_K p = p$, so
+    \[
+        (v - p) - \mathcal I_K(v - p) = v - \mathcal I_K v .
+    \]
+    We can subtract any linear function for free: the error only depends on how far $v$ is from being linear, i.e.\ on $v''$.
     \medskip
+
+    \textbf{2. Each derivative is worth a power of $h$.} For a function that varies over a length $h$, taking a derivative is like dividing by $h$.
+    Counting units: from $v''$ and $h$ we can only build $h^2 v''$ (units of $v$) and $h\, v''$ (units of $v'$).
+    \medskip
+
+    \textbf{What we want to prove} (in integral norms, with $C$ independent of the size of $K$):
+    \[
+        \|v - \mathcal I_K v\|_{L^2(K)} \le C h_K^2\, [v]_{H^2(K)},
+        \qquad
+        [v - \mathcal I_K v]_{H^1(K)} \le C h_K\, [v]_{H^2(K)},
+    \]
+    where \ $[v]_{H^1(K)} = \|\nabla v\|_{L^2(K)}$, \ $[v]_{H^2(K)} = \|D^2 v\|_{L^2(K)}$, \ $h_K = \operatorname{diam}(K)$.
+\end{frame}
+
+\begin{frame}{The strategy: a reference element}
+    \begin{enumerate}
+        \item \textbf{Go to a reference element.} $K = F(\widehat K)$, with $\widehat K$ a fixed element of size one and $F$ an affine map.
+              A function $v$ on $K$ becomes $\widehat v = v \circ F$ on $\widehat K$.
+        \item \textbf{Estimate on the reference element.} No $h$ there: the constant is a number, computed once.
+        \item \textbf{Come back.} The powers of $h$ appear from the chain rule and the change of variables in the integrals.
+    \end{enumerate}
     \begin{center}
-        \begin{tikzpicture}[scale=1.6]
+        \begin{tikzpicture}[scale=1.3]
             \draw[thick] (0,0) -- (1,0);
-            \fill (0,0) circle (1pt) node[below] {$0$};
-            \fill (1,0) circle (1pt) node[below] {$1$};
-            \node at (.5,-.6) {$d = 1$: $(0,1)$};
-            \begin{scope}[xshift=2.2cm]
+            \fill (0,0) circle (1pt) node[below] {\scriptsize $0$};
+            \fill (1,0) circle (1pt) node[below] {\scriptsize $1$};
+            \node at (.5,-.6) {\small $d = 1$: $(0,1)$};
+            \begin{scope}[xshift=2.4cm]
                 \draw[thick] (0,0) -- (1,0) -- (0,1) -- cycle;
-                \node[below left] at (0,0) {\scriptsize $(0,0)$};
+                \node[below] at (0,0) {\scriptsize $(0,0)$};
                 \node[below] at (1,0) {\scriptsize $(1,0)$};
                 \node[left] at (0,1) {\scriptsize $(0,1)$};
-                \node at (.5,-.6) {$d = 2$: triangle};
+                \node at (.5,-.6) {\small $d = 2$: triangle};
             \end{scope}
-            \begin{scope}[xshift=4.6cm]
+            \begin{scope}[xshift=4.9cm]
                 \draw[thick] (0,0) rectangle (1,1);
-                \node[below left] at (0,0) {\scriptsize $(0,0)$};
-                \node[above right] at (1,1) {\scriptsize $(1,1)$};
-                \node at (.5,-.6) {$d = 2$: square};
+                \node[below] at (0,0) {\scriptsize $(0,0)$};
+                \node[above] at (1,1) {\scriptsize $(1,1)$};
+                \node at (.5,-.6) {\small $d = 2$: square};
             \end{scope}
         \end{tikzpicture}
     \end{center}
+    \takeaway{We do the complete computation for the two examples: first $d = 1$, then $d = 2$.}
+\end{frame}
+
+\begin{frame}{First example, $d = 1$: the elements correspond}
+    \begin{center}
+        \femfigure[.8]{affine-1d}
+    \end{center}
+    Reference element: $\widehat K = (0,1)$, \ $\widehat\psi_1(\widehat x) = 1 - \widehat x$, \ $\widehat\psi_2(\widehat x) = \widehat x$. \quad For $v$ on $K$: \ $\widehat v(\widehat x) = v(a + h\widehat x)$.
     \medskip
-    and transport them to each element of the mesh by an \alert{affine map} $F(x) = \mat A x + \vec b$.
-    \takeaway{Compute once on the reference element, then change variables.}
+
+    \textbf{Step 0.} Basis and degrees of freedom of $K$ are those of $\widehat K$ after the change of variables: $\psi_i \circ F = \widehat\psi_i$ and
+    \[
+        N_1(v) = v(a) = \widehat v(0) = \widehat N_1(\widehat v), \qquad
+        N_2(v) = v(b) = \widehat v(1) = \widehat N_2(\widehat v).
+    \]
+    Hence the interpolants correspond:
+    \[
+        (\mathcal I_K v)\circ F = \mathcal I_{\widehat K}\, \widehat v .
+    \]
+    \takeaway{Interpolating and then changing variables $=$ changing variables and then interpolating.}
 \end{frame}
 
-\begin{frame}{Affine equivalence}
-    \begin{definition}[Affine equivalence]
-        $(K,\mathcal P,\mathcal N)$ and $(\widehat K,\widehat{\mathcal P},\widehat{\mathcal N})$ are affine equivalent if there is $F(x) = \mat A x + \vec b$, $\mat A$ non-singular, such that
-        \begin{enumerate}
-            \item $F(K) = \widehat K$;
-            \item $F^* \widehat{\mathcal P} = \mathcal P$, where $F^*\widehat v = \widehat v \circ F$ (pull-back);
-            \item $F_* \mathcal N = \widehat{\mathcal N}$, where $(F_* N)(\widehat v) = N(\widehat v \circ F)$ (push-forward).
-        \end{enumerate}
-    \end{definition}
-    \begin{example}[Linear elements in $d=1$]
-        Two linear Lagrange elements on $(x_1,x_2)$ and $(\widehat x_1, \widehat x_2)$ are affine equivalent via
-        \[
-            F(x) = \widehat x_1 + (\widehat x_2 - \widehat x_1)\frac{x - x_1}{x_2 - x_1}.
-        \]
-        In particular, we can do all computations on $(0,1)$.
-    \end{example}
-\end{frame}
-
-\begin{frame}{Scaling of Sobolev seminorms}
-    Size of an element: \quad
-    $h_K = \operatorname{diam}(K)$, \qquad $\rho_K = \sup\{\operatorname{diam}(B) : B \text{ ball contained in } K\}$.
-    \begin{lemma}
-        Let $F(x) = \mat A x + \vec b$, $F(K) = \widehat K$, $\widehat v \in H^m(\widehat K)$ and $v = \widehat v \circ F$. Then
-        \[
-            [\widehat v]_{H^m(\widehat K)} \le C\, \|\mat A^{-1}\|^m\, |\det \mat A|^{\frac 1 2}\, [v]_{H^m(K)},
-            \qquad
-            \|\mat A^{-1}\| \le \frac{h_K}{\rho_{\widehat K}}.
-        \]
-    \end{lemma}
-    \begin{proofsteps}
-        \begin{enumerate}
-            \item Change of variables: $\int_{\widehat K} \widehat w = |\det \mat A| \int_K \widehat w \circ F$.
-            \item Chain rule: each derivative produces a factor $\mat A^{-1}$.
-            \item Any $\vec\xi$ with $|\vec\xi| = \rho_{\widehat K}$ is $\widehat x - \widehat y$ with $\widehat x, \widehat y \in \overline{\widehat K}$, so
-                  $|\mat A^{-1}\vec\xi| = |F^{-1}\widehat x - F^{-1}\widehat y| \le h_K$.
-        \end{enumerate}
-    \end{proofsteps}
-\end{frame}
-
-\begin{frame}{Interpolation estimates by affine equivalence}
+\begin{frame}{First example, $d = 1$: the powers of $h$}
     \small
-    \begin{theorem}
-        Let $(K,\mathcal P,\mathcal N)$ (reference) and $(\widehat K,\widehat{\mathcal P},\widehat{\mathcal N})$ be affine equivalent, and assume
-        \[
-            [v - \mathcal I_K v]_{H^k(K)} \le C_1(K)\, [v]_{H^m(K)} \qquad \forall v \in H^m(K).
-        \]
-        Then
-        \[
-            [\widehat v - \mathcal I_{\widehat K} \widehat v]_{H^k(\widehat K)} \le C_2(K)\, \frac{h_{\widehat K}^m}{\rho_{\widehat K}^k}\, [\widehat v]_{H^m(\widehat K)},
-        \]
-        with $C_2$ independent of $\widehat K$.
-    \end{theorem}
-    \begin{proofsteps}
-        \begin{enumerate}
-            \item Interpolation commutes with the change of variables: $(\mathcal I_{\widehat K}\widehat v)\circ F = \mathcal I_K v$.
-            \item Go to the reference element (factor $h_K^k \rho_{\widehat K}^{-k} |\det \mat A|^{\frac12}$), apply the assumption there.
-            \item Come back with $F^{-1}$ (factor $h_{\widehat K}^m \rho_K^{-m} |\det\mat A|^{-\frac12}$). The determinants cancel.
-        \end{enumerate}
-    \end{proofsteps}
+    \textbf{Step 1: how the norms change.} Chain rule: $\widehat v' = h\, v' \circ F$, \ $\widehat v'' = h^2\, v''\circ F$. \ Integrals: $\diff x = h \diff\widehat x$.
+    \[
+        \|\widehat v\|_{L^2(\widehat K)} = h^{-\frac12} \|v\|_{L^2(K)}, \qquad
+        [\widehat v]_{H^1(\widehat K)} = h^{\frac12} [v]_{H^1(K)}, \qquad
+        [\widehat v]_{H^2(\widehat K)} = h^{\frac32} [v]_{H^2(K)}.
+    \]
+    \textbf{Step 2: reference estimate} (Session 2 with the mesh $\{0,1\}$). No $h$:
+    \[
+        \|\widehat v - \mathcal I_{\widehat K}\widehat v\|_{L^2(\widehat K)} \le \tfrac{1}{\pi^2} [\widehat v]_{H^2(\widehat K)}, \qquad
+        [\widehat v - \mathcal I_{\widehat K}\widehat v]_{H^1(\widehat K)} \le \tfrac{1}{\pi} [\widehat v]_{H^2(\widehat K)}.
+    \]
+    \textbf{Step 3: come back.}
+    \[
+        [v - \mathcal I_K v]_{H^1(K)}
+        = h^{-\frac12} [\widehat v - \mathcal I_{\widehat K}\widehat v]_{H^1(\widehat K)}
+        \le h^{-\frac12}\, \tfrac1\pi\, [\widehat v]_{H^2(\widehat K)}
+        = h^{-\frac12}\, \tfrac1\pi\, h^{\frac32}\, [v]_{H^2(K)}
+        = \tfrac h\pi\, [v]_{H^2(K)} .
+    \]
+    \board{the same for $L^2$: \ $\|v - \mathcal I_K v\|_{L^2(K)} \le \frac{h^2}{\pi^2} [v]_{H^2(K)}$.}
 \end{frame}
 
-\begin{frame}{A difficulty: derivatives as degrees of freedom}
-    \begin{example}[Hermite cubics are not affine equivalent]
-        Let $F(x) = a + (b-a)x$ map $(0,1)$ to $\widehat K = (a,b)$. Since $\frac{\diff F}{\diff x} = b - a$,
-        \[
-            \widehat N_1(\widehat v) = \widehat v(a),\quad
-            \widehat N_2(\widehat v) = \widehat v(b),\quad
-            \widehat N_3(\widehat v) = (b-a)\,\widehat v'(a),\quad
-            \widehat N_4(\widehat v) = (b-a)\,\widehat v'(b).
-        \]
-        The natural element on $(a,b)$ uses $\widehat v'(a)$ and $\widehat v'(b)$ \alert{without} the factor $(b-a)$.
-    \end{example}
+\begin{frame}{Second example, $d = 2$: the affine map}
+    \begin{center}
+        \femfigure[.72]{affine-2d}
+    \end{center}
+    \[
+        F(\widehat x) = z_1 + \mat A \widehat x, \qquad \mat A = \big( z_2 - z_1 \mid z_3 - z_1 \big) \in \R^{2\times 2}, \qquad F(\widehat z_i) = z_i .
+    \]
+    $\mat A$ is invertible because the vertices are not collinear. \ For $v$ on $K$: \ $\widehat v = v \circ F$.
+    \medskip
+
+    \textbf{Step 0: the elements correspond.} If $p$ has degree $\le 1$, so does $p \circ F$, and $N_i(v) = v(z_i) = \widehat v(\widehat z_i) = \widehat N_i(\widehat v)$. Hence
+    \[
+        \psi_i \circ F = \widehat\psi_i, \qquad (\mathcal I_K v)\circ F = \mathcal I_{\widehat K}\, \widehat v .
+    \]
+\end{frame}
+
+\begin{frame}{Second example, $d = 2$: how the norms change}
+    \small
+    \textbf{Step 1.} Chain rule for the gradient and the Hessian, and change of variables in the integrals:
+    \[
+        \widehat\nabla \widehat v = \mat A^t\, (\nabla v)\circ F, \qquad
+        \widehat D^2 \widehat v = \mat A^t\, (D^2 v)\circ F\, \mat A, \qquad
+        \diff x = |\det \mat A| \diff \widehat x .
+    \]
+    \begin{lemma}[Change of variables in the seminorms]
+        \begin{align*}
+            \|\widehat v\|_{L^2(\widehat K)}  & = |\det\mat A|^{-\frac12} \|v\|_{L^2(K)},                         \\
+            [\widehat v]_{H^1(\widehat K)} & \le \|\mat A\|\, |\det\mat A|^{-\frac12} [v]_{H^1(K)},
+                                           & [v]_{H^1(K)} & \le \|\mat A^{-1}\|\, |\det\mat A|^{\frac12} [\widehat v]_{H^1(\widehat K)},   \\
+            [\widehat v]_{H^2(\widehat K)} & \le \|\mat A\|^2\, |\det\mat A|^{-\frac12} [v]_{H^2(K)},
+                                           & [v]_{H^2(K)} & \le \|\mat A^{-1}\|^2\, |\det\mat A|^{\frac12} [\widehat v]_{H^2(\widehat K)}.
+        \end{align*}
+    \end{lemma}
     \begin{itemize}
-        \item Elements with derivatives as degrees of freedom are not affine equivalent to the reference element in general.
-        \item We need a more general tool: the \alert{Bramble--Hilbert lemma}.
+        \item In $d = 1$: $\mat A = h$, and we recover the powers $h^{-\frac12}$, $h^{\frac12}$, $h^{\frac32}$.
+        \item The role of $h$ is played by $\|\mat A\|$ (derivatives) and $|\det\mat A|$ (integrals).
     \end{itemize}
 \end{frame}
 
-\begin{frame}{The Bramble--Hilbert lemma}
-    \begin{lemma}[Bramble--Hilbert]
-        Let $\Omega \subset \R^d$ be bounded and star-shaped with respect to a ball, $m \ge 1$, $p \in (1,\infty)$.
-        Let $F: W^{m,p}(\Omega) \to \R$ be linear and continuous with
-        \[
-            F(P) = 0 \qquad \forall P \in \R_{m-1}[x_1, \dots, x_d].
-        \]
-        Then $|F(v)| \le C\, \|D^m v\|_{L^p(\Omega)}$ for all $v \in W^{m,p}(\Omega)$.
+\begin{frame}{Size and shape of an element}
+    \begin{columns}[c]
+        \begin{column}{.42\textwidth}
+            \begin{definition}
+                \begin{align*}
+                    h_K    & = \operatorname{diam}(K),                              \\
+                    \rho_K & = \sup\{\operatorname{diam}(B) : B \text{ ball} \subset K\}, \\
+                    \mu_K  & = \rho_K / h_K \in (0,1].
+                \end{align*}
+            \end{definition}
+        \end{column}
+        \begin{column}{.56\textwidth}
+            \centering
+            \femfigure[.62]{h-rho}
+        \end{column}
+    \end{columns}
+    \begin{lemma}[The size of $\mat A$]
+        If $F(\widehat x) = \mat A\widehat x + \vec b$ and $F(\widehat K) = K$, then
+        \quad $\displaystyle \|\mat A\| \le \frac{h_K}{\rho_{\widehat K}}, \qquad \|\mat A^{-1}\| \le \frac{h_{\widehat K}}{\rho_K}$.
     \end{lemma}
-    \begin{example}[Linear interpolation in $(0,1)$]
-        $E(v) = v - \big(v(0) + (v(1) - v(0))x\big)$ vanishes on $\R_1[x]$. Applying the lemma with $m = 2$:
-        \[
-            \|E(v)\|_{H^1(0,1)} \le C\, \|v''\|_{L^2(0,1)} .
-        \]
-    \end{example}
-    \takeaway{If $\mathcal I_K$ reproduces polynomials of degree $m-1$, the error only sees $D^m v$.}
+    \begin{proofsteps}[Proof]
+        Any $\vec\xi$ with $|\vec\xi| = \rho_{\widehat K}$ is $\widehat x - \widehat y$ with $\widehat x, \widehat y \in \overline{\widehat K}$ (on a ball inside $\widehat K$). Then
+        $\mat A\vec\xi = F(\widehat x) - F(\widehat y)$ is a difference of two points of $\overline K$: \ $|\mat A \vec \xi| \le h_K$.
+    \end{proofsteps}
 \end{frame}
 
-\begin{frame}{General bound on the interpolation error}
-    \begin{theorem}[Simplified statement]
-        Let $(K,\mathcal P,\mathcal N)$ be a finite element such that
-        \begin{enumerate}
-            \item $K$ is star-shaped with respect to a ball of diameter $\rho_K$ (e.g.\ $K$ convex),
-            \item $\R_{m-1}[x] \subset \mathcal P$,
-            \item the nodal functions are bounded in $C^\ell(\overline K)$, with $m - \ell - \frac dp > 0$.
-        \end{enumerate}
-        Then, for $j = 0, \dots, m$,
+\begin{frame}{Second example, $d = 2$: the local error}
+    \small
+    \textbf{Step 2: reference estimate} (no $h$; proved with the Bramble--Hilbert lemma):
+    \[
+        \|\widehat v - \mathcal I_{\widehat K}\widehat v\|_{L^2(\widehat K)} + [\widehat v - \mathcal I_{\widehat K}\widehat v]_{H^1(\widehat K)} \le \widehat C\, [\widehat v]_{H^2(\widehat K)} .
+    \]
+    \textbf{Step 3: come back.}
+    \begin{align*}
+        [v - \mathcal I_K v]_{H^1(K)}
+         & \le \|\mat A^{-1}\|\, |\det\mat A|^{\frac12}\, [\widehat v - \mathcal I_{\widehat K}\widehat v]_{H^1(\widehat K)}
+        \le \widehat C\, \|\mat A^{-1}\|\, |\det\mat A|^{\frac12}\, [\widehat v]_{H^2(\widehat K)}                      \\
+         & \le \widehat C\, \|\mat A^{-1}\|\, \|\mat A\|^2\, [v]_{H^2(K)}
+        \le \widehat C\, \frac{h_{\widehat K}}{\rho_K} \Big(\frac{h_K}{\rho_{\widehat K}}\Big)^2 [v]_{H^2(K)} .
+    \end{align*}
+    The determinants cancel, and $h_{\widehat K}$, $\rho_{\widehat K}$ are just numbers.
+    \begin{theorem}[Local error of the linear triangle]
+        For every triangle $K$ and $v \in H^2(K)$, with $C$ independent of $K$:
         \[
-            [v - \mathcal I_K v]_{W^{j,p}(K)} \le C\, h_K^{m-j}\, [v]_{W^{m,p}(K)} \qquad \forall v \in W^{m,p}(K),
+            \|v - \mathcal I_K v\|_{L^2(K)} \le C h_K^2\, [v]_{H^2(K)},
+            \qquad
+            [v - \mathcal I_K v]_{H^1(K)} \le C \frac{h_K^2}{\rho_K}\, [v]_{H^2(K)} = \frac{C}{\mu_K}\, h_K\, [v]_{H^2(K)} .
         \]
-        where $C$ depends on $d,m,p,\ell$, on $h_K/\rho_K$ and on $\mathcal I$ rescaled to diameter $1$.
     \end{theorem}
-    \begin{proofsteps}[Idea]
-        Rescale $K$ to diameter $1$, apply Bramble--Hilbert to $v - \mathcal I_K v$ (it vanishes on $\R_{m-1}$), and scale back.
-    \end{proofsteps}
+    \takeaway{New with respect to $d=1$: the shape matters. Flat triangles ($\mu_K$ small) are bad.}
+\end{frame}
+
+\begin{frame}{Affine equivalence}
+    \small
+    \begin{definition}[Affine equivalence]
+        $(\widehat K,\widehat{\mathcal P},\widehat{\mathcal N})$ and $(K,\mathcal P,\mathcal N)$ are affine equivalent if there is $F(\widehat x) = \mat A \widehat x + \vec b$, $\mat A$ non-singular, with
+        \begin{enumerate}
+            \item $F(\widehat K) = K$;
+            \item $v \in \mathcal P$ if and only if $v \circ F \in \widehat{\mathcal P}$;
+            \item $N_i(v) = \widehat N_i(v \circ F)$.
+        \end{enumerate}
+    \end{definition}
+    \begin{lemma}[Interpolation and affine maps commute]
+        $\psi_i = \widehat\psi_i \circ F^{-1}$ \quad and \quad $(\mathcal I_K v)\circ F = \mathcal I_{\widehat K}(v \circ F)$.
+    \end{lemma}
+    This is all we used in the two examples (Step 0). Therefore:
+    \begin{theorem}[Local interpolation error]
+        If the reference estimate (Step 2) holds on $\widehat K$, the estimates of the previous slide hold for \alert{every} element affine equivalent to the reference one, in any dimension.
+    \end{theorem}
+\end{frame}
+
+\begin{frame}{The estimate on the reference element}
+    \begin{lemma}[Bramble--Hilbert]
+        Let $\Omega \subset \R^d$ be bounded and star-shaped with respect to a ball.
+        If $F: H^2(\Omega) \to \R$ is linear, continuous and vanishes on the polynomials of degree $\le 1$, then
+        \quad $|F(v)| \le C\, \|D^2 v\|_{L^2(\Omega)}$.
+    \end{lemma}
+    This is the rigorous version of the first idea. Apply it to the error $E(\widehat v) = \widehat v - \mathcal I_{\widehat K} \widehat v$:
+    \begin{itemize}
+        \item $E$ is continuous from $H^2(\widehat K)$ to $H^1(\widehat K)$ \ (for $d \le 3$, functions of $H^2$ are continuous);
+        \item $E(p) = 0$ for all polynomials of degree $\le 1$, because $\mathcal I_{\widehat K} p = p$.
+    \end{itemize}
+    Hence \ $\|E(\widehat v)\|_{H^1(\widehat K)} \le \widehat C\, [\widehat v]_{H^2(\widehat K)}$: the reference estimate holds for linear elements.
+    \takeaway{If the interpolant does not change polynomials of degree $1$, the error only sees $D^2 v$.}
+\end{frame}
+
+\begin{frame}{Other norms and other elements}
+    \small
+    The three steps work in the same way for more derivatives and higher degree.
+    \begin{theorem}[General version]
+        Let $(K,\mathcal P,\mathcal N)$ be affine equivalent to $(\widehat K,\widehat{\mathcal P},\widehat{\mathcal N})$, $0 \le k \le m$, and assume
+        $[\widehat v - \mathcal I_{\widehat K}\widehat v]_{H^k(\widehat K)} \le \widehat C\, [\widehat v]_{H^m(\widehat K)}$. Then
+        \[
+            [v - \mathcal I_K v]_{H^k(K)} \le C\, \frac{h_K^m}{\rho_K^k}\, [v]_{H^m(K)} .
+        \]
+    \end{theorem}
+    \begin{itemize}
+        \item Polynomials of degree $m - 1$ in $\mathcal P$ $\Rightarrow$ error of order $h_K^{m-k}$ in $H^k$ \ (for $\mu_K$ bounded below).
+        \item \textbf{Warning:} derivatives as degrees of freedom. The affine image of the Hermite element of $(0,1)$ in $(a,b)$ has
+              $N_3(v) = (b-a)\, v'(a)$, not the natural $v'(a)$.
+        \item A general result (Bramble--Hilbert on each element, no affine equivalence) covers these elements:
+              \[
+                  [v - \mathcal I_K v]_{W^{j,p}(K)} \le C\, h_K^{m-j}\, [v]_{W^{m,p}(K)}, \qquad j = 0, \dots, m.
+              \]
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Summary and practice}
     \begin{itemize}
-        \item Finite element $= (K, \mathcal P, \mathcal N)$; nodal basis $N_i(\psi_j) = \delta_{ij}$; $\mathcal I_K v = \sum_i N_i(v)\psi_i$.
-        \item Reference element $+$ affine maps: compute once, transport everywhere.
-        \item Scaling: $[v - \mathcal I_K v]_{H^k} \lesssim \frac{h_K^m}{\rho_K^k}[v]_{H^m}$.
-        \item Bramble--Hilbert: reproducing $\R_{m-1}$ gives order $h_K^{m-j}$.
+        \item Two examples: linear interval and linear triangle. Nodal basis, interpolant, degrees of freedom.
+        \item Finite element $= (K, \mathcal P, \mathcal N)$; \ $N_i(\psi_j) = \delta_{ij}$; \ $\mathcal I_K v = \sum_i N_i(v)\psi_i$; \ $\mathcal I_K p = p$ in $\mathcal P$.
+        \item Local error: reference element $+$ affine map. Three steps: go, estimate, come back.
+        \item Linear elements: \ $\|v - \mathcal I_K v\|_{L^2(K)} \le C h_K^2 [v]_{H^2(K)}$, \ $[v - \mathcal I_K v]_{H^1(K)} \le \frac{C}{\mu_K} h_K [v]_{H^2(K)}$.
     \end{itemize}
     \bigskip
     \textbf{Practice.} Exercises 2.1--2.4:

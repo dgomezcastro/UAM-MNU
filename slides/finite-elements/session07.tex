@@ -29,14 +29,14 @@
 \begin{frame}{Lagrange triangles}
     \begin{columns}[T]
         \begin{column}{.48\textwidth}
-            \textbf{Linear Lagrange triangle}
+            \textbf{Linear Lagrange triangle} (Session 4)
             \begin{itemize}
                 \item $\mathcal P = \R_1[x,y]$ ($\dim = 3$),
                 \item $N_i(v) = v(z_i)$, $i = 1,2,3$ (vertices).
             \end{itemize}
-            On the reference triangle $z_1 = (0,0)$, $z_2 = (1,0)$, $z_3 = (0,1)$:
+            On the reference triangle $\widehat K$, with vertices $\widehat z_1 = (0,0)$, $\widehat z_2 = (1,0)$, $\widehat z_3 = (0,1)$:
             \[
-                \psi_1 = 1 - x - y, \quad \psi_2 = x, \quad \psi_3 = y.
+                \widehat\psi_1 = 1 - x - y, \quad \widehat\psi_2 = x, \quad \widehat\psi_3 = y.
             \]
         \end{column}
         \begin{column}{.48\textwidth}
@@ -123,15 +123,15 @@
 
 \begin{frame}{The Dirichlet Laplacian with piece-wise linear functions}
     \small
-    Triangulation $\mathcal T$ of $\Omega$ with vertices $x_i$; for each $K \in \mathcal T$ an affine map $F_K: K_0 \to K$ from the reference triangle.
+    Triangulation $\mathcal T$ of $\Omega$ with vertices $x_i$; for each $K \in \mathcal T$ an affine map $F_K: \widehat K \to K$ from the reference triangle.
     \medskip
 
     \textbf{Global basis.} $\varphi_i$ continuous, linear on each triangle, $\varphi_i(x_j) = \delta_{ij}$:
     \[
         \varphi_i\big|_K =
         \begin{cases}
-            \psi_j \circ F_K^{-1} & \text{if } x_i = F_K(z_j) \text{ is a vertex of } K, \\
-            0                     & \text{if } x_i \notin \overline K.
+            \widehat\psi_j \circ F_K^{-1} & \text{if } x_i = F_K(\widehat z_j) \text{ is a vertex of } K, \\
+            0                             & \text{if } x_i \notin \overline K.
         \end{cases}
     \]
     \begin{itemize}
@@ -216,10 +216,10 @@
 
 \begin{frame}{General triangulations: via the reference triangle}
     \small
-    If $F_K(z_{j_k}) = x_{i_k}$, change variables $x = F_K(\widehat x) = \mat A_K \widehat x + \vec b_K$:
+    If $F_K(\widehat z_{j_k}) = x_{i_k}$, change variables $x = F_K(\widehat x) = \mat A_K \widehat x + \vec b_K$:
     \begin{align*}
-        \int_K \varphi_{i_1}\varphi_{i_2}                         & = |\det \mat A_K| \int_{K_0} \psi_{j_1}\psi_{j_2},                                                            \\
-        \int_K \nabla\varphi_{i_1}\cdot\nabla\varphi_{i_2} & = |\det \mat A_K| \int_{K_0} \big(\mat A_K^{-t}\widehat\nabla\psi_{j_1}\big)\cdot\big(\mat A_K^{-t}\widehat\nabla\psi_{j_2}\big).
+        \int_K \varphi_{i_1}\varphi_{i_2}                         & = |\det \mat A_K| \int_{\widehat K} \widehat\psi_{j_1}\widehat\psi_{j_2},                                                            \\
+        \int_K \nabla\varphi_{i_1}\cdot\nabla\varphi_{i_2} & = |\det \mat A_K| \int_{\widehat K} \big(\mat A_K^{-t}\widehat\nabla\widehat\psi_{j_1}\big)\cdot\big(\mat A_K^{-t}\widehat\nabla\widehat\psi_{j_2}\big).
     \end{align*}
     \begin{example}[Local mass matrix of the linear triangle]
         \textcolor{mnuaccent}{\textbf{Check it at the board:}} \quad
@@ -238,7 +238,7 @@
         \item Elements in $d=2$: Lagrange triangles ($\R_k$), Hermite triangle, rectangles ($\mathbb Q_k$), tensor B-splines, \dots
         \item Linear triangles: global hat functions (pyramids), sparse stiffness matrix.
         \item Uniform triangulation of the square: five-point finite-difference scheme.
-        \item General meshes: compute on each triangle (directly or via $K_0$) and assemble.
+        \item General meshes: compute on each triangle (directly or via $\widehat K$) and assemble.
         \item Error (shape-regular meshes, $u \in H^2$): $O(h)$ in $H^1$ and $O(h^2)$ in $L^2$ (Session 5).
     \end{itemize}
     \bigskip
