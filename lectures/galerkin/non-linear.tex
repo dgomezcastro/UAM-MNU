@@ -53,24 +53,6 @@ where the power $\vec u^q$ is taken component-wise. On a uniform mesh, dividing 
     \frac{-U_{i+1} + 2 U_i - U_{i-1}}{h^2} + \frac{U_{i-1}^q + 4 U_i^q + U_{i+1}^q}{6} = \frac 1 h \int_0^1 f \varphi_i .
 \end{equation*}
 
-\begin{remark}
-    \begin{enumerate}
-        \item The same construction works for continuous piece-wise linear functions on a triangulation in $d = 2$ (see \Cref{ch:FEM d=2}), since again $\varphi_j(x_i) = \delta_{ij}$.
-        \item Replacing $u_h^q$ by $\mathcal I_h(u_h^q)$ is a \emph{variational crime}: the discrete problem is not the restriction of the continuous one to $V_h$. Its effect can be analysed with arguments of the type of \namedCref{lem:Strang first lemma}.
-        \item Newton's method for \eqref{eq:Galerkin semilinear algebraic system} only needs the Jacobian
-              \begin{equation*}
-                  \mat J(\vec u) = \mat K + \mat M \operatorname{diag}\big(q\, |U_1|^{q-1}, \dots, q\, |U_{N-1}|^{q-1}\big),
-              \end{equation*}
-              which is as sparse as $\mat K$ and $\mat M$. The matrices $\mat K$ and $\mat M$ are computed only once.
-        \item Existence of a solution of \eqref{eq:Galerkin semilinear algebraic system} follows from Brouwer's fixed point theorem as in the proof of \Cref{ex:Galerkin convergence by compactness}, using that $\vec u \cdot \mat K \vec u \ge \alpha^* \|u_h\|^2_{H^1}$ and $\vec u \cdot \mat M \vec u^q \ge 0$ (check this last inequality element by element).
-        \item If $\mat M$ is replaced by the diagonal matrix of its row sums (\emph{mass lumping}, $h \mat I$ on a uniform mesh), the non-linear term becomes $h U_i^q$ and we recover the finite-difference scheme
-              \begin{equation*}
-                  \frac{-U_{i+1} + 2U_i - U_{i-1}}{h^2} + U_i^q = \frac1h\int_0^1 f\varphi_i \approx f(x_i).
-              \end{equation*}
-              In this case the map $\vec u \mapsto \mat K\vec u + h \vec u^q$ is strictly monotone, so the solution is also unique.
-    \end{enumerate}
-\end{remark}
-
 \subsection{Quasi-linear problems}
 
 Galerkin approximation is used as an analytical tool to prove existence in some problems. For example, the $p$-Laplacian is defined by
@@ -95,7 +77,6 @@ However, we want to highlight a common technique known as \emph{convergence by c
 It is more broadly applicable than Céa-type estimates, but it does not guarantee any rate of convergence.
 For the following example we follow the presentation in \cite[Section 9.14]{Ciarlet2013}.
 \begin{example}[Convergence by compactness for \eqref{eq:cuasilinear}]
-    \label{ex:Galerkin convergence by compactness}
     Let $\Omega$ be a bounded Lipschitz domain. Suppose that $a : {\mathbb R^d} \to {\mathbb R^d}$ is continuous,
     monotone in the sense that
     \begin{equation*}
