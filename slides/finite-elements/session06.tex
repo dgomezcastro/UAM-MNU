@@ -85,13 +85,16 @@
                 \psi_1 & = \theta_0(\xi),        & \psi_2 & = \theta_1(\xi),        \\
                 \psi_3 & = (b-a)\theta_2(\xi),   & \psi_4 & = (b-a)\theta_3(\xi),
             \end{align*}
-            where $\theta_0, \dots, \theta_3$ is the nodal basis on $(0,1)$ (Session 4).
+            where $\theta_0, \dots, \theta_3$ is the nodal basis on $(0,1)$ (Exercise 2.1).
         \end{column}
         \begin{column}{.42\textwidth}
             \includegraphics[width=\textwidth]{../../lectures/finite-elements/d-1/Hermite/Hermite_reference_element.png}
         \end{column}
     \end{columns}
-    \medskip
+    \[
+        \theta_0 = 1 - 3\xi^2 + 2\xi^3, \qquad \theta_1 = 3\xi^2 - 2\xi^3, \qquad
+        \theta_2 = \xi - 2\xi^2 + \xi^3, \qquad \theta_3 = -\xi^2 + \xi^3.
+    \]
     \textbf{Local error.} After rescaling, the factors $(b-a)$ cancel, so (Bramble--Hilbert, $m = 4$):
     \[
         [v - \mathcal I_K v]_{W^{j,p}(K)} \le C h_K^{4-j} [v]_{W^{4,p}(K)}, \qquad j = 0, \dots, 4.
