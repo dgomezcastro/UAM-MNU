@@ -327,7 +327,7 @@
             [v - \mathcal I_K v]_{H^1(K)} \le C \frac{h_K^2}{\rho_K}\, [v]_{H^2(K)} = \frac{C}{\mu_K}\, h_K\, [v]_{H^2(K)} .
         \]
     \end{theorem}
-    \takeaway{New with respect to $d=1$: the shape matters. Flat triangles ($\mu_K$ small) are bad.}
+    \takeaway{New with respect to $d=1$: the $H^1$ bound worsens as the shape ratio $\mu_K$ decreases.}
 \end{frame}
 
 \begin{frame}{Affine equivalence}
@@ -375,14 +375,31 @@
         \]
     \end{theorem}
     \begin{itemize}
-        \item Polynomials of degree $m - 1$ in $\mathcal P$ $\Rightarrow$ error of order $h_K^{m-k}$ in $H^k$ \ (for $\mu_K$ bounded below).
+        \item Under the reference-estimate hypothesis: error of order $h_K^{m-k}$ in $H^k$ \ (for $\mu_K$ bounded below).
         \item \textbf{Warning:} derivatives as degrees of freedom (Hermite elements, Session 6). The affine image in $(a,b)$ of $\widehat N(\widehat v) = \widehat v'(0)$ is
               $N(v) = (b-a)\, v'(a)$, not the natural $v'(a)$.
-        \item A general result (Bramble--Hilbert on each element, no affine equivalence) covers these elements:
-              \[
-                  [v - \mathcal I_K v]_{W^{j,p}(K)} \le C\, h_K^{m-j}\, [v]_{W^{m,p}(K)}, \qquad j = 0, \dots, m.
-              \]
+        \item A general result using Bramble--Hilbert on each element covers these elements under the hypotheses on the next slide.
     \end{itemize}
+\end{frame}
+
+\begin{frame}{Beyond affine equivalence}
+    \small
+    Suppose $1<p<\infty$ and, on each element $K$:
+    \begin{itemize}
+        \item $K$ is star-shaped with respect to a ball of diameter $\rho_{*,K}$;
+        \item $\R_{m-1} \subset \mathcal P \subset W^{m,\infty}(K)$;
+        \item the degrees of freedom are continuous on $C^\ell(\overline K)$, with $m-\ell-d/p>0$.
+    \end{itemize}
+    Rescale $K$ to diameter one, transporting the interpolant, and set
+    \[
+        \sigma_K = \|\mathcal I_{\widehat K}\|_{C^\ell(\overline{\widehat K})\to W^{m,p}(\widehat K)}.
+    \]
+    Then, for $v\in W^{m,p}(K)$ and $j=0,\dots,m$,
+    \[
+        [v-\mathcal I_Kv]_{W^{j,p}(K)}
+        \le C\big(d,m,p,\ell,h_K/\rho_{*,K},\sigma_K\big)\,h_K^{m-j}[v]_{W^{m,p}(K)}.
+    \]
+    \takeaway{A uniform bound requires both controlled element shapes and uniformly bounded rescaled interpolants.}
 \end{frame}
 
 \begin{frame}{Summary and practice}
@@ -396,7 +413,7 @@
     \textbf{Practice.} Exercises 2.1--2.4:
     \begin{itemize}
         \item 2.1: nodal basis of the Hermite cubics.
-        \item 2.2: $\|v\|_{L^\infty(T)} \le C h_T^{-2} \|v\|_{L^1(T)}$ for polynomials on a triangle (go to the reference triangle).
+        \item 2.2: $\|v\|_{L^\infty(T)} \le C(m,h_T/\rho_T) h_T^{-2} \|v\|_{L^1(T)}$ for degree-$m$ polynomials (go to the reference triangle).
         \item 2.3: linear element on $(a,b)$; $\mathcal I_K p = p$ for $p \in \mathcal P$.
         \item 2.4: linear Lagrange basis on a triangle; local stiffness matrix.
     \end{itemize}

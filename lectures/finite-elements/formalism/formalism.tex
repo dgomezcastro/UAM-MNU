@@ -531,7 +531,7 @@ Since $\widehat K$ is fixed, $h_{\widehat K}$ and $\rho_{\widehat K}$ are just n
 \end{equation}
 where $C$ does not depend on $K$.
 This is \eqref{eq:FEM local error expected}, with one new feature with respect to $d = 1$: the constant of the $H^1$ estimate depends on the shape of the triangle through $\mu_K$.
-For an equilateral triangle $\mu_K = \frac{1}{\sqrt 3}$, but for a very flat triangle $\mu_K$ is very small and the estimate is useless.
+For an equilateral triangle $\mu_K = \frac{1}{\sqrt 3}$, but for a very flat triangle $\mu_K$ is very small and the displayed $H^1$ bound deteriorates. Whether it tends to zero under refinement depends on the ratio $h_K/\mu_K$.
 
 \subsection{Affine equivalence}
 \label{sec:FEM affine equivalence definition}
@@ -613,7 +613,7 @@ The rigorous version of this idea is the Bramble--Hilbert lemma (\Cref{lem:Bramb
     \end{equation*}
     is linear and continuous from $H^2(\widehat K)$ to $H^1(\widehat K)$.
     By \eqref{eq:FEM interpolant reproduces P}, $E(p) = 0$ for all polynomials $p$ of degree at most $1$.
-    Therefore, applying \Cref{lem:Bramble-Hilbert} (with $m = 2$) to the linear functionals $F_w (\widehat v) = \langle E(\widehat v), w \rangle_{H^1(\widehat K)}$, for each fixed $w$ with $\| w \|_{H^1(\widehat K)} \le 1$, and taking the supremum over $w$, we have that
+    Apply \Cref{lem:Bramble-Hilbert} (with $m = 2$) to the linear functionals $F_w (\widehat v) = \langle E(\widehat v), w \rangle_{H^1(\widehat K)}$, for $\| w \|_{H^1(\widehat K)} \le 1$. Their operator norms satisfy $\|F_w\| \le \|E\|_{H^2(\widehat K)\to H^1(\widehat K)}$, so the Bramble--Hilbert bound is uniform in $w$. Taking the supremum over $w$, we obtain
     \begin{equation*}
         \| E (\widehat v) \|_{H^1(\widehat K)} \le \widehat C\, [ \widehat v ]_{H^2(\widehat K)}. \qedhere
     \end{equation*}
@@ -665,7 +665,7 @@ where $C$ depends only on $d$ and $m$.
     \end{align*}
     This completes the proof.
 \end{proof}
-For example, for elements that contain the polynomials of degree $2$ one can take $m = 3$, and the error in $H^1$ is of order $h_K^2$ for functions in $H^3(K)$.
+For example, suppose that the reference shape space contains the polynomials of degree $2$ and its interpolant is bounded from $H^3(\widehat K)$ to $H^1(\widehat K)$. On a convex reference domain, polynomial reproduction and the Bramble--Hilbert lemma give the reference estimate with $m = 3$ and $k = 1$. For affine-equivalent elements with $\mu_K$ bounded below by a positive constant, the resulting $H^1$ seminorm error is of order $h_K^2$ for functions in $H^3(K)$.
 
 This kind of affine-equivalence results work well when the nodal functions $N_i(v)$ are evaluations of $v$ at different points. We construct an example showing difficulties with affine equivalence in other cases
 \begin{example}[Affine equivalence for Hermite cubics]
@@ -954,7 +954,7 @@ The $\subset$ here is usually an $=$.
 We will see this effect clearly in some bases in dimension $d=1$, and then again for some examples in dimension $d = 2$.
 
 \begin{remark}
-    In practice, the nodal functions are evaluation of the function and its derivatives at certain points $x_i^{(K)}$. When $x_i^{(K)} \in \partial K$, the nodal functions are usually chosen so that $N_{K,i} = N_{L,j}$ between adjacent sub-domains $K$ and $L$.
+    In practice, the nodal functions are evaluations of the function and its derivatives at certain points $x_i^{(K)}$. At a shared boundary node, $N_{K,i}$ and $N_{L,j}$ may represent the same nodal quantity on adjacent sub-domains $K$ and $L$. They remain distinct maps on the broken space $\mathcal P_{\mathcal T}$; in the assembled conforming space we impose $N_{K,i}(v_h) = N_{L,j}(v_h)$.
     This allows a ``natural'' glueing between the local basis functions to get basis functions of $V_h$ (similarly to \Cref{ex:finite-element space d=1})
     after matching shared degrees of freedom and imposing boundary constraints. Since the local nodal maps separate elements, the correct dimension formula is
     \begin{equation*}
@@ -1112,7 +1112,7 @@ Combining this result with Céa's lemma we obtain the convergence of the finite-
 \begin{remark}
     \begin{enumerate}
         \item The assumption $u \in H^2(\Omega)$ holds, for example, if $\Omega$ is convex. In that case, the duality argument of \namedCref{lem:Aubin-Nietsche} gives the better rate $\| u - u_h \|_{L^2(\Omega)} \le \frac{C}{\mu_*^2} h^2 \| f \|_{L^2(\Omega)}$.
-        \item The constant blows up if the triangles become flat. A family of triangulations such that $\mu_* \ge \mu > 0$, with $\mu$ independent of $h$, is called \emph{shape regular}. For such a family the method converges with order $h$ in $H^1(\Omega)$.
+        \item The constant in the displayed bound blows up if the triangles become flat; this does not by itself show that the optimal error constant diverges. A family of triangulations such that $\mu_* \ge \mu > 0$, with $\mu$ independent of $h$, is called \emph{shape regular}. For such a family the method converges with order $h$ in $H^1(\Omega)$.
         \item The same proof works in $d = 1$, where $\mu_* = 1$.
     \end{enumerate}
 \end{remark}

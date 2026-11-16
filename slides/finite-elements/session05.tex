@@ -160,7 +160,7 @@
     \[
         V_h \defeq V \cap \mathcal I_h C^r(\overline\Omega) \ \subset\ V \cap \mathcal P_{\mathcal T}
     \]
-    (usually with equality). Then $\mathcal I_h u \in V_h$ and we can use Céa's lemma.
+    (usually with equality). If the interpolant preserves conformity and the boundary conditions, then $\mathcal I_h u\in V$ and hence $\mathcal I_h u\in V_h$, as required by Céa's lemma.
     \begin{example}[Linear elements]
         \begin{itemize}
             \item Dirichlet Laplacian: $V_h = H^1_0(\Omega) \cap \mathcal P_{\mathcal T}$: continuous, piece-wise linear, zero on $\partial\Omega$.
@@ -244,7 +244,7 @@
 \begin{frame}{Shape regularity and mesh generation}
     \begin{columns}[c]
         \begin{column}{.48\textwidth}
-            The constants blow up if the triangles become flat ($\mu_K \to 0$, Exercise 2.9).
+            The displayed $H^1$ bound loses uniformity as $\mu_K\to0$ (Exercise 2.9); this does not by itself prove that the error grows.
             \begin{definition}[Shape-regular family]
                 A family of triangulations with
                 \[
@@ -257,7 +257,7 @@
             \femfigure[.55]{h-rho}
         \end{column}
     \end{columns}
-    \takeaway{For shape-regular triangulations: error $O(h)$ in $H^1$ and $O(h^2)$ in $L^2$.}
+    \takeaway{On a convex polygon, with shape-regular triangulations: error $O(h)$ in $H^1$ and $O(h^2)$ in $L^2$.}
     \bigskip
     \textbf{Mesh generation.} Given points in the plane, how do we choose the triangles?
     \begin{itemize}
@@ -276,8 +276,8 @@
         \]
     \end{theorem}
     \begin{itemize}
-        \item Elements containing the polynomials of degree $m-1$: interpolation error $\lesssim h^{m-k}$ in $H^k$, and by Céa the Galerkin error is $\lesssim h^{m-1}$ in $H^1$.
-        \item Without affine equivalence (e.g.\ Hermite elements): the same rate, using the Bramble--Hilbert estimate on each element, for shape-regular meshes.
+        \item Under these hypotheses, on shape-regular meshes: interpolation error $\lesssim h^{m-k}$ in $H^k$; if $\mathcal I_hu\in V_h$, Céa gives Galerkin error $\lesssim h^{m-1}$ in $H^1$.
+        \item Without affine equivalence (e.g.\ Hermite elements): the same rate holds under the general local hypotheses of Session 4, provided the rescaled interpolants are uniformly bounded and $\mathcal I_h:H^m(\Omega)\to H^k(\Omega)$, with $\inf_K\rho_{*,K}/h_K>0$.
     \end{itemize}
 \end{frame}
 
