@@ -1,0 +1,15 @@
+% A function and its linear interpolant on one interval of length h.
+% Shared by the lecture notes and the slides.
+\begin{tikzpicture}[x=4.2cm,y=2.4cm,>={Stealth}]
+    \draw[->] (-.2,0) -- (1.3,0);
+    \fill[red!12] plot[domain=0:1,samples=40] (\x,{0.3+1.4*\x-0.9*\x*\x}) -- cycle;
+    \draw[thick,blue] plot[domain=-0.12:1.12,samples=50] (\x,{0.3+1.4*\x-0.9*\x*\x}) node[right] {$v$};
+    \draw[thick,red!75!black] (0,0.3) -- (1,0.8) node[pos=.82,below right=-1pt] {$\mathcal I_K v$};
+    \draw[dotted] (0,0) -- (0,0.3) (1,0) -- (1,0.8);
+    \fill (0,0.3) circle (1.3pt) (1,0.8) circle (1.3pt);
+    \fill (0,0) circle (1pt) node[below] {$a$};
+    \fill (1,0) circle (1pt) node[below] {$b$};
+    \draw[<->] (0,-.3) -- (1,-.3) node[midway,fill=white] {$h$};
+    \draw[<->] (0.5,0.55) -- (0.5,0.775);
+    \draw[<-] (0.52,0.66) -- (0.72,0.3) node[below right=-3pt] {error};
+\end{tikzpicture}

@@ -85,6 +85,11 @@
     \par\smallskip
     {\color{mnublue}\(\blacktriangleright\)~\textbf{#1}}\par}
 
+% Figures shared with the lecture notes (tikz code in lectures/finite-elements/formalism/figures).
+% \femfigure[scale]{name}, to be used from a session file.
+\newcommand{\femfigure}[2][1]{%
+    \scalebox{#1}{\subimport{../../lectures/finite-elements/formalism/figures/}{#2.tex}}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Sessions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,0 +1,30 @@
+% The affine map from the reference triangle to a generic triangle.
+% Shared by the lecture notes and the slides.
+\begin{tikzpicture}[>={Stealth}]
+    % reference triangle
+    \coordinate (h1) at (0,0);
+    \coordinate (h2) at (2,0);
+    \coordinate (h3) at (0,2);
+    \fill[gray!12] (h1) -- (h2) -- (h3) -- cycle;
+    \draw[thick] (h1) -- (h2) -- (h3) -- cycle;
+    \fill (h1) circle (1.5pt) node[below,xshift=-8pt] {$\widehat z_1 = (0,0)$};
+    \fill (h2) circle (1.5pt) node[below,xshift=8pt] {$\widehat z_2 = (1,0)$};
+    \fill (h3) circle (1.5pt) node[above] {$\widehat z_3 = (0,1)$};
+    \node at (.62,.62) {$\widehat K$};
+    % the map
+    \draw[->,thick] (2.5,1.25) to[bend left=18] node[above] {$F(\widehat x) = z_1 + \mat A\,\widehat x$} (5.6,1.25);
+    % generic triangle
+    \begin{scope}[xshift=6.6cm,yshift=.1cm]
+        \coordinate (z1) at (0,0.3);
+        \coordinate (z2) at (3.3,0);
+        \coordinate (z3) at (2,2.3);
+        \fill[blue!6] (z1) -- (z2) -- (z3) -- cycle;
+        \draw[thick] (z2) -- (z3);
+        \draw[->,very thick,blue] (z1) -- (z2) node[midway,below] {$z_2 - z_1$};
+        \draw[->,very thick,blue] (z1) -- (z3) node[midway,above left=-2pt] {$z_3 - z_1$};
+        \fill (z1) circle (1.5pt) node[left] {$z_1$};
+        \fill (z2) circle (1.5pt) node[right] {$z_2$};
+        \fill (z3) circle (1.5pt) node[above] {$z_3$};
+        \node at (1.9,0.95) {$K$};
+    \end{scope}
+\end{tikzpicture}

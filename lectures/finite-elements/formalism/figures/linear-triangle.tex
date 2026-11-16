@@ -1,0 +1,35 @@
+% The linear Lagrange triangle: nodes (left) and the basis function psi_1 (right).
+% Shared by the lecture notes and the slides.
+\begin{tikzpicture}[>={Stealth}]
+    % (a) the triangle and its three nodes
+    \begin{scope}
+        \coordinate (z1) at (0,0);
+        \coordinate (z2) at (3,0.4);
+        \coordinate (z3) at (1,2.2);
+        \fill[blue!6] (z1) -- (z2) -- (z3) -- cycle;
+        \draw[thick] (z1) -- (z2) -- (z3) -- cycle;
+        \fill (z1) circle (1.6pt) node[below left] {$z_1$};
+        \fill (z2) circle (1.6pt) node[below right] {$z_2$};
+        \fill (z3) circle (1.6pt) node[above] {$z_3$};
+        \node at (1.35,0.85) {$K$};
+    \end{scope}
+    % (b) the graph of psi_1: height 1 at z_1 and 0 at z_2, z_3
+    \begin{scope}[xshift=5.4cm,yshift=-.1cm]
+        \coordinate (a1) at (0,0);
+        \coordinate (a2) at (3.2,0.1);
+        \coordinate (a3) at (2.1,1.45);
+        \coordinate (top) at (0,1.9);
+        \fill[gray!12] (a1) -- (a2) -- (a3) -- cycle;
+        \draw (a1) -- (a2);
+        \draw[dashed] (a1) -- (a3);
+        \fill[blue!25,opacity=.75] (top) -- (a2) -- (a3) -- cycle;
+        \draw[thick,blue] (top) -- (a2) -- (a3) -- cycle;
+        \draw[dotted,thick] (a1) -- (top);
+        \fill (a1) circle (1.6pt) node[below left] {$z_1$};
+        \fill (a2) circle (1.6pt) node[below right] {$z_2$};
+        \fill (a3) circle (1.6pt) node[above right] {$z_3$};
+        \fill[blue] (top) circle (1.6pt);
+        \node[left] at (0,0.95) {$1$};
+        \node[blue] at (1.85,1.1) {$\psi_1$};
+    \end{scope}
+\end{tikzpicture}

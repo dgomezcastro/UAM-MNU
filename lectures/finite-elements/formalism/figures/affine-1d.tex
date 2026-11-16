@@ -1,0 +1,17 @@
+% The affine map from the reference interval to a generic interval.
+% Shared by the lecture notes and the slides.
+\begin{tikzpicture}[>={Stealth}]
+    \draw[thick] (0,0) -- (2,0);
+    \fill (0,0) circle (1.4pt) node[below] {$0$};
+    \fill (2,0) circle (1.4pt) node[below] {$1$};
+    \fill[blue] (0.8,0) circle (1.4pt) node[above] {$\widehat x$};
+    \node at (1,-.85) {$\widehat K = (0,1)$};
+    \draw[->,thick] (2.6,0.3) to[bend left=18] node[above] {$F(\widehat x) = a + h\,\widehat x$} (5.1,0.3);
+    \begin{scope}[xshift=5.7cm]
+        \draw[thick] (0,0) -- (3.4,0);
+        \fill (0,0) circle (1.4pt) node[below] {$a$};
+        \fill (3.4,0) circle (1.4pt) node[below] {$b$};
+        \fill[blue] (1.36,0) circle (1.4pt) node[above] {$x$};
+        \node at (1.7,-.85) {$K = (a,b)$, \ $h = b-a$};
+    \end{scope}
+\end{tikzpicture}
