@@ -153,36 +153,36 @@ This is the general definition.
 We usually expect that the nodal functions in $\mathcal N$ are defined on some infinite-dimensional space $X \supset \mathcal P$, typically $X = C^k(\overline K)$.
 
 In practice, $\mathcal P$ is a space of polynomials, and the degrees of freedom are values of the function, or of its derivatives, at some points of $\overline K$ (the \emph{nodes}).
-The condition that $\mathcal N$ is a basis of $\mathcal P^*$ says that the degrees of freedom describe the functions of $\mathcal P$ exactly: for any choice of numbers $\alpha_1, \dots, \alpha_N$ there is one and only one $p \in \mathcal P$ such that $N_i(p) = \alpha_i$ for all $i$.
+The condition that $\mathcal N$ is a basis of $\mathcal P^*$ says that the degrees of freedom describe the functions of $\mathcal P$ exactly: for any choice of numbers $\alpha_1, \dots, \alpha_n$, where $n = \dim \mathcal P$ is the number of degrees of freedom, there is one and only one $p \in \mathcal P$ such that $N_i(p) = \alpha_i$ for all $i$.
 It can be checked as we did in the examples.
 \begin{lemma}[How to check that $\mathcal N$ is a basis of $\mathcal P^*$]
     \label{lem:FEM unisolvence}
-    Let $\mathcal P$ be a space of dimension $N$ and let $N_1, \dots, N_N$ be linear functionals on $\mathcal P$.
-    Then $\{N_1, \dots, N_N\}$ is a basis of $\mathcal P^*$ if and only if
+    Let $\mathcal P$ be a space of dimension $n$ and let $N_1, \dots, N_n$ be linear functionals on $\mathcal P$.
+    Then $\{N_1, \dots, N_n\}$ is a basis of $\mathcal P^*$ if and only if
     \begin{equation*}
-        p \in \mathcal P \text{ and } N_i(p) = 0 \text{ for all } i \in \{1, \dots, N\} \implies p = 0.
+        p \in \mathcal P \text{ and } N_i(p) = 0 \text{ for all } i \in \{1, \dots, n\} \implies p = 0.
     \end{equation*}
 \end{lemma}
 \begin{proof}
-    Consider the linear map $\Phi : \mathcal P \to \mathbb R^N$ given by $\Phi(p) = (N_1(p), \dots, N_N(p))$.
+    Consider the linear map $\Phi : \mathcal P \to \mathbb R^n$ given by $\Phi(p) = (N_1(p), \dots, N_n(p))$.
     The condition of the statement says that $\Phi$ is injective.
-    Since both spaces have dimension $N$, this is equivalent to $\Phi$ being bijective, i.e., to the fact that for every $\alpha \in \mathbb R^N$ there is a unique $p \in \mathcal P$ with $N_i(p) = \alpha_i$.
-    Taking $\alpha$ in the canonical basis we obtain $\psi_j \in \mathcal P$ with $N_i(\psi_j) = \delta_{ij}$, and this implies that $N_1, \dots, N_N$ are linearly independent in $\mathcal P^*$, which has dimension $N$.
+    Since both spaces have dimension $n$, this is equivalent to $\Phi$ being bijective, i.e., to the fact that for every $\alpha \in \mathbb R^n$ there is a unique $p \in \mathcal P$ with $N_i(p) = \alpha_i$.
+    Taking $\alpha$ in the canonical basis we obtain $\psi_j \in \mathcal P$ with $N_i(\psi_j) = \delta_{ij}$, and this implies that $N_1, \dots, N_n$ are linearly independent in $\mathcal P^*$, which has dimension $n$.
     Conversely, if $\{N_i\}$ is a basis of $\mathcal P^*$ and $N_i(p) = 0$ for all $i$, then $\ell(p) = 0$ for all $\ell \in \mathcal P^*$, and hence $p = 0$.
 \end{proof}
 
 \begin{definition}[Basis functions of a finite element]
-    Let $(K, \mathcal P, \mathcal N) $ be a finite element with $\mathcal N = \{N_1, \dots, N_N\}$, where $N = \# \mathcal N$.
-    The \emph{nodal basis} is the unique basis $\{\psi_1, \dots, \psi_N\}$ of $\mathcal P$ such that
+    Let $(K, \mathcal P, \mathcal N) $ be a finite element with $\mathcal N = \{N_1, \dots, N_n\}$, where $n = \# \mathcal N = \dim \mathcal P$.
+    The \emph{nodal basis} is the unique basis $\{\psi_1, \dots, \psi_n\}$ of $\mathcal P$ such that
     \begin{equation*}
-        N_i (\psi_j) = \delta_{ij}, \quad \forall i, j \in \{1, \dots, N\}.
+        N_i (\psi_j) = \delta_{ij}, \quad \forall i, j \in \{1, \dots, n\}.
     \end{equation*}
     These functions are also called \emph{nodal basis functions} or \emph{local basis functions}.
 \end{definition}
 The degrees of freedom are the coordinates in the nodal basis: every $p \in \mathcal P$ can be written as
 \begin{equation}
     \label{eq:FEM coordinates in nodal basis}
-    p = \sum_{i=1}^N N_i(p) \psi_i .
+    p = \sum_{i=1}^n N_i(p) \psi_i .
 \end{equation}
 To compute the nodal basis in practice, we write $\psi_j$ in any basis of $\mathcal P$ (for example, the monomials) and we solve the linear system $N_i(\psi_j) = \delta_{ij}$ for its coefficients.
 
@@ -190,7 +190,7 @@ To compute the nodal basis in practice, we write $\psi_j$ in any basis of $\math
     Let $(K, \mathcal P, \mathcal N)$ be a finite element,
     and let $\psi_i$ be the basis functions. We define the \emph{local interpolation} as the map
     \begin{equation*}
-        \mathcal I_K v = \sum_{i=1}^N N_i (v) \psi_i.
+        \mathcal I_K v = \sum_{i=1}^n N_i (v) \psi_i.
     \end{equation*}
 \end{definition}
 Notice that the interpolant can be extended to any functional space $X$ such that $N_i : X \to \mathbb R$ for all $i$.
@@ -545,7 +545,7 @@ The two examples above only used the following property.
     \begin{enumerate}
         \item $F(\widehat K) = K$,
         \item $\mathcal P = \{ \widehat p \circ F^{-1} : \widehat p \in \widehat{\mathcal P} \}$, i.e., $v \in \mathcal P$ if and only if $v \circ F \in \widehat{\mathcal P}$,
-        \item $\mathcal N = \{ N_1, \dots, N_N\}$ and $\widehat{\mathcal N} = \{ \widehat N_1, \dots, \widehat N_N \}$ with $N_i (v) = \widehat N_i (v \circ F)$.
+        \item $\mathcal N = \{ N_1, \dots, N_n\}$ and $\widehat{\mathcal N} = \{ \widehat N_1, \dots, \widehat N_n \}$ with $N_i (v) = \widehat N_i (v \circ F)$.
     \end{enumerate}
 \end{definition}
 In the usual notation of pull-backs and push-forwards, the last two conditions read $F^* \mathcal P = \widehat{\mathcal P}$ and $F_* \widehat{\mathcal N} = \mathcal N$, where $F^* v = v \circ F$ and $(F_* \widehat N) (v) = \widehat N (F^* v)$.
@@ -566,7 +566,7 @@ In the usual notation of pull-backs and push-forwards, the last two conditions r
 \begin{proof}
     The functions $\widehat \psi_j \circ F^{-1}$ belong to $\mathcal P$ and $N_i (\widehat \psi_j \circ F^{-1}) = \widehat N_i (\widehat \psi_j) = \delta_{ij}$. By the uniqueness of the nodal basis, $\psi_j = \widehat \psi_j \circ F^{-1}$. Therefore
     \begin{equation*}
-        (\mathcal I_K v) \circ F = \sum_{i=1}^N N_i(v)\, \psi_i \circ F = \sum_{i=1}^N \widehat N_i (v \circ F)\, \widehat \psi_i = \mathcal I_{\widehat K} (v \circ F). \qedhere
+        (\mathcal I_K v) \circ F = \sum_{i=1}^n N_i(v)\, \psi_i \circ F = \sum_{i=1}^n \widehat N_i (v \circ F)\, \widehat \psi_i = \mathcal I_{\widehat K} (v \circ F). \qedhere
     \end{equation*}
 \end{proof}
 
@@ -609,7 +609,7 @@ The rigorous version of this idea is the Bramble--Hilbert lemma (\Cref{lem:Bramb
     Since $d \le 3$, the functions of $H^2(\widehat K)$ are continuous in $\overline{\widehat K}$ and $\max |\widehat v| \le C \| \widehat v \|_{H^2(\widehat K)}$.
     Hence $|\widehat N_i (\widehat v)| \le C \| \widehat v \|_{H^2(\widehat K)}$, and the error operator
     \begin{equation*}
-        E (\widehat v) = \widehat v - \mathcal I_{\widehat K} \widehat v = \widehat v - \sum_{i=1}^N \widehat N_i (\widehat v)\, \widehat \psi_i
+        E (\widehat v) = \widehat v - \mathcal I_{\widehat K} \widehat v = \widehat v - \sum_{i=1}^n \widehat N_i (\widehat v)\, \widehat \psi_i
     \end{equation*}
     is linear and continuous from $H^2(\widehat K)$ to $H^1(\widehat K)$.
     By \eqref{eq:FEM interpolant reproduces P}, $E(p) = 0$ for all polynomials $p$ of degree at most $1$.

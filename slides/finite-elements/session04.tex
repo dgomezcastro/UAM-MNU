@@ -94,23 +94,23 @@
         \begin{enumerate}
             \item $K \subset \R^d$ is a bounded, simply connected open set with piece-wise smooth boundary (the \emph{element domain});
             \item $\mathcal P$ is a finite-dimensional space of functions on $K$ (the \emph{shape functions});
-            \item $\mathcal N = \{N_1, \dots, N_N\}$ is a basis of $\mathcal P^*$ (the \emph{degrees of freedom}, or \emph{nodal functions}).
+            \item $\mathcal N = \{N_1, \dots, N_n\}$ is a basis of $\mathcal P^*$ (the \emph{degrees of freedom}, or \emph{nodal functions}).
         \end{enumerate}
     \end{definition}
     \begin{itemize}
         \item In practice: $\mathcal P$ polynomials; $N_i$ values of $v$ (or of its derivatives) at some points, the \emph{nodes}.
-        \item ``Basis of $\mathcal P^*$'': for any numbers $\alpha_1, \dots, \alpha_N$ there is exactly one $p \in \mathcal P$ with $N_i(p) = \alpha_i$.
-        \item How to check it: \ $\dim \mathcal P = N$ \ and \ $\big( N_i(p) = 0 \ \forall i \Rightarrow p = 0 \big)$.
+        \item ``Basis of $\mathcal P^*$'': for any numbers $\alpha_1, \dots, \alpha_n$ there is exactly one $p \in \mathcal P$ with $N_i(p) = \alpha_i$.
+        \item How to check it: \ $\dim \mathcal P = n$ \ and \ $\big( N_i(p) = 0 \ \forall i \Rightarrow p = 0 \big)$.
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Nodal basis and local interpolant}
     \begin{definition}[Nodal basis]
-        The unique basis $\{\psi_1, \dots, \psi_N\}$ of $\mathcal P$ such that \ $N_i(\psi_j) = \delta_{ij}$.
+        The unique basis $\{\psi_1, \dots, \psi_n\}$ of $\mathcal P$ such that \ $N_i(\psi_j) = \delta_{ij}$.
     \end{definition}
     \begin{definition}[Local interpolant]
         \[
-            \mathcal I_K v = \sum_{i=1}^N N_i(v)\, \psi_i .
+            \mathcal I_K v = \sum_{i=1}^n N_i(v)\, \psi_i .
         \]
     \end{definition}
     \begin{itemize}
