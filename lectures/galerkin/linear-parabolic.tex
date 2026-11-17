@@ -3,10 +3,30 @@
 \section{Linear Parabolic Problems}
 
 For this section we loosely follow \cite[Chapter 11]{QuarteroniValli1994}.
-Parabolic problems like the heat equation can be written as
+As a model problem we will use the heat equation.
+\begin{example}[Heat equation in $(0,1)$ with Dirichlet boundary condition]
+    \label{ex:Galerkin heat d=1}
+    Consider the problem
+    \begin{equation*}
+        \frac{\partial u}{\partial t} - \frac{\partial^2 u}{\partial x^2} = f \text{ in } (0,T) \times (0,1), \qquad u(t,0) = u(t,1) = 0, \qquad u(0,x) = u_0(x).
+    \end{equation*}
+    We look at $u$ as a function of time with values in a space of functions of $x$, i.e. we write $u(t) = u(t, \cdot)$ and $f(t) = f(t, \cdot)$, and we denote the time derivative by $\frac{\diff u}{\diff t}(t)$.
+    For each fixed $t \in (0,T)$ we multiply the equation by a test function $v \in H_0^1(0,1)$, which does not depend on time, and integrate by parts only in space, as in \Cref{ex:Galerkin Laplace d=1}.
+    The classical solutions of this problem satisfy the \emph{weak-in-space formulation}
+    \begin{equation*}
+        \int_0^1 \frac{\diff u}{\diff t}(t) \, v + \int_0^1 \frac{\partial u}{\partial x}(t) \frac{\diff v}{\diff x} = \int_0^1 f(t) \, v, \qquad \forall v \in H_0^1(0,1), \ t \in (0,T),
+    \end{equation*}
+    together with the initial condition $u(0) = u_0$.
+    With $H = L^2(0,1)$, $V = H^1_0(0,1)$ and $a(u,v) = \int_0^1 \frac{\diff u}{\diff x}\frac{\diff v}{\diff x}$ this reads
+    \begin{equation*}
+        \prodH{\frac{\diff u}{\diff t}(t)}{v} + a(u(t), v) = \prodH{f(t)}{v}, \qquad \forall v \in V, \ t \in (0,T).
+    \end{equation*}
+\end{example}
+In general, parabolic problems like the heat equation can be written as
 \begin{equation*}
     \frac{\diff u}{\diff t}(t) + A u(t) = f(t), \qquad \forall t \in (0,T).
 \end{equation*}
+In \Cref{ex:Galerkin heat d=1} we have $A = -\frac{\diff^2}{\diff x^2}$.
 If $\prodH{Au}{v} = a(u,v)$ for $u \in D_H(A)$ and $v \in V$ (see \Cref{sec:Galerkin linear problems Hilbert space}) we arrive at the weak formulation
 \begin{equation}
     \tag{C}
@@ -164,7 +184,7 @@ a linear system of ODEs with constant coefficients. If $f \in C([0,T];H)$, it ha
 \end{equation*}
 \begin{example}[Heat equation in $(0,1)$ with piece-wise linear functions]
     \label{ex:Galerkin heat piece-wise linear}
-    Consider the heat equation $\frac{\partial u}{\partial t} - \frac{\partial^2 u}{\partial x^2} = f$ in $(0,1)$ with homogeneous Dirichlet conditions, i.e. $V = H^1_0(0,1)$, $H = L^2(0,1)$, $a(u,v) = \int_0^1 \frac{\diff u}{\diff x}\frac{\diff v}{\diff x}$.
+    Consider the heat equation in $(0,1)$ with homogeneous Dirichlet conditions of \Cref{ex:Galerkin heat d=1}, i.e. $V = H^1_0(0,1)$, $H = L^2(0,1)$, $a(u,v) = \int_0^1 \frac{\diff u}{\diff x}\frac{\diff v}{\diff x}$.
     For the hat functions of \Cref{ex:piece-wise linear in d=1} on the uniform mesh $x_i = ih$, a direct computation gives
     \begin{equation*}
         \int_0^1 \varphi_i^2 = \frac{2h}{3}, \qquad \int_0^1 \varphi_i \varphi_{i \pm 1} = \frac{h}{6},

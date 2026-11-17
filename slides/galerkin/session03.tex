@@ -27,8 +27,18 @@
 \end{frame}
 
 \begin{frame}{Parabolic problems: weak formulation}
-  Heat-type equations: \quad $\dfrac{\diff u}{\diff t} + Au = f(t)$, \quad $t \in (0,T)$, \quad $u(0) = u_0$.
-  \medskip
+  \begin{example}[Heat equation in $(0,1)$ with Dirichlet conditions]
+    $u_t - u_{xx} = f$ in $(0,T) \times (0,1)$, \quad $u(t,0) = u(t,1) = 0$, \quad $u(0,x) = u_0(x)$.
+    \smallskip
+
+    See $u$ as $t \mapsto u(t) = u(t,\cdot)$. Multiply by $v = v(x)$ and integrate by parts \alert{only in space}:
+    \[
+      \int_0^1 \frac{\diff u}{\diff t}(t)\, v + \int_0^1 u_x(t)\, v_x = \int_0^1 f(t)\, v
+      \qquad \forall v \in H^1_0(0,1),\ t \in (0,T).
+    \]
+    Here $V = H^1_0(0,1)$, $H = L^2(0,1)$, $a(u,v) = \int_0^1 u_x v_x$.
+  \end{example}
+  In general: \quad $\dfrac{\diff u}{\diff t} + Au = f(t)$, \quad $t \in (0,T)$, \quad $u(0) = u_0$.
 
   With $\prodH{Au}{v} = a(u,v)$ (Session 1) we get the weak formulation:
   \[
@@ -39,9 +49,6 @@
       u(0) = u_0.
     \end{cases}
   \]
-  \begin{example}[Heat equation in $(0,1)$]
-    $u_t - u_{xx} = f$, $u(t,0) = u(t,1) = 0$: \ $V = H^1_0(0,1)$, $H = L^2(0,1)$, $a(u,v) = \int_0^1 u_x v_x$.
-  \end{example}
 \end{frame}
 
 \begin{frame}{Energy estimates}
