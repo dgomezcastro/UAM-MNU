@@ -11,7 +11,7 @@
 \begin{frame}{Plan for today}
     \begin{enumerate}
         \item Sturm--Liouville problems and orthogonal polynomials.
-        \item Polynomial interpolation: Lebesgue constant, Chebyshev nodes, Runge's phenomenon.
+        \item Polynomial interpolation: Lebesgue constant, Chebyshev nodes, \mbox{Runge's phenomenon.}
         \item Gauss and Gauss--Lobatto quadrature.
         \item Legendre polynomials.
         \item Chebyshev polynomials.
@@ -30,7 +30,7 @@
     \begin{lemma}[Singular case $p(\pm1) = 0$]
         If $u_\lambda, u_\mu \in C^2([-1,1])$ are eigenfunctions with $\lambda \ne \mu$, then
         \(
-            (u_\lambda, u_\mu)_w \defeq \int_{-1}^1 u_\lambda u_\mu w = 0.
+        (u_\lambda, u_\mu)_w \defeq \int_{-1}^1 u_\lambda u_\mu w = 0.
         \)
     \end{lemma}
     \begin{proofsteps}
@@ -51,7 +51,7 @@
               \[
                   \hat u_k = \frac{(u, p_k)_w}{\|p_k\|_w^2}, \qquad P_N u = \sum_{k=0}^N \hat u_k p_k .
               \]
-        \item Characterisation: $(P_N u, v)_w = (u,v)_w$ for all $v \in \R_N[x]$ (orthogonal projection onto $\R_N[x]$).
+        \item Characterisation: $(P_N u, v)_w = (u,v)_w$ for all $v \in \R_N[x]$\\ (orthogonal projection onto $\R_N[x]$).
         \item Completeness (Weierstrass): $\|u - P_N u\|_w \to 0$ for every $u \in L^2_w(-1,1)$.
     \end{itemize}
 \end{frame}
@@ -69,7 +69,7 @@
         \[
             \|u - I_N u\|_\infty \le \|u - p\|_\infty + \|I_N(p - u)\|_\infty \le (1 + \Lambda_N) \inf_{p \in \R_N[x]} \|u - p\|_\infty .
         \]
-        $\Lambda_N$ grows exponentially for equi-distant nodes, but only like $\frac{2}{\pi}\log N$ for Chebyshev nodes.
+        $\Lambda_N$ grows exponentially for equi-distant nodes,\\ but only like $\frac{2}{\pi}\log N$ for Chebyshev nodes.
     \end{remark}
 \end{frame}
 
@@ -87,24 +87,24 @@
     \begin{proofsteps}
         \begin{enumerate}
             \item The $x_k$ are the roots of $T_{N+1}(x) = \cos((N+1)\arccos x)$.
-            \item Same roots, and leading coefficients $1$ and $2^N$: \ $\prod_{k}(x - x_k) = 2^{-N}\, T_{N+1}(x)$, and $|T_{N+1}| \le 1$.
+            \item Same roots, and leading coefficients $1$ and $2^N$: \ $\prod_{k}(x - x_k) = 2^{-N}\, T_{N+1}(x)$, \mbox{and $|T_{N+1}| \le 1$.}
         \end{enumerate}
     \end{proofsteps}
 \end{frame}
 
 \begin{frame}{Runge's phenomenon}
-    \begin{columns}[c]
+    \begin{columns}[c,onlytextwidth]
         \begin{column}{.5\textwidth}
             \includegraphics[width=\textwidth]{../../lectures/spectral/basis/Runge.pdf}
         \end{column}
         \begin{column}{.48\textwidth}
-            Interpolation of $f(x) = \dfrac{1}{1 + 25x^2}$ at equi-distant nodes.
+            Interpolation of $f(x) = \dfrac{1}{1 + 25x^2}$\\ at equi-distant nodes.
             \medskip
 
-            The interpolants oscillate near $\pm1$ and do \alert{not} converge uniformly. Two reasons:
+            The interpolants oscillate near $\pm1$\\ and do \alert{not} converge uniformly.\\ Two reasons:
             \begin{enumerate}
                 \item $f^{(n)}$ grows very fast with $n$;
-                \item for equi-distant nodes the factor $\max \prod_k |x - x_k|$ does not decay fast enough.
+                \item for equi-distant nodes the factor $\max \prod_k |x - x_k|$ does not decay \mbox{fast enough.}
             \end{enumerate}
             \medskip
             Remedies: choose the nodes wisely (Chebyshev), or use weights that are singular at $\pm1$, like $w = (1-x^2)^{-1/2}$.
@@ -115,7 +115,7 @@
 \begin{frame}{Gauss quadrature}
     \small
     \begin{theorem}[Gauss quadrature]
-        Let $p_k$ be orthogonal in $L^2_w(-1,1)$, $x_0, \dots, x_N$ the roots of $p_{N+1}$, and $w_j$ such that the rule is exact for $x^k$, $0 \le k \le N$. Then $w_j > 0$ and
+        Let $p_k$ be orthogonal in $L^2_w(-1,1)$, $x_0, \dots, x_N$ the roots of $p_{N+1}$,\\ and $w_j$ such that the rule is exact for $x^k$, $0 \le k \le N$. Then $w_j > 0$ and
         \[
             \sum_{j=0}^N p(x_j) w_j = \int_{-1}^1 p(x) w(x) \diff x \qquad \forall p \in \R_{2N+1}[x].
         \]
@@ -143,8 +143,9 @@
             \sum_{j=0}^N p(x_j) w_j = \int_{-1}^1 p(x)\, w_{\alpha,\beta}(x) \diff x \qquad \forall p \in \R_{2N-1}[x].
         \]
     \end{theorem}
+    \vspace{-1pt}% the frame is 0.2pt too tall otherwise
     \begin{itemize}
-        \item We lose two degrees of exactness ($2N-1$ instead of $2N+1$) because two nodes are fixed.
+        \item We lose two degrees of exactness ($2N-1$ instead of $2N+1$)\\ because two nodes are fixed.
         \item Differentiation: $\mat D_N$ maps nodal values to the values of $\frac{\diff}{\diff x} I_N u$, and $\mat D_N^{(2)} = \mat D_N^2$.
     \end{itemize}
 \end{frame}
@@ -168,7 +169,7 @@
     \]
     ($I_N$ at Gauss or Gauss--Lobatto nodes), and for the $H^1$-orthogonal projection $\Pi^1_N$:
     \(
-        \|u - \Pi^1_N u\|_{H^1} \le C N^{1-m}\|u\|_{H^m}.
+    \|u - \Pi^1_N u\|_{H^1} \le C N^{1-m}\|u\|_{H^m}.
     \)
 \end{frame}
 
@@ -200,19 +201,19 @@
     \]
     \begin{itemize}
         \item Recurrence: $T_0 = 1$, $T_1 = x$, $T_{n+1} = 2x T_n - T_{n-1}$ (leading coefficient $2^{n-1}$).
-        \item The singular weight gives more importance to $\pm1$, where interpolation errors concentrate.
+        \item The singular weight gives more importance to $\pm1$,\\ where interpolation errors concentrate.
         \item \textbf{Chebyshev--Gauss:} $x_j = \cos\frac{(2j+1)\pi}{2N+2}$, \ $w_j = \frac{\pi}{N+1}$.
         \item \textbf{Chebyshev--Gauss--Lobatto:} $x_k = \cos\frac{k\pi}{N}$, \ $w_0 = w_N = \frac{\pi}{2N}$, \ $w_k = \frac{\pi}{N}$ otherwise.
-        \item Approximation: $\|u - P_N u\|_{L^2_w} \le C N^{-m}\|u\|_{H^m_w}$; the same for $I_N$ at these nodes ($m \ge 1$).
-        \item Derivatives via $U_n(x) = \frac{\sin((n+1)\arccos x)}{\sin(\arccos x)}$: \ $T_n' = n U_{n-1}$. Explicit $\mat D_N$ in Canuto et al.
+        \item Approximation: $\|u - P_N u\|_{L^2_w} \le C N^{-m}\|u\|_{H^m_w}$;\\ the same for $I_N$ at these nodes ($m \ge 1$).
+        \item Derivatives via $U_n(x) = \frac{\sin((n+1)\arccos x)}{\sin(\arccos x)}$: \ $T_n' = n U_{n-1}$. \mbox{Explicit $\mat D_N$ in Canuto et al.}
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Summary and practice}
     \begin{itemize}
-        \item Singular Sturm--Liouville problems $\Rightarrow$ orthogonal polynomials (Legendre $w = 1$, Chebyshev $w = (1-x^2)^{-1/2}$).
-        \item Interpolation: use the zeros of orthogonal polynomials, not equi-distant nodes (Runge).
-        \item Gauss quadrature: $N+1$ nodes, exact up to degree $2N+1$ ($2N-1$ for Gauss--Lobatto).
+        \item Singular Sturm--Liouville problems $\Rightarrow$ orthogonal polynomials\\ (Legendre $w = 1$, Chebyshev $w = (1-x^2)^{-1/2}$).
+        \item Interpolation: use the zeros of orthogonal polynomials,\\ not equi-distant nodes (Runge).
+        \item Gauss quadrature: $N+1$ nodes, exact up to degree $2N+1$ \mbox{($2N-1$ for Gauss--Lobatto).}
         \item Error $O(N^{-m})$ for $u \in H^m$: spectral accuracy, also for non-periodic problems.
     \end{itemize}
     \bigskip

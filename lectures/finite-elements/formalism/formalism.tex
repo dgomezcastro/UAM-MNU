@@ -438,15 +438,15 @@ The role that $h$ played in $d = 1$ is now played by the matrix norm $\|\mat A\|
     Let $\widehat K, K \subset \mathbb R^d$ be open sets and let $F(\widehat x) = \mat A \widehat x + \vec b$ be an invertible affine map such that $F(\widehat K) = K$.
     Let $v \in H^2(K)$ and $\widehat v = v \circ F$. Then $\widehat v \in H^2(\widehat K)$ and
     \begin{align*}
-        \| \widehat v \|_{L^2(\widehat K)}  & = |\det \mat A|^{-\frac 1 2} \| v \|_{L^2(K)},
+        \| \widehat v \|_{L^2(\widehat K)} & = |\det \mat A|^{-\frac 1 2} \| v \|_{L^2(K)},
         \\
-        [ \widehat v ]_{H^1(\widehat K)} & \le \|\mat A\|\, |\det \mat A|^{-\frac 1 2} [ v ]_{H^1(K)},
-                                         &
-        [ v ]_{H^1(K)}                   & \le \|\mat A^{-1}\|\, |\det \mat A|^{\frac 1 2} [ \widehat v ]_{H^1(\widehat K)},
+        [ \widehat v ]_{H^1(\widehat K)}   & \le \|\mat A\|\, |\det \mat A|^{-\frac 1 2} [ v ]_{H^1(K)},
+                                           &
+        [ v ]_{H^1(K)}                     & \le \|\mat A^{-1}\|\, |\det \mat A|^{\frac 1 2} [ \widehat v ]_{H^1(\widehat K)},
         \\
-        [ \widehat v ]_{H^2(\widehat K)} & \le \|\mat A\|^2\, |\det \mat A|^{-\frac 1 2} [ v ]_{H^2(K)},
-                                         &
-        [ v ]_{H^2(K)}                   & \le \|\mat A^{-1}\|^2\, |\det \mat A|^{\frac 1 2} [ \widehat v ]_{H^2(\widehat K)},
+        [ \widehat v ]_{H^2(\widehat K)}   & \le \|\mat A\|^2\, |\det \mat A|^{-\frac 1 2} [ v ]_{H^2(K)},
+                                           &
+        [ v ]_{H^2(K)}                     & \le \|\mat A^{-1}\|^2\, |\det \mat A|^{\frac 1 2} [ \widehat v ]_{H^2(\widehat K)},
     \end{align*}
     where $\| \mat A \|$ is the matrix norm associated to the Euclidean norm in $\mathbb R^d$.
 \end{lemma}
@@ -1045,7 +1045,7 @@ Given a sub-division $\mathcal T$, we denote
 \begin{equation*}
     h = \max_{K \in \mathcal T} h_K,
     \qquad
-    \mu_* = \min_{K \in \mathcal T} \mu_K = \min_{K \in \mathcal T} \frac{\rho_K}{h_K}.
+    \mu_{\mathcal T} = \min_{K \in \mathcal T} \mu_K = \min_{K \in \mathcal T} \frac{\rho_K}{h_K}.
 \end{equation*}
 The number $h$ is called the \emph{mesh size}.
 
@@ -1056,9 +1056,9 @@ The number $h$ is called the \emph{mesh size}.
     \begin{equation*}
         \| v - \mathcal I_{\mathcal T} v \|_{L^2(\Omega)} \le C h^2\, [ v ]_{H^2(\Omega)},
         \qquad
-        [ v - \mathcal I_{\mathcal T} v ]_{H^1(\Omega)} \le \frac{C}{\mu_*} h\, [ v ]_{H^2(\Omega)},
+        [ v - \mathcal I_{\mathcal T} v ]_{H^1(\Omega)} \le \frac{C}{\mu_{\mathcal T}} h\, [ v ]_{H^2(\Omega)},
     \end{equation*}
-    where $C$ depends only on the dimension. In $d = 1$ we have $\mu_* = 1$.
+    where $C$ depends only on the dimension. In $d = 1$ we have $\mu_{\mathcal T} = 1$.
 \end{strongtheorem}
 \begin{proof}
     Since $d \le 2$, the function $v$ is continuous in $\overline \Omega$.
@@ -1071,8 +1071,8 @@ The number $h$ is called the \emph{mesh size}.
          & = \sum_{K \in \mathcal T} [ v - \mathcal I_K v ]_{H^1(K)}^2
         \le \sum_{K \in \mathcal T} \frac{C^2}{\mu_K^2} h_K^2\, [ v ]_{H^2(K)}^2
         \\
-         & \le \frac{C^2}{\mu_*^2} h^2 \sum_{K \in \mathcal T} [ v ]_{H^2(K)}^2
-        = \frac{C^2}{\mu_*^2} h^2\, [ v ]_{H^2(\Omega)}^2 .
+         & \le \frac{C^2}{\mu_{\mathcal T}^2} h^2 \sum_{K \in \mathcal T} [ v ]_{H^2(K)}^2
+        = \frac{C^2}{\mu_{\mathcal T}^2} h^2\, [ v ]_{H^2(\Omega)}^2 .
     \end{align*}
     The estimate in $L^2(\Omega)$ is analogous.
 \end{proof}
@@ -1091,7 +1091,7 @@ Combining this result with Céa's lemma we obtain the convergence of the finite-
     \end{equation*}
     be the space of continuous piece-wise linear functions that vanish on $\partial \Omega$, and let $u_h \in V_h$ be the solution of Galerkin's method \eqref{eq:Galerkin elliptic variational discrete}. Then
     \begin{equation*}
-        \| u - u_h \|_{H^1(\Omega)} \le \frac{C}{\mu_*} h\, [ u ]_{H^2(\Omega)},
+        \| u - u_h \|_{H^1(\Omega)} \le \frac{C}{\mu_{\mathcal T}} h\, [ u ]_{H^2(\Omega)},
     \end{equation*}
     where $C$ depends only on $\Omega$.
 \end{strongtheorem}
@@ -1101,19 +1101,19 @@ Combining this result with Céa's lemma we obtain the convergence of the finite-
         \| u - u_h \|_{H^1(\Omega)} \le \frac{M}{\alpha^*} \| u - v_h \|_{H^1(\Omega)} \qquad \text{for all } v_h \in V_h.
     \end{equation*}
     We choose $v_h = \mathcal I_{\mathcal T} u$. It belongs to $V_h$: it is continuous and piece-wise linear by \Cref{thm:FEM interpolation error linear elements}, and it vanishes on $\partial \Omega$ because $u$ vanishes at the vertices that lie on $\partial \Omega$ and $\mathcal I_{\mathcal T} u$ is linear on each edge.
-    Using \Cref{thm:FEM interpolation error linear elements}, $h \le \operatorname{diam}(\Omega)$ and $\mu_* \le 1$, we conclude that
+    Using \Cref{thm:FEM interpolation error linear elements}, $h \le \operatorname{diam}(\Omega)$ and $\mu_{\mathcal T} \le 1$, we conclude that
     \begin{equation*}
         \| u - \mathcal I_{\mathcal T} u \|_{H^1(\Omega)}
         \le \| u - \mathcal I_{\mathcal T} u \|_{L^2(\Omega)} + [ u - \mathcal I_{\mathcal T} u ]_{H^1(\Omega)}
-        \le C \Big( h^2 + \frac{h}{\mu_*} \Big) [ u ]_{H^2(\Omega)}
-        \le \frac{C}{\mu_*} h\, [ u ]_{H^2(\Omega)}. \qedhere
+        \le C \Big( h^2 + \frac{h}{\mu_{\mathcal T}} \Big) [ u ]_{H^2(\Omega)}
+        \le \frac{C}{\mu_{\mathcal T}} h\, [ u ]_{H^2(\Omega)}. \qedhere
     \end{equation*}
 \end{proof}
 \begin{remark}
     \begin{enumerate}
-        \item The assumption $u \in H^2(\Omega)$ holds, for example, if $\Omega$ is convex. In that case, the duality argument of \namedCref{lem:Aubin-Nietsche} gives the better rate $\| u - u_h \|_{L^2(\Omega)} \le \frac{C}{\mu_*^2} h^2 \| f \|_{L^2(\Omega)}$.
-        \item The constant in the displayed bound blows up if the triangles become flat; this does not by itself show that the optimal error constant diverges. A family of triangulations such that $\mu_* \ge \mu > 0$, with $\mu$ independent of $h$, is called \emph{shape regular}. For such a family the method converges with order $h$ in $H^1(\Omega)$.
-        \item The same proof works in $d = 1$, where $\mu_* = 1$.
+        \item The assumption $u \in H^2(\Omega)$ holds, for example, if $\Omega$ is convex. In that case, the duality argument of \namedCref{lem:Aubin-Nietsche} gives the better rate $\| u - u_h \|_{L^2(\Omega)} \le \frac{C}{\mu_{\mathcal T}^2} h^2 \| f \|_{L^2(\Omega)}$.
+        \item The constant in the displayed bound blows up if the triangles become flat; this does not by itself show that the optimal error constant diverges. A family of triangulations such that $\mu_{\mathcal T} \ge \mu > 0$, with $\mu$ independent of $h$, is called \emph{shape regular}. For such a family the method converges with order $h$ in $H^1(\Omega)$.
+        \item The same proof works in $d = 1$, where $\mu_{\mathcal T} = 1$.
     \end{enumerate}
 \end{remark}
 

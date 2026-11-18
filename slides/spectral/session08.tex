@@ -16,7 +16,7 @@
         \item Linear algebra of collocation: differentiation matrices.
     \end{enumerate}
     \bigskip
-    \takeaway{From now on we follow mostly Canuto, Hussaini, Quarteroni and Zang, \emph{Spectral Methods} (2011).}
+    \takeaway{From now on we follow mostly \\ Canuto, Hussaini, Quarteroni and Zang, \emph{Spectral Methods} (2011).}
 \end{frame}
 
 \begin{frame}{Spectral methods vs finite elements}
@@ -25,13 +25,13 @@
     \begin{center}
         \begin{tabular}{@{}lll@{}}
             \toprule
-                         & Finite elements                   & Spectral methods                       \\
+                       & Finite elements           & Spectral methods                    \\
             \midrule
-            Basis        & local support (pieces)            & global (whole domain)                  \\
-            Refinement   & $h \to 0$, fixed degree           & fixed domain, degree $N \to \infty$    \\
-            Matrices     & sparse                            & usually full                           \\
-            Accuracy     & $O(h^{p})$ for degree $p$         & depends on the smoothness of $u$       \\
-            Geometry     & complex domains                   & simple domains (intervals, boxes)      \\
+            Basis      & local support (pieces)    & global (whole domain)               \\
+            Refinement & $h \to 0$, fixed degree   & fixed domain, degree $N \to \infty$ \\
+            Matrices   & sparse                    & usually full                        \\
+            Accuracy   & $O(h^{p})$ for degree $p$ & depends on the smoothness of $u$    \\
+            Geometry   & complex domains           & simple domains (intervals, boxes)   \\
             \bottomrule
         \end{tabular}
     \end{center}
@@ -39,14 +39,14 @@
     \textbf{Accuracy of spectral methods} (with periodicity or the right endpoint conditions):
     \begin{itemize}
         \item $u \in C^\infty$: error $O(N^{-m})$ for every $m$ (faster than any power);
-        \item $u$ analytic in a neighbourhood of the domain: \alert{geometric} (exponential) convergence, $O(\rho^{-N})$ with $\rho > 1$.
+        \item $u$ analytic in a neighbourhood of the domain:\\ \alert{geometric} (exponential) convergence, $O(\rho^{-N})$ with $\rho > 1$.
     \end{itemize}
     {\small Spectral-element methods combine both ideas: high degree on each element.}
 \end{frame}
 
 \begin{frame}{Galerkin and collocation}
     \begin{enumerate}
-        \item \textbf{Galerkin methods.} Keep the variational formulation (as in (E)), but restrict to a finite-dimensional space:
+        \item \textbf{Galerkin methods.} Keep the variational formulation (as in (E)),\\ but restrict to a finite-dimensional space:
               \[
                   u_N \in V_N, \qquad a(u_N, v_N) = \ell(v_N) \quad \forall v_N \in V_N.
               \]
@@ -83,20 +83,20 @@
 \end{frame}
 
 \begin{frame}{Chebyshev--Gauss--Lobatto points}
-    \begin{columns}[c]
+    \begin{columns}[c,onlytextwidth]
         \begin{column}{.55\textwidth}
             \[
                 x_j = \cos\frac{j\pi}{N}, \qquad j = 0, \dots, N .
             \]
             \begin{itemize}
-                \item Projections of equi-spaced points on the half circle.
+                \item Projections of equi-spaced points \mbox{on the half circle.}
                 \item They cluster near $\pm 1$.
                 \item Natural basis: Chebyshev polynomials
                       \[
                           T_k(x) = \cos(k \arccos x),
                       \]
                       and we write $u_N = \sum_{k=0}^N a_k T_k$.
-                \item $T_k(x_j) = \cos\frac{kj\pi}{N}$: the system is easy to write.
+                \item $T_k(x_j) = \cos\frac{kj\pi}{N}$:\\ the system is easy to write.
             \end{itemize}
         \end{column}
         \begin{column}{.42\textwidth}
@@ -105,11 +105,11 @@
                 \draw[gray] (1,0) arc (0:180:1);
                 \draw[-{Stealth}] (-1.15,0) -- (1.2,0);
                 \foreach \j in {0,...,10} {
-                    \pgfmathsetmacro{\ang}{180*\j/10}
-                    \draw[dotted,blue] ({cos(\ang)},{sin(\ang)}) -- ({cos(\ang)},0);
-                    \fill[blue] ({cos(\ang)},{sin(\ang)}) circle (.6pt);
-                    \fill[red] ({cos(\ang)},0) circle (.9pt);
-                }
+                        \pgfmathsetmacro{\ang}{180*\j/10}
+                        \draw[dotted,blue] ({cos(\ang)},{sin(\ang)}) -- ({cos(\ang)},0);
+                        \fill[blue] ({cos(\ang)},{sin(\ang)}) circle (.6pt);
+                        \fill[red] ({cos(\ang)},0) circle (.9pt);
+                    }
                 \node[below] at (-1,0) {\scriptsize $-1$};
                 \node[below] at (1,0) {\scriptsize $1$};
                 \node at (0,-.3) {\scriptsize $N = 10$};
@@ -119,7 +119,7 @@
 \end{frame}
 
 \begin{frame}{Very fast convergence}
-    \begin{columns}[c]
+    \begin{columns}[c,onlytextwidth]
         \begin{column}{.58\textwidth}
             \includegraphics[width=\textwidth]{../../lectures/spectral/intro/convergenceChebyshev.pdf}
         \end{column}
@@ -144,10 +144,10 @@
         \begin{pmatrix} u_N(x_0) \\ \vdots \\ u_N(x_N) \end{pmatrix}
         =
         \underbrace{\begin{pmatrix}
-            \phi_{k_0}(x_0) & \cdots & \phi_{k_N}(x_0) \\
-            \vdots          &        & \vdots          \\
-            \phi_{k_0}(x_N) & \cdots & \phi_{k_N}(x_N)
-        \end{pmatrix}}_{\mat A_N}
+                \phi_{k_0}(x_0) & \cdots & \phi_{k_N}(x_0) \\
+                \vdots          &        & \vdots          \\
+                \phi_{k_0}(x_N) & \cdots & \phi_{k_N}(x_N)
+            \end{pmatrix}}_{\mat A_N}
         \begin{pmatrix} \hat u_{k_0} \\ \vdots \\ \hat u_{k_N} \end{pmatrix}.
     \]
     \begin{itemize}
@@ -176,7 +176,7 @@
     \]
     \begin{itemize}
         \item If the basis is orthogonal, $\mat B_N$ is easy to compute.
-        \item For Chebyshev--Gauss--Lobatto points, $\mat D_N$ is known explicitly (Canuto et al., Section 2.4).
+        \item For Chebyshev--Gauss--Lobatto points, $\mat D_N$ is known explicitly \mbox{(Canuto et al., Section 2.4).}
     \end{itemize}
 \end{frame}
 
@@ -184,7 +184,7 @@
     Find $u_N \in \R_N[x]$ such that $-u_N''(x_j) = f(x_j)$ for $j = 1, \dots, N-1$, and $u_N(x_0) = g(x_0)$, $u_N(x_N) = g(x_N)$.
     \[
         \begin{pmatrix}
-            \vec e_0^{\,t}             \\
+            \vec e_0^{\,t}       \\
             -\mat Z_N \mat D_N^2 \\
             \vec e_N^{\,t}
         \end{pmatrix}
@@ -207,18 +207,18 @@
     \begin{center}
         \begin{tabular}{@{}lll@{}}
             \toprule
-                                   & Galerkin                         & Collocation                       \\
+                             & Galerkin                     & Collocation                        \\
             \midrule
-            Equation imposed       & tested against $V_N$             & at the collocation points         \\
-            Natural unknowns       & coefficients $\hat u_k$          & point values $u_N(x_j)$           \\
-            Needs                  & integrals (quadrature)           & point evaluations                 \\
-            Analysis               & Céa, Aubin--Nitsche              & quadrature rules (Sessions 10--11)\\
-            Non-linear terms       & convolutions of coefficients     & point-wise products               \\
+            Equation imposed & tested against $V_N$         & at the collocation points          \\
+            Natural unknowns & coefficients $\hat u_k$      & point values $u_N(x_j)$            \\
+            Needs            & integrals (quadrature)       & point evaluations                  \\
+            Analysis         & Céa, Aubin--Nitsche          & quadrature rules (Sessions 10--11) \\
+            Non-linear terms & convolutions of coefficients & point-wise products                \\
             \bottomrule
         \end{tabular}
     \end{center}
     \bigskip
-    \textbf{Time-dependent problems.} For the heat equation $u_t = u_{xx}$ the same reasoning gives a semi-discretisation in space:
+    \textbf{Time-dependent problems.} For the heat equation $u_t = u_{xx}$ the same reasoning\\ gives a semi-discretisation in space:
     \[
         \frac{\diff}{\diff t} u_N(t, x_j) = \big(\mat D_N^2\, \vec u(t)\big)_j, \qquad j = 1, \dots, N-1,
     \]
@@ -230,12 +230,12 @@
         \item Spectral methods: global bases, very fast convergence for smooth solutions.
         \item Galerkin: variational formulation on $V_N$. Collocation: equation at the nodes.
         \item Collocation in practice: values at the nodes, differentiation matrix $\mat D_N = \mat A_N \mat B_N \mat A_N^{-1}$.
-        \item Chebyshev--Gauss--Lobatto points $x_j = \cos(j\pi/N)$ avoid the problems of equi-distant points.
+        \item Chebyshev--Gauss--Lobatto points $x_j = \cos(j\pi/N)$\\ avoid the problems of equi-distant points.
     \end{itemize}
     \bigskip
     \textbf{Practice.}
     \begin{itemize}
-        \item Notebook \notebook{lectures/spectral/intro}{colocationChebyshev.ipynb}: solve $-u'' = f$ by Chebyshev collocation and plot the error as a function of $N$.
+        \item Notebook \notebook{lectures/spectral/intro}{colocationChebyshev.ipynb}: solve $-u'' = f$\\ by Chebyshev collocation and plot the error as a function of $N$.
     \end{itemize}
     \bigskip
     \textbf{Next session:} Fourier series.

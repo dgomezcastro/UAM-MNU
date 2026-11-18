@@ -20,12 +20,12 @@
     \begin{center}
         \begin{tabular}{@{}lccc@{}}
             \toprule
-            Element         & Shape functions on $K$ & Global smoothness & Error in $H^1$ \\
+            Element        & Shape functions on $K$ & Global smoothness & Error in $H^1$ \\
             \midrule
-            Linear          & $\R_1[x]$              & $C^0$             & $O(h)$         \\
-            Lagrange        & $\R_N[x]$              & $C^0$             & $O(h^N)$       \\
-            Hermite cubics  & $\R_3[x]$              & $C^1$             & $O(h^3)$       \\
-            B-splines       & $\R_p[x]$              & $C^{p-1}$         & $O(h^p)$       \\
+            Linear         & $\R_1[x]$              & $C^0$             & $O(h)$         \\
+            Lagrange       & $\R_N[x]$              & $C^0$             & $O(h^N)$       \\
+            Hermite cubics & $\R_3[x]$              & $C^1$             & $O(h^3)$       \\
+            B-splines      & $\R_p[x]$              & $C^{p-1}$         & $O(h^p)$       \\
             \bottomrule
         \end{tabular}
     \end{center}
@@ -66,14 +66,14 @@
                   u(x) - \mathcal I_K u(x) = \frac{u^{(N+1)}(\xi(x))}{(N+1)!} \prod_{i=1}^{N+1} (x - x_i).
               \]
         \item Very good for $N$ fixed and $h \to 0$.
-        \item Dangerous for $N \to \infty$ with equi-distant nodes: \alert{Runge's phenomenon} (Session 10).
+        \item Dangerous for $N \to \infty$ with equi-distant nodes:\\ \alert{Runge's phenomenon} (Session 10).
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Hermite cubics}
     \small
     Goal: a \alert{$C^1$} global interpolant (needed e.g.\ for fourth-order problems posed in $H^2$).
-    \begin{columns}[c]
+    \begin{columns}[c,onlytextwidth]
         \begin{column}{.55\textwidth}
             On $K = (a,b)$: $\mathcal P = \R_3[x]$,
             \begin{align*}
@@ -82,8 +82,8 @@
             \end{align*}
             Nodal basis, with $\xi = \frac{x - a}{b - a}$:
             \begin{align*}
-                \psi_1 & = \theta_0(\xi),        & \psi_2 & = \theta_1(\xi),        \\
-                \psi_3 & = (b-a)\theta_2(\xi),   & \psi_4 & = (b-a)\theta_3(\xi),
+                \psi_1 & = \theta_0(\xi),      & \psi_2 & = \theta_1(\xi),      \\
+                \psi_3 & = (b-a)\theta_2(\xi), & \psi_4 & = (b-a)\theta_3(\xi),
             \end{align*}
             where $\theta_0, \dots, \theta_3$ is the nodal basis on $(0,1)$ (Exercise 2.1).
         \end{column}
@@ -106,7 +106,7 @@
     \[
         v_i(x_j) = \delta_{ij},\quad v_i'(x_j) = 0, \qquad w_i(x_j) = 0, \quad w_i'(x_j) = \delta_{ij}.
     \]
-    \begin{columns}[c]
+    \begin{columns}[c,onlytextwidth]
         \begin{column}{.5\textwidth}
             \[
                 v_i(x) =
@@ -131,10 +131,10 @@
 \end{frame}
 
 \begin{frame}{Global error and convergence}
-    The interpolant is only $C^1$ across the nodes, so it is in $H^2$ but not in $H^3$. For $j \in \{0,1,2\}$:
+    The interpolant is only $C^1$ across the nodes, so it is in $H^2$ but not in $H^3$. \mbox{For $j \in \{0,1,2\}$:}
     \begin{align*}
         [v - \mathcal I_{\mathcal T} v]_{H^j(a,b)}
-         & = \Big( \sum_{i} [v - \mathcal I_{\mathcal T} v]^2_{H^j(x_{i-1},x_i)} \Big)^{\frac12}             \\
+         & = \Big( \sum_{i} [v - \mathcal I_{\mathcal T} v]^2_{H^j(x_{i-1},x_i)} \Big)^{\frac12} \\
          & \le \Big( C \sum_i (x_i - x_{i-1})^{2(4-j)} [v]^2_{H^4(x_{i-1},x_i)} \Big)^{\frac12}
         \le C h^{4-j} [v]_{H^4(a,b)} .
     \end{align*}
@@ -148,7 +148,7 @@
 \end{frame}
 
 \begin{frame}{Implementation: back to the reference element}
-    On $K_k = (x_k, x_{k+1})$, $h_k = x_{k+1} - x_k$, $x = x_k + h_k \xi$, only $v_k, v_{k+1}, w_k, w_{k+1}$ are non-zero:
+    On $K_k = (x_k, x_{k+1})$, $h_k = x_{k+1} - x_k$, $x = x_k + h_k \xi$,\\ only $v_k, v_{k+1}, w_k, w_{k+1}$ are non-zero:
     \[
         \varphi_{g(k,\alpha)}(x) = s_{k,\alpha}\, \theta_\alpha(\xi), \qquad \alpha = 0, 1, 2, 3,
     \]
@@ -170,31 +170,31 @@
         \widehat B_{\alpha\beta} = \int_0^1 \theta_\alpha''\theta_\beta''.
     \]
     {\footnotesize\setlength{\arraycolsep}{3pt}
-    \[
-        \widehat M = \frac{1}{420}
-        \begin{pmatrix}
-            156 & 54  & 22 & -13 \\
-            54  & 156 & 13 & -22 \\
-            22  & 13  & 4  & -3  \\
-            -13 & -22 & -3 & 4
-        \end{pmatrix},
-        \ \
-        \widehat A = \frac{1}{30}
-        \begin{pmatrix}
-            36  & -36 & 3  & 3  \\
-            -36 & 36  & -3 & -3 \\
-            3   & -3  & 4  & -1 \\
-            3   & -3  & -1 & 4
-        \end{pmatrix},
-        \ \
-        \widehat B =
-        \begin{pmatrix}
-            12  & -12 & 6  & 6  \\
-            -12 & 12  & -6 & -6 \\
-            6   & -6  & 4  & 2  \\
-            6   & -6  & 2  & 4
-        \end{pmatrix}.
-    \]
+        \[
+            \widehat M = \frac{1}{420}
+            \begin{pmatrix}
+                156 & 54  & 22 & -13 \\
+                54  & 156 & 13 & -22 \\
+                22  & 13  & 4  & -3  \\
+                -13 & -22 & -3 & 4
+            \end{pmatrix},
+            \ \
+            \widehat A = \frac{1}{30}
+            \begin{pmatrix}
+                36  & -36 & 3  & 3  \\
+                -36 & 36  & -3 & -3 \\
+                3   & -3  & 4  & -1 \\
+                3   & -3  & -1 & 4
+            \end{pmatrix},
+            \ \
+            \widehat B =
+            \begin{pmatrix}
+                12  & -12 & 6  & 6  \\
+                -12 & 12  & -6 & -6 \\
+                6   & -6  & 4  & 2  \\
+                6   & -6  & 2  & 4
+            \end{pmatrix}.
+        \]
     }
     \begin{itemize}
         \item Exact Gaussian quadrature: $\theta_\alpha\theta_\beta$ has degree $6$ ($4$ points); $\widehat A$: degree $4$ ($3$ points); $\widehat B$: degree $2$ ($2$ points).
@@ -225,11 +225,11 @@
 \end{frame}
 
 \begin{frame}{B-splines}
-    Idea: basis functions that are piece-wise polynomials of degree $p$, glued with $C^{p-1}$ regularity, with the \alert{smallest possible support}.
+    Idea: basis functions that are piece-wise polynomials of degree $p$,\\ glued with $C^{p-1}$ regularity, with the \alert{smallest possible support}.
     \begin{definition}[Cox--de Boor recursion]
         Given knots $t_0 < t_1 < \cdots < t_m$,
         \begin{align*}
-            B_{i,0}(x) & = \begin{cases} 1 & x \in [t_i, t_{i+1}), \\ 0 & \text{otherwise,} \end{cases} \\
+            B_{i,0}(x) & = \begin{cases} 1 & x \in [t_i, t_{i+1}), \\ 0 & \text{otherwise,} \end{cases}                           \\
             B_{i,p}(x) & = \frac{x - t_i}{t_{i+p} - t_i} B_{i,p-1}(x) + \frac{t_{i+p+1} - x}{t_{i+p+1} - t_{i+1}} B_{i+1,p-1}(x).
         \end{align*}
     \end{definition}
@@ -241,9 +241,9 @@
 \end{frame}
 
 \begin{frame}{Quadratic B-splines}
-    \begin{columns}[c]
+    \begin{columns}[c,onlytextwidth]
         \begin{column}{.55\textwidth}
-            Reference element $K = (-1,1)$, uniform knots $t_i = 2i - 5$: three B-splines do not vanish on $K$. Shape functions:
+            Reference element $K = (-1,1)$, uniform knots $t_i = 2i - 5$: three B-splines do not vanish on~$K$. Shape functions:
             \begin{align*}
                 \psi_1(y) & = \tfrac18 (1 - 2y + y^2), \\
                 \psi_2(y) & = \tfrac14 (3 - y^2),      \\
@@ -281,7 +281,7 @@
     \end{columns}
     \medskip
     \begin{itemize}
-        \item \alert{Clamped} knot vector: repeat each end point $p+1$ times (convention: terms with zero denominator are $0$).
+        \item \alert{Clamped} knot vector: repeat each end point $p+1$ times\\ (convention: terms with zero denominator are $0$).
         \item An interior knot of multiplicity $r$ reduces the continuity to $C^{p-r}$.
     \end{itemize}
 \end{frame}
@@ -290,7 +290,7 @@
     \begin{itemize}
         \item Lagrange elements: $C^0$, high order for fixed degree.
         \item Hermite cubics: $C^1$ glueing, $\mathcal I_{\mathcal T}: H^2 \to H^2$, error $O(h^{4-j})$ in $H^j$.
-        \item Implementation: reference matrices, local-to-global map, assembly loop over elements.
+        \item Implementation: reference matrices, local-to-global map, \mbox{assembly loop over elements.}
         \item B-splines: $C^{p-1}$ piece-wise polynomials of degree $p$ with minimal support.
     \end{itemize}
     \bigskip
@@ -298,7 +298,7 @@
     \begin{itemize}
         \item Notebooks \notebook{lectures/finite-elements/d-1/Hermite}{Hermite.ipynb} and \notebook{lectures/finite-elements/d-1/Bsplines}{Bsplines.ipynb}.
         \item Exercise 3.1: the beam equation $u'''' = f$ in $(-1,1)$.
-              \board{weak formulation in $H^2$: $\int_{-1}^1 u'' v'' = \int_{-1}^1 f v$. Which boundary conditions go into $V$?}
+              \board{weak formulation in $H^2$: $\int_{-1}^1 u'' v'' = \int_{-1}^1 f v$.\\ Which boundary conditions go into $V$?}
     \end{itemize}
     \bigskip
     \textbf{Next session:} finite elements in $d = 2$.

@@ -17,15 +17,16 @@
         \item Example: Fourier--Galerkin for the periodic Laplace equation.
     \end{enumerate}
     \bigskip
-    \takeaway{Fourier series are the natural basis for periodic problems: derivatives become multiplications.}
+    \takeaway{Fourier series are the natural basis for periodic problems:\\ derivatives become multiplications.}
 \end{frame}
 
 \begin{frame}{Continuous Fourier series}
     $\phi_k(x) = e^{ikx}$, $k \in \mathbb Z$, is an orthogonal system in $L^2(0,2\pi)$:
     \(
-        \int_0^{2\pi} \phi_k \overline{\phi_l} = 2\pi\delta_{kl}.
+    \int_0^{2\pi} \phi_k \overline{\phi_l} = 2\pi\delta_{kl}.
     \)
     \begin{definition}[Fourier coefficients and truncation]
+        \vspace{-\abovedisplayskip}
         \[
             \hat u_k = \frac{1}{2\pi} \int_0^{2\pi} u(x)\, \overline{\phi_k(x)} \diff x,
             \qquad
@@ -36,15 +37,15 @@
         $S_N = \spannedby_{\mathbb C}\{\phi_k : -N/2 \le k \le N/2 - 1\}$.
     \end{definition}
     \begin{itemize}
-        \item Parseval: $\|u\|^2_{L^2(0,2\pi)} = 2\pi \sum_k |\hat u_k|^2$. Hence $P_N u \to u$ in $L^2$ for every $u \in L^2(0,2\pi)$.
-        \item If $u$ is periodic and $C^1$ (or Hölder), $P_N u \to u$ uniformly. Continuity alone is not enough.
-        \item Real $u$: $\hat u_{-k} = \overline{\hat u_k}$, so $u = \sum a_k \cos kx + b_k \sin kx$ with $\hat u_k = a_k - i b_k$.
+        \item Parseval: $\|u\|^2_{L^2(0,2\pi)} = 2\pi \sum_k |\hat u_k|^2$.\\ Hence $P_N u \to u$ in $L^2$ for every $u \in L^2(0,2\pi)$.
+        \item If $u$ is periodic and $C^1$ (or Hölder), $P_N u \to u$ uniformly.\\ Continuity alone is not enough.
+        \item Real $u$: $\hat u_{-k} = \overline{\hat u_k}$, so $u = \sum a_k \cos kx + b_k \sin kx$ with $\hat u_k = a_k - i b_k$.\\
               For real approximations use symmetric frequencies $-K, \dots, K$ (i.e.\ $N = 2K+1$).
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Gibbs' phenomenon}
-    \begin{columns}[c]
+    \begin{columns}[c,onlytextwidth]
         \begin{column}{.5\textwidth}
             \begin{example}
                 \[
@@ -52,15 +53,15 @@
                 \]
                 \[
                     \hat u_k = \begin{cases}
-                        \frac12                       & k = 0,              \\
-                        0                             & k \ne 0 \text{ even}, \\
-                        -\frac{(-1)^{(k-1)/2}}{k\pi}  & k \text{ odd}.
+                        \frac12                      & k = 0,                \\
+                        0                            & k \ne 0 \text{ even}, \\
+                        -\frac{(-1)^{(k-1)/2}}{k\pi} & k \text{ odd}.
                     \end{cases}
                 \]
             \end{example}
             \begin{itemize}
-                \item Slow decay $|\hat u_k| \sim 1/k$: $u$ is discontinuous.
-                \item Oscillations near the jumps that do not disappear as $N \to \infty$.
+                \item Slow decay $|\hat u_k| \sim 1/k$:\\ $u$ is discontinuous.
+                \item Oscillations near the jumps\\ that do not disappear as $N \to \infty$.
             \end{itemize}
         \end{column}
         \begin{column}{.48\textwidth}
@@ -83,7 +84,7 @@
               \[
                   \newnorm{u}_{H^m_p(0,2\pi)} = \Big( \sum_{k \in \mathbb Z} (1 + |k|^{2m}) |\hat u_k|^2 \Big)^{\frac 12}.
               \]
-        \item $L^2_p = L^2$: $P_N u \to u$ in $L^2$ also for non-periodic $u$. But periodicity is needed for fast convergence.
+        \item $L^2_p = L^2$: $P_N u \to u$ in $L^2$ also for non-periodic $u$.\\ But periodicity is needed for fast convergence.
     \end{itemize}
 \end{frame}
 
@@ -209,7 +210,7 @@
     \bigskip
     \textbf{Practice.} Exercise 6.1:
     \begin{itemize}
-        \item Code the Fourier--Galerkin method for the periodic Laplacian (use a library for the integrals $\hat f_k$).
+        \item Code the Fourier--Galerkin method for the periodic Laplacian\\ (use a library for the integrals $\hat f_k$).
         \item Code the Fourier collocation method with $N = 2K+1$ nodes. Solvability requires $\sum_j f(x_j) = 0$: subtract the mean of the samples if necessary.
         \item Compare the errors as functions of $N$.
     \end{itemize}

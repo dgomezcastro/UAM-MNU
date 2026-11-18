@@ -20,7 +20,7 @@
         \item Overview of the course.
     \end{enumerate}
     \bigskip
-    \takeaway{Convergence $=$ consistency $+$ stability. Quadrature rules are the key tool to analyse collocation methods.}
+    \takeaway{Convergence $=$ consistency $+$ stability.\\ Quadrature rules are the key tool to analyse collocation methods.}
 \end{frame}
 
 \begin{frame}{Chebyshev collocation for Laplace's equation}
@@ -29,7 +29,7 @@
         -u_N''(x_k) = f(x_k), \quad k = 1, \dots, N-1, \qquad u_N(x_0) = u_N(x_N) = 0.
     \]
     \begin{itemize}
-        \item \textbf{Consistency:} the exact solution almost satisfies the scheme (quite technical, we skip it).
+        \item \textbf{Consistency:} the exact solution almost satisfies the scheme \mbox{(quite technical, we skip it).}
         \item \textbf{Stability:} the discrete solution is bounded by the data, uniformly in $N$.
     \end{itemize}
     \begin{theorem}[Stability]
@@ -44,11 +44,11 @@
     \small
     Weight $w = (1-x^2)^{-1/2}$, Gauss--Lobatto weights $w_k$ (Session 10).
     \begin{enumerate}
-        \item Multiply the $k$-th equation by $u_N(x_k) w_k$ and add (the boundary terms vanish since $u_N(\pm1) = 0$):
+        \item Multiply the $k$-th equation by $u_N(x_k) w_k$ and add\\ (the boundary terms vanish since $u_N(\pm1) = 0$):
               \[
                   -\sum_{k=0}^N u_N''(x_k)\, u_N(x_k)\, w_k = \sum_{k=0}^N f(x_k)\, u_N(x_k)\, w_k .
               \]
-        \item $u_N'' u_N \in \R_{2N-2}[x]$, and Gauss--Lobatto is exact on $\R_{2N-1}[x]$: the left-hand side is $-\int_{-1}^1 u_N'' u_N w$.
+        \item $u_N'' u_N \in \R_{2N-2}[x]$, and Gauss--Lobatto is exact on $\R_{2N-1}[x]$:\\ the left-hand side is $-\int_{-1}^1 u_N'' u_N w$.
         \item Since $u_N(\pm1) = 0$ (Canuto et al., Section 7.1):
               \[
                   -\int_{-1}^1 u_N'' u_N w \ge \frac 14 \int_{-1}^1 |u_N'|^2 w \ge \frac14 \int_{-1}^1 |u_N'|^2 .
@@ -90,7 +90,7 @@
         \item Products become \alert{convolutions}: \
               $\widehat{(uv)}_k = \sum_{p + q = k} \hat u_p \hat v_q$, \ so \
               $\widehat{\big(u_N \partial_x u_N\big)}_k = \sum_{\substack{p+q = k\\ |p|,|q| \le K}} iq\, \hat u_p \hat u_q$.
-        \item Direct cost $O(N^2)$ per evaluation; it can be done faster with transform methods (Canuto et al., Section 3.4).
+        \item Direct cost $O(N^2)$ per evaluation; it can be done faster with transform methods \mbox{(Canuto et al., Section 3.4).}
         \item Conjugate symmetry is preserved: $u_N$ stays real. Initial datum: $u_N(0) = Q_N u_0$.
     \end{itemize}
 \end{frame}
@@ -101,7 +101,7 @@
         \Big( \frac{\partial u_N}{\partial t} + u_N \frac{\partial u_N}{\partial x} - \nu \frac{\partial^2 u_N}{\partial x^2} \Big)\Big|_{x = x_j} = 0, \qquad t > 0.
     \]
     \begin{remark}
-        For the product $u_N \partial_x u_N$ it is easier to work with the \alert{values} $u_N(t, x_j)$ than with the coefficients.
+        For the product $u_N \partial_x u_N$ it is easier to work with the \alert{values} $u_N(t, x_j)$ \mbox{than with the coefficients.}
     \end{remark}
     With $\vec u(t) = (u_N(t,x_0), \dots, u_N(t,x_{N-1}))^t$ and the Fourier differentiation matrix $\mat D$:
     \[
@@ -129,7 +129,7 @@
     \begin{itemize}
         \item Initial datum: $\vec u(0) = (u_0(x_0), \dots, u_0(x_N))^t$, compatible with the boundary data.
         \item A system of ODEs: choose a time integrator.
-              Explicit methods need small $\tau$: the eigenvalues of $\mat D_N^2$ grow like $N^2$ (Fourier) or $N^4$ (Chebyshev).
+              Explicit methods need small $\tau$:\\ the eigenvalues of $\mat D_N^2$ grow like $N^2$ (Fourier) or $N^4$ (Chebyshev).
     \end{itemize}
 \end{frame}
 
@@ -138,32 +138,32 @@
         \footnotesize
         \begin{tabular}{@{}lll@{}}
             \toprule
-                                & Finite elements                         & Spectral methods                           \\
+                               & Finite elements                       & Spectral methods                          \\
             \midrule
-            Framework           & Galerkin: $a(u_h, v_h) = \ell(v_h)$     & Galerkin or collocation                    \\
-            Basis               & local, piece-wise polynomials           & global: $e^{ikx}$, orthogonal polynomials  \\
-            Parameter           & mesh size $h \to 0$                     & degree $N \to \infty$                      \\
-            Error (smooth $u$)  & $O(h^{p})$ in $H^1$ for degree $p$      & faster than any power of $N$               \\
-            Matrices            & sparse, assembled element by element    & full, but structured (FFT)                 \\
-            Domains             & general (triangulations)                & simple (intervals, boxes)                  \\
-            Key tools           & Céa, Aubin--Nitsche, Bramble--Hilbert   & Parseval, quadrature, interpolation        \\
+            Framework          & Galerkin: $a(u_h, v_h) = \ell(v_h)$   & Galerkin or collocation                   \\
+            Basis              & local, piece-wise polynomials         & global: $e^{ikx}$, orthogonal polynomials \\
+            Parameter          & mesh size $h \to 0$                   & degree $N \to \infty$                     \\
+            Error (smooth $u$) & $O(h^{p})$ in $H^1$ for degree $p$    & faster than any power of $N$              \\
+            Matrices           & sparse, assembled element by element  & full, but structured (FFT)                \\
+            Domains            & general (triangulations)              & simple (intervals, boxes)                 \\
+            Key tools          & Céa, Aubin--Nitsche, Bramble--Hilbert & Parseval, quadrature, interpolation       \\
             \bottomrule
         \end{tabular}
     \end{center}
     \bigskip
-    \takeaway{The same principle everywhere: convergence $=$ stability (coercivity) $+$ approximation $+$ consistency.}
+    \takeaway{The same principle everywhere:\\ convergence $=$ stability (coercivity) $+$ approximation $+$ consistency.}
 \end{frame}
 
 \begin{frame}{Summary and practice}
     \begin{itemize}
         \item Chebyshev collocation is stable: proof by Gauss--Lobatto exactness.
-        \item Burgers: Galerkin gives convolutions of coefficients; collocation gives point-wise products of values.
-        \item Dirichlet conditions in collocation: replace the boundary equations by the boundary data.
+        \item Burgers: Galerkin gives convolutions of coefficients;\\ collocation gives point-wise products of values.
+        \item Dirichlet conditions in collocation:\\ replace the boundary equations by the boundary data.
     \end{itemize}
     \bigskip
     \textbf{Practice.} Exercise 7.1: solve numerically some of the previous systems, e.g.
     \begin{itemize}
-        \item Burgers' equation by Fourier collocation, with $u_0(x) = \sin x$ and several values of $\nu$;
+        \item Burgers' equation by Fourier collocation, with $u_0(x) = \sin x$\\ and several values of $\nu$;
         \item Burgers' equation by Chebyshev collocation with Dirichlet data.
     \end{itemize}
     Use an ODE solver for the time integration, and compare different values of $N$.

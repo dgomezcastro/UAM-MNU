@@ -17,9 +17,9 @@
         \item Linear algebra: the stiffness matrix.
     \end{enumerate}
     \bigskip
-    \takeaway{Idea of Galerkin's method: see the PDE as an equation in an infinite-dimensional space, and move it to a finite-dimensional subspace, where it can be solved.}
+    \takeaway{Idea of Galerkin's method:\\ see the PDE as an equation in an infinite-dimensional space,\\ and move it to a finite-dimensional subspace, where it can be solved.}
     \medskip
-    {\small (Finite differences instead see the PDE as relations between derivatives, and replace them by difference quotients.)}
+    {\small (Finite differences instead see the PDE as relations between derivatives,\\ and replace them by difference quotients.)}
 \end{frame}
 
 \begin{frame}{Model problem: Laplace's equation}
@@ -31,7 +31,7 @@
         \int_\Omega (-\Delta u)\, v = \int_\Omega \nabla u \cdot \nabla v - \int_{\partial \Omega} v\, \nabla u \cdot n.
     \]
     \begin{itemize}
-        \item The boundary term vanishes if $v = 0$ on $\partial\Omega$ (Dirichlet) or if $\nabla u \cdot n = 0$ on $\partial\Omega$ (Neumann).
+        \item The boundary term vanishes if $v = 0$ on $\partial\Omega$ (Dirichlet)\\ or if $\nabla u \cdot n = 0$ on $\partial\Omega$ (Neumann).
         \item We are left with the bilinear form
               \[
                   a_L(u,v) \defeq \int_\Omega \nabla u \cdot \nabla v .
@@ -87,7 +87,7 @@
     \end{theorem}
     \begin{proofsteps}[Idea of the proof (symmetric case)]
         If $a$ is also symmetric, $a(\cdot,\cdot)$ is a scalar product on $V$ with norm equivalent to $\|\cdot\|_V$.
-        Then \textup{(E)} is exactly the Riesz representation theorem for $\ell$ in $(V, a)$.
+        Then \textup{(E)} is exactly the Riesz representation theorem for $\ell$ in $(V, a)$.\\
         The general case uses Riesz and a fixed-point argument; see Brezis, Corollary 5.8.
     \end{proofsteps}
 \end{frame}
@@ -107,11 +107,11 @@
               \]
               so that $a(u,u) = \|u'\|^2_{L^2} \ge \left(1+\frac{1}{\pi^2}\right)^{-1} \|u\|_{H^1}^2$.
     \end{itemize}
-    \board{Neumann problem for $-u'' = f$ (Exercise 1.3): there is no coercivity in $H^1$ (constants!). Work in $V = \{u \in H^1 : \int_0^1 u = 0\}$.}
+    \board{Neumann problem for $-u'' = f$ (Exercise 1.3):\\ there is no coercivity in $H^1$ (constants!). Work in $V = \{u \in H^1 : \int_0^1 u = 0\}$.}
 \end{frame}
 
 \begin{frame}{From bilinear forms to operators}
-    Let $V \subset H$ be Hilbert spaces, with $V$ dense and continuously embedded in $H$ (e.g.\ $H^1_0 \subset L^2$).
+    Let $V \subset H$ be Hilbert spaces, with $V$ dense and continuously embedded in $H$ \mbox{(e.g.\ $H^1_0 \subset L^2$).}
     \begin{definition}[Operator associated to $a$]
         \[
             D_H(A) = \Big\{ u \in V : \sup_{v \in V\setminus\{0\}} \frac{|a(u,v)|}{\|v\|_H} < \infty \Big\}.
@@ -122,14 +122,14 @@
         \]
     \end{definition}
     \begin{example}[Dirichlet Laplacian in $(0,1)$]
-        $V = H^1_0(0,1)$, $H = L^2(0,1)$, $a(u,v) = \int_0^1 u'v'$. Then $A = -\Delta_D$ and
+        $V = H^1_0(0,1)$, $H = L^2(0,1)$, $a(u,v) = \int_0^1 u'v'$.\\ Then $A = -\Delta_D$ and
         $D_{L^2}(-\Delta_D) = H^2(0,1) \cap H^1_0(0,1)$.
     \end{example}
 \end{frame}
 
 \begin{frame}{Weak formulation $=$ functional equation}
     \begin{lemma}
-        Assume $V$ is dense in $H$ and $\ell(v) = \prodH{f}{v}$ with $f \in H$. Then $u \in V$ solves \textup{(E)} if and only if
+        Assume $V$ is dense in $H$ and $\ell(v) = \prodH{f}{v}$ with $f \in H$.\\ Then $u \in V$ solves \textup{(E)} if and only if
         \[
             u \in D_H(A) \quad \text{and} \quad Au = f \text{ in } H.
         \]
@@ -157,18 +157,18 @@
         \item $h$ is a discretisation parameter: we want $u_h \to u$ as $h \to 0$.
     \end{itemize}
     \bigskip
-    \takeaway{Main questions of the course: good choices of $V_h$, and estimates of $\|u - u_h\|$ in different norms.}
+    \takeaway{Main questions of the course: good choices of $V_h$,\\ and estimates of $\|u - u_h\|$ in different norms.}
 \end{frame}
 
 \begin{frame}{Example: piece-wise linear functions in $d=1$}
-    \begin{columns}[T]
+    \begin{columns}[T,onlytextwidth]
         \begin{column}{.58\textwidth}
             Mesh $0 = x_0 < x_1 < \cdots < x_N = 1$, $h_i = x_i - x_{i-1}$, $h = \max_i h_i$.
             \[
                 \varphi_i(x) =
                 \begin{cases}
-                    \dfrac{x - x_{i-1}}{h_i}     & x \in (x_{i-1}, x_i],  \\[1ex]
-                    \dfrac{x_{i+1} - x}{h_{i+1}} & x \in (x_i, x_{i+1}],   \\[1ex]
+                    \dfrac{x - x_{i-1}}{h_i}     & x \in (x_{i-1}, x_i], \\[1ex]
+                    \dfrac{x_{i+1} - x}{h_{i+1}} & x \in (x_i, x_{i+1}], \\[1ex]
                     0                            & \text{otherwise.}
                 \end{cases}
             \]
@@ -213,8 +213,8 @@
     \[
         a(\varphi_j, \varphi_i) =
         \begin{cases}
-            2/h  & i = j,         \\
-            -1/h & |i - j| = 1,   \\
+            2/h  & i = j,       \\
+            -1/h & |i - j| = 1, \\
             0    & |i-j| \ge 2,
         \end{cases}
         \qquad

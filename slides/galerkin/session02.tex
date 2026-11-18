@@ -32,7 +32,7 @@
         \]
     \end{lemma}
     \bigskip
-    \begin{columns}
+    \begin{columns}[onlytextwidth]
         \begin{column}{.55\textwidth}
             If $a$ is symmetric, $a(\cdot,\cdot)$ is a scalar product and
             \[
@@ -69,7 +69,7 @@
             \item Continuity: $\alpha^* \|u - u_h\|_V^2 \le a(u - u_h, u - v_h) \le M \|u - u_h\|_V \|u - v_h\|_V$.
         \end{enumerate}
     \end{proofsteps}
-    \takeaway{Error of the method $\le$ constant $\times$ best approximation error. We only need approximation theory!}
+    \takeaway{Error of the method $\le$ constant $\times$ best approximation error.\\ We only need approximation theory!}
 \end{frame}
 
 \begin{frame}{The symmetric case: energy norm}
@@ -135,7 +135,7 @@
 
 \begin{frame}{Error estimate for the Galerkin method}
     \begin{example}[Laplace--Dirichlet with hat functions]
-        Let $f \in L^2(0,1)$. Then $u'' = -f$, and $\|v\|_a = \|v'\|_{L^2}$. By the best approximation property:
+        Let $f \in L^2(0,1)$. Then $u'' = -f$, and $\|v\|_a = \|v'\|_{L^2}$.\\ By the best approximation property:
         \[
             \|(u - u_h)'\|_{L^2(0,1)} \le \|(u - \mathcal I_h u)'\|_{L^2(0,1)} \le \frac h \pi \|f\|_{L^2(0,1)}.
         \]
@@ -193,7 +193,7 @@
     \[
         -\diver\big(\mat A(x) \nabla u\big) = f
     \]
-    the problem is well posed, but the integrals $a(\varphi_j, \varphi_i)$, $\ell(\varphi_i)$ cannot be computed exactly.
+    the problem is well posed,\\ but the integrals $a(\varphi_j, \varphi_i)$, $\ell(\varphi_i)$ cannot be computed exactly.
     \medskip
 
     Using \alert{quadrature} we actually solve
@@ -212,8 +212,8 @@
         Let $a$ be continuous ($M$), $a$ and $a_h$ coercive ($\alpha^*$) on $V_h$. Then
         \begin{align*}
             \|u - u_h\|_V \le \inf_{w_h \in V_h} \Big[ & \Big(1 + \frac{M}{\alpha^*}\Big) \|u - w_h\|_V
-            + \frac{1}{\alpha^*} \sup_{v_h \in V_h\setminus\{0\}} \frac{|a(w_h,v_h) - a_h(w_h,v_h)|}{\|v_h\|_V} \Big] \\
-                                                       & + \frac{1}{\alpha^*} \sup_{v_h \in V_h\setminus\{0\}} \frac{|\ell(v_h) - \ell_h(v_h)|}{\|v_h\|_V}.
+                                                     + \frac{1}{\alpha^*} \sup_{v_h \in V_h\setminus\{0\}} \frac{|a(w_h,v_h) - a_h(w_h,v_h)|}{\|v_h\|_V} \Big] \\
+             & + \frac{1}{\alpha^*} \sup_{v_h \in V_h\setminus\{0\}} \frac{|\ell(v_h) - \ell_h(v_h)|}{\|v_h\|_V}.
         \end{align*}
     \end{lemma}
     \begin{proofsteps}
@@ -236,11 +236,11 @@
     \end{lemma}
     \begin{itemize}
         \item First term: \alert{approximation} error (as in Céa).
-        \item Second term: \alert{consistency} error: how well the exact solution satisfies the discrete equation.
+        \item Second term: \alert{consistency} error: how well the exact solution satisfies \mbox{the discrete equation.}
     \end{itemize}
     \takeaway{Convergence $=$ stability (coercivity) $+$ approximation $+$ consistency.}
     \medskip
-    {\small Proofs: Quarteroni--Valli, Theorem 5.5.1; Ciarlet, Handbook of Numerical Analysis, pp.~212--213.}
+    {\small Proofs: Quarteroni--Valli, Theorem 5.5.1;\\ Ciarlet, Handbook of Numerical Analysis, pp.~212--213.}
 \end{frame}
 
 \begin{frame}{Summary and practice}

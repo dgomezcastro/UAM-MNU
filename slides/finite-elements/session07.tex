@@ -27,7 +27,7 @@
 \end{frame}
 
 \begin{frame}{Lagrange triangles}
-    \begin{columns}[T]
+    \begin{columns}[T,onlytextwidth]
         \begin{column}{.48\textwidth}
             \textbf{Linear Lagrange triangle} (Session 4)
             \begin{itemize}
@@ -64,17 +64,17 @@
             \end{scope}
         \end{tikzpicture}
     \end{center}
-    \board{why is the glueing continuous? On an edge, $v \in \R_k$ is a polynomial of degree $k$ in one variable, determined by its values at the $k+1$ nodes of the edge.}
+    \board{why is the glueing continuous? On an edge, $v \in \R_k$ is a polynomial of~degree~$k$ in one variable, determined by its values at the $k+1$ nodes of the edge.}
 \end{frame}
 
 \begin{frame}{Cubic Hermite triangle and rectangles}
     \small
-    \begin{columns}[T]
+    \begin{columns}[T,onlytextwidth]
         \begin{column}{.5\textwidth}
             \textbf{Cubic Hermite triangle}
             \begin{itemize}
                 \item $\mathcal P = \R_3[x,y]$ ($\dim = 10$),
-                \item values at the vertices and the centroid $z_4$ (4),
+                \item values at the vertices\\ and the centroid $z_4$ (4),
                 \item both first derivatives at the vertices (6).
             \end{itemize}
             \textbf{Bi-linear rectangle} $K = (0,1)^2$
@@ -85,7 +85,7 @@
             \textbf{Bi-quadratic rectangle}
             \begin{itemize}
                 \item $\mathcal P = \mathbb Q_2 = \spannedby\{x^iy^j : 0 \le i,j \le 2\}$,
-                \item values at corners, mid-points of sides and centre (9).
+                \item values at corners, mid-points of sides \mbox{and centre (9).}
             \end{itemize}
         \end{column}
         \begin{column}{.46\textwidth}
@@ -118,12 +118,12 @@
     \centering
     \includegraphics[height=.78\textheight]{../../lectures/finite-elements/d-greater-1/Ciarlet_diagram.pdf}
 
-    {\scriptsize Reproduction of Figure 3.1.2 in Ciarlet, \emph{The Finite Element Method for Elliptic Problems}. Dot: evaluation; circle: also first derivatives.}
+    {\scriptsize Reproduction of Figure 3.1.2 in Ciarlet, \emph{The Finite Element Method for Elliptic Problems}.\\ Dot: evaluation; circle: also first derivatives.}
 \end{frame}
 
 \begin{frame}{The Dirichlet Laplacian with piece-wise linear functions}
     \small
-    Triangulation $\mathcal T$ of $\Omega$ with vertices $x_i$; for each $K \in \mathcal T$ an affine map $F_K: \widehat K \to K$ from the reference triangle.
+    Triangulation $\mathcal T$ of $\Omega$ with vertices $x_i$; for each $K \in \mathcal T$ an affine map $F_K: \widehat K \to K$ \mbox{from the reference triangle.}
     \medskip
 
     \textbf{Global basis.} $\varphi_i$ continuous, linear on each triangle, $\varphi_i(x_j) = \delta_{ij}$:
@@ -135,7 +135,7 @@
         \end{cases}
     \]
     \begin{itemize}
-        \item $\varphi_i$ is continuous across edges (linear on each edge, same values at the vertices), so $\varphi_i \in H^1(\Omega)$ by the glueing theorem.
+        \item $\varphi_i$ is continuous across edges (linear on each edge, same values at the vertices),\\ so $\varphi_i \in H^1(\Omega)$ by the glueing theorem.
         \item Dirichlet conditions: basis of $\mathcal P_{\mathcal T} \cap H^1_0(\Omega)$ is $\{\varphi_i : x_i \in \Omega\}$ (interior vertices).
         \item Stiffness matrix:
               \[
@@ -194,12 +194,12 @@
     \begin{itemize}
         \item This is the \alert{five-point finite-difference scheme} (with an averaged right-hand side).
         \item In matrix form: Kronecker products of the $1$-dimensional finite-difference matrix.
-        \item The finite-element framework works on any triangulation, not only on uniform grids.
+        \item The finite-element framework works on any triangulation,\\ not only on uniform grids.
     \end{itemize}
 \end{frame}
 
 \begin{frame}{General triangulations: direct computation}
-    On a triangle with vertices $P = (x_1,y_1)$, $Q = (x_2,y_2)$, $R = (x_3, y_3)$, the linear function with values $1, 0, 0$ is
+    On a triangle with vertices $P = (x_1,y_1)$, $Q = (x_2,y_2)$, $R = (x_3, y_3)$,\\ the linear function with values $1, 0, 0$ is
     \[
         \varphi(x,y) = 1 + \frac{y_2 - y_3}{D}(x - x_1) + \frac{x_3 - x_2}{D}(y - y_1),
     \]
@@ -211,14 +211,14 @@
         \item The area can also be computed with Heron's formula:
               $|K| = \sqrt{s(s-a)(s-b)(s-c)}$, \ $s = \frac{a+b+c}{2}$.
     \end{itemize}
-    \board{Exercise 2.4: write the local stiffness matrix of a triangle in terms of its edge vectors.}
+    \board{Exercise 2.4: write the local stiffness matrix of a triangle\\ in terms of its edge vectors.}
 \end{frame}
 
 \begin{frame}{General triangulations: via the reference triangle}
     \small
     If $F_K(\widehat z_{j_k}) = x_{i_k}$, change variables $x = F_K(\widehat x) = \mat A_K \widehat x + \vec b_K$:
     \begin{align*}
-        \int_K \varphi_{i_1}\varphi_{i_2}                         & = |\det \mat A_K| \int_{\widehat K} \widehat\psi_{j_1}\widehat\psi_{j_2},                                                            \\
+        \int_K \varphi_{i_1}\varphi_{i_2}                  & = |\det \mat A_K| \int_{\widehat K} \widehat\psi_{j_1}\widehat\psi_{j_2},                                                                                \\
         \int_K \nabla\varphi_{i_1}\cdot\nabla\varphi_{i_2} & = |\det \mat A_K| \int_{\widehat K} \big(\mat A_K^{-t}\widehat\nabla\widehat\psi_{j_1}\big)\cdot\big(\mat A_K^{-t}\widehat\nabla\widehat\psi_{j_2}\big).
     \end{align*}
     \begin{example}[Local mass matrix of the linear triangle]
@@ -228,7 +228,7 @@
     \textbf{Assembly} (as in $d=1$; it extends to other elements and to $d = 3$):
     \begin{enumerate}
         \item connectivity table: the three global vertex indices of each triangle;
-        \item loop over the triangles: compute the $3\times3$ local matrices and add them to the global matrix;
+        \item loop over the triangles: compute the $3\times3$ local matrices\\ and add them to the global matrix;
         \item remove the boundary vertices (Dirichlet conditions).
     \end{enumerate}
 \end{frame}
@@ -239,13 +239,13 @@
         \item Linear triangles: global hat functions (pyramids), sparse stiffness matrix.
         \item Uniform triangulation of the square: five-point finite-difference scheme.
         \item General meshes: compute on each triangle (directly or via $\widehat K$) and assemble.
-        \item Error on shape-regular meshes: $O(h)$ in $H^1$ for $u\in H^2$; $O(h^2)$ in $L^2$ also needs dual $H^2$ regularity, e.g.\ a convex polygon (Session 5).
+        \item Error on shape-regular meshes: $O(h)$ in $H^1$ for $u\in H^2$;\\ $O(h^2)$ in $L^2$ also needs dual $H^2$ regularity, e.g.\ a convex polygon (Session 5).
     \end{itemize}
     \bigskip
     \textbf{Practice.}
     \begin{itemize}
         \item Notebook \notebook{lectures/finite-elements/d-greater-1}{FEMlinear2dLaplaceDirichlet.ipynb}.
-        \item Solve $-\Delta u = f$ on a non-uniform triangulation and check the rates of convergence.
+        \item Solve $-\Delta u = f$ on a non-uniform triangulation\\ and check the rates of convergence.
     \end{itemize}
     \bigskip
     \textbf{Next session:} spectral methods.

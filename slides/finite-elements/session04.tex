@@ -13,7 +13,7 @@
     \[
         \|u - u_h\|_V \le \frac{M}{\alpha^*} \|u - \mathcal I_h u\|_V .
     \]
-    For hat functions in $d=1$ we did everything by hand. Finite elements do it systematically, in any dimension, from \alert{small and simple pieces}.
+    For hat functions in $d=1$ we did everything by hand.\\ Finite elements do it systematically, in any dimension, from \alert{small and simple pieces}.
     \begin{enumerate}
         \item \textbf{One piece}: basis, interpolant and degrees of freedom on a piece $K$. \hfill {\color{mnuaccent}today}
         \item \textbf{The error on one piece}: how large is $v - \mathcal I_K v$ if $K$ has size $h$? \hfill {\color{mnuaccent}today}
@@ -56,13 +56,13 @@
         \item They give the interpolant: \ $\mathcal I_K v = N_1(v)\, \psi_1 + N_2(v)\, \psi_2$.
     \end{itemize}
     \bigskip
-    \takeaway{Three ingredients: a piece $K$, a space of functions $\mathcal P$, and degrees of freedom $\mathcal N = \{N_1, N_2\}$.}
+    \takeaway{Three ingredients: a piece $K$, a space of functions $\mathcal P$,\\ and degrees of freedom $\mathcal N = \{N_1, N_2\}$.}
     \medskip
     {\small The end points are shared with the neighbours: this will allow us to glue the pieces (Session 5).}
 \end{frame}
 
 \begin{frame}{Example: the linear Lagrange triangle in $d = 2$}
-    \begin{columns}[c]
+    \begin{columns}[c,onlytextwidth]
         \begin{column}{.5\textwidth}
             $K$ a triangle with vertices $z_1, z_2, z_3$, and
             \[
@@ -76,30 +76,30 @@
         \end{column}
     \end{columns}
     \medskip
-    \textbf{1. Nodal basis.} $\psi_1, \psi_2, \psi_3 \in \mathcal P$ with $\psi_i(z_j) = \delta_{ij}$. For $z_1 = (0,0)$, $z_2 = (1,0)$, $z_3 = (0,1)$:
+    \textbf{1. Nodal basis.} $\psi_1, \psi_2, \psi_3 \in \mathcal P$ with $\psi_i(z_j) = \delta_{ij}$.\\ For $z_1 = (0,0)$, $z_2 = (1,0)$, $z_3 = (0,1)$:
     \[
         \psi_1 = 1 - x - y, \qquad \psi_2 = x, \qquad \psi_3 = y.
     \]
-    \textbf{2. Interpolant.} $\mathcal I_K v = v(z_1)\psi_1 + v(z_2)\psi_2 + v(z_3)\psi_3$: the plane through the three points $(z_i, v(z_i))$.
+    \textbf{2. Interpolant.} $\mathcal I_K v = v(z_1)\psi_1 + v(z_2)\psi_2 + v(z_3)\psi_3$:\\ the plane through the three points $(z_i, v(z_i))$.
     \medskip
 
     \textbf{3. Degrees of freedom.} $N_i(v) = v(z_i)$. Again $N_i(\psi_j) = \delta_{ij}$ and $\mathcal I_K v = \sum_i N_i(v)\psi_i$.
-    \board{if $p \in \mathcal P$ vanishes at the three vertices then $p = 0$ \ (use $p(x) = p(z_1) + \nabla p\cdot(x - z_1)$).}
+    \board{if $p \in \mathcal P$ vanishes at the three vertices then $p = 0$\\ (use $p(x) = p(z_1) + \nabla p\cdot(x - z_1)$).}
 \end{frame}
 
 \begin{frame}{The finite element}
-    In both examples: a piece $K$, simple functions $\mathcal P$, and numbers $\mathcal N$ that determine them.
+    In both examples: a piece $K$, simple functions $\mathcal P$,\\ and numbers $\mathcal N$ that determine them.
     \begin{definition}[Finite element (Ciarlet)]
         A finite element is a triplet $(K, \mathcal P, \mathcal N)$ where
         \begin{enumerate}
-            \item $K \subset \R^d$ is a bounded, simply connected open set with piece-wise smooth boundary (the \emph{element domain});
+            \item $K \subset \R^d$ is a bounded, simply connected open set\\ with piece-wise smooth boundary (the \emph{element domain});
             \item $\mathcal P$ is a finite-dimensional space of functions on $K$ (the \emph{shape functions});
             \item $\mathcal N = \{N_1, \dots, N_n\}$ is a basis of $\mathcal P^*$ (the \emph{degrees of freedom}, or \emph{nodal functions}).
         \end{enumerate}
     \end{definition}
     \begin{itemize}
-        \item In practice: $\mathcal P$ polynomials; $N_i$ values of $v$ (or of its derivatives) at some points, the \emph{nodes}.
-        \item ``Basis of $\mathcal P^*$'': for any numbers $\alpha_1, \dots, \alpha_n$ there is exactly one $p \in \mathcal P$ with $N_i(p) = \alpha_i$.
+        \item In practice: $\mathcal P$ polynomials; $N_i$ values of $v$ (or of its derivatives) \mbox{at some points, the \emph{nodes}.}
+        \item ``Basis of $\mathcal P^*$'': for any numbers $\alpha_1, \dots, \alpha_n$ there is exactly one $p \in \mathcal P$ \mbox{with $N_i(p) = \alpha_i$.}
         \item How to check it: \ $\dim \mathcal P = n$ \ and \ $\big( N_i(p) = 0 \ \forall i \Rightarrow p = 0 \big)$.
     \end{itemize}
 \end{frame}
@@ -114,16 +114,16 @@
         \]
     \end{definition}
     \begin{itemize}
-        \item The degrees of freedom are the coordinates in the nodal basis: $p = \sum_i N_i(p)\, \psi_i$ for $p \in \mathcal P$.
+        \item The degrees of freedom are the coordinates in the nodal basis:\\ $p = \sum_i N_i(p)\, \psi_i$ for $p \in \mathcal P$.
         \item $\mathcal I_K v$ is the only function of $\mathcal P$ with the same degrees of freedom as $v$.
         \item \alert{$\mathcal I_K p = p$ for all $p \in \mathcal P$}: the interpolant does not change the functions of $\mathcal P$.
     \end{itemize}
-    \board{how to compute $\psi_j$: write it in any basis of $\mathcal P$ and solve the linear system $N_i(\psi_j) = \delta_{ij}$.}
+    \board{how to compute $\psi_j$: write it in any basis of $\mathcal P$\\ and solve the linear system $N_i(\psi_j) = \delta_{ij}$.}
 \end{frame}
 
 \begin{frame}{The local interpolation error}
     \textbf{Question.} How large is $v - \mathcal I_K v$ on an element $K$ of size $h$?
-    \begin{columns}[c]
+    \begin{columns}[c,onlytextwidth]
         \begin{column}{.45\textwidth}
             \centering
             \femfigure[.72]{local-error}
@@ -132,8 +132,8 @@
             \begin{lemma}[Linear interpolant in $K = (a,b)$]
                 For $v \in C^2([a,b])$ and $h = b - a$:
                 \begin{align*}
-                    |v - \mathcal I_K v|       & \le h^2 \max |v''|, \\
-                    |v' - (\mathcal I_K v)'|   & \le h \max |v''|.
+                    |v - \mathcal I_K v|     & \le h^2 \max |v''|, \\
+                    |v' - (\mathcal I_K v)'| & \le h \max |v''|.
                 \end{align*}
             \end{lemma}
         \end{column}
@@ -149,11 +149,11 @@
     \[
         (v - p) - \mathcal I_K(v - p) = v - \mathcal I_K v .
     \]
-    We can subtract any linear function for free: the error only depends on how far $v$ is from being linear, i.e.\ on $v''$.
+    We can subtract any linear function for free:\\ the error only depends on how far $v$ is from being linear, i.e.\ on $v''$.
     \medskip
 
-    \textbf{2. Each derivative is worth a power of $h$.} For a function that varies over a length $h$, taking a derivative is like dividing by $h$.
-    Counting units: from $v''$ and $h$ we can only build $h^2 v''$ (units of $v$) and $h\, v''$ (units of $v'$).
+    \textbf{2. Each derivative is worth a power of $h$.} For a function that varies over\\ a length $h$, taking a derivative is like dividing by $h$.
+    Counting units:\\ from $v''$ and $h$ we can only build $h^2 v''$ (units of $v$) and $h\, v''$ (units of $v'$).
     \medskip
 
     \textbf{What we want to prove} (in integral norms, with $C$ independent of the size of $K$):
@@ -162,15 +162,16 @@
         \qquad
         [v - \mathcal I_K v]_{H^1(K)} \le C h_K\, [v]_{H^2(K)},
     \]
-    where \ $[v]_{H^1(K)} = \|\nabla v\|_{L^2(K)}$, \ $[v]_{H^2(K)} = \|D^2 v\|_{L^2(K)}$, \ $h_K = \operatorname{diam}(K)$.
+    where \ $[v]_{H^1(K)} = \|\nabla v\|_{L^2(K)}$, \ $[v]_{H^2(K)} = \|D^2 v\|_{L^2(K)}$, \ $h_K = \operatorname{diam}(K)$,\\
+    and the Hessian matrix is measured entry by entry: \ $|D^2 v|^2 = \sum_{i,j=1}^d |\partial_{x_i x_j} v|^2$.
 \end{frame}
 
 \begin{frame}{The strategy: a reference element}
     \begin{enumerate}
-        \item \textbf{Go to a reference element.} $K = F(\widehat K)$, with $\widehat K$ a fixed element of size one and $F$ an affine map.
+        \item \textbf{Go to a reference element.} $K = F(\widehat K)$, with $\widehat K$ a fixed element of size one\\ and $F$ an affine map.
               A function $v$ on $K$ becomes $\widehat v = v \circ F$ on $\widehat K$.
-        \item \textbf{Estimate on the reference element.} No $h$ there: the constant is a number, computed once.
-        \item \textbf{Come back.} The powers of $h$ appear from the chain rule and the change of variables in the integrals.
+        \item \textbf{Estimate on the reference element.} No $h$ there:\\ the constant is a number, computed once.
+        \item \textbf{Come back.} The powers of $h$ appear from the chain rule\\ and the change of variables in the integrals.
     \end{enumerate}
     \begin{center}
         \begin{tikzpicture}[scale=1.3]
@@ -193,17 +194,17 @@
             \end{scope}
         \end{tikzpicture}
     \end{center}
-    \takeaway{We do the complete computation for the two examples: first $d = 1$, then $d = 2$.}
+    \takeaway{We do the complete computation for the two examples:\\ first $d = 1$, then $d = 2$.}
 \end{frame}
 
 \begin{frame}{First example, $d = 1$: the elements correspond}
     \begin{center}
         \femfigure[.8]{affine-1d}
     \end{center}
-    Reference element: $\widehat K = (0,1)$, \ $\widehat\psi_1(\widehat x) = 1 - \widehat x$, \ $\widehat\psi_2(\widehat x) = \widehat x$. \quad For $v$ on $K$: \ $\widehat v(\widehat x) = v(a + h\widehat x)$.
+    Reference element: $\widehat K = (0,1)$, \ $\widehat\psi_1(\widehat x) = 1 - \widehat x$, \ $\widehat\psi_2(\widehat x) = \widehat x$.\\ For $v$ on $K$: \ $\widehat v(\widehat x) = v(a + h\widehat x)$.
     \medskip
 
-    \textbf{Step 0.} Basis and degrees of freedom of $K$ are those of $\widehat K$ after the change of variables: $\psi_i \circ F = \widehat\psi_i$ and
+    \textbf{Step 0.} Basis and degrees of freedom of $K$ are those of $\widehat K$\\ after the change of variables: $\psi_i \circ F = \widehat\psi_i$ and
     \[
         N_1(v) = v(a) = \widehat v(0) = \widehat N_1(\widehat v), \qquad
         N_2(v) = v(b) = \widehat v(1) = \widehat N_2(\widehat v).
@@ -212,12 +213,12 @@
     \[
         (\mathcal I_K v)\circ F = \mathcal I_{\widehat K}\, \widehat v .
     \]
-    \takeaway{Interpolating and then changing variables $=$ changing variables and then interpolating.}
+    \takeaway{Interpolating and then changing variables $\equiv$\\ changing variables and then interpolating.}
 \end{frame}
 
 \begin{frame}{First example, $d = 1$: the powers of $h$}
     \small
-    \textbf{Step 1: how the norms change.} Chain rule: $\widehat v' = h\, v' \circ F$, \ $\widehat v'' = h^2\, v''\circ F$. \ Integrals: $\diff x = h \diff\widehat x$.
+    \textbf{Step 1: how the norms change.} Chain rule: $\widehat v' = h\, v' \circ F$, \ $\widehat v'' = h^2\, v''\circ F$. \ \mbox{Integrals: $\diff x = h \diff\widehat x$.}
     \[
         \|\widehat v\|_{L^2(\widehat K)} = h^{-\frac12} \|v\|_{L^2(K)}, \qquad
         [\widehat v]_{H^1(\widehat K)} = h^{\frac12} [v]_{H^1(K)}, \qquad
@@ -264,13 +265,15 @@
         \diff x = |\det \mat A| \diff \widehat x .
     \]
     \begin{lemma}[Change of variables in the seminorms]
+        \vspace{-\abovedisplayskip}
         \begin{align*}
-            \|\widehat v\|_{L^2(\widehat K)}  & = |\det\mat A|^{-\frac12} \|v\|_{L^2(K)},                         \\
-            [\widehat v]_{H^1(\widehat K)} & \le \|\mat A\|\, |\det\mat A|^{-\frac12} [v]_{H^1(K)},
-                                           & [v]_{H^1(K)} & \le \|\mat A^{-1}\|\, |\det\mat A|^{\frac12} [\widehat v]_{H^1(\widehat K)},   \\
-            [\widehat v]_{H^2(\widehat K)} & \le \|\mat A\|^2\, |\det\mat A|^{-\frac12} [v]_{H^2(K)},
-                                           & [v]_{H^2(K)} & \le \|\mat A^{-1}\|^2\, |\det\mat A|^{\frac12} [\widehat v]_{H^2(\widehat K)}.
+            \|\widehat v\|_{L^2(\widehat K)} & = |\det\mat A|^{-\frac12} \|v\|_{L^2(K)},                                                                                                 \\
+            [\widehat v]_{H^1(\widehat K)}   & \le \|\mat A\|\, |\det\mat A|^{-\frac12} [v]_{H^1(K)},
+                                             & [v]_{H^1(K)}                                             & \le \|\mat A^{-1}\|\, |\det\mat A|^{\frac12} [\widehat v]_{H^1(\widehat K)},   \\
+            [\widehat v]_{H^2(\widehat K)}   & \le \|\mat A\|^2\, |\det\mat A|^{-\frac12} [v]_{H^2(K)},
+                                             & [v]_{H^2(K)}                                             & \le \|\mat A^{-1}\|^2\, |\det\mat A|^{\frac12} [\widehat v]_{H^2(\widehat K)}.
         \end{align*}
+        Here $\|\mat A\| = \max_{\vec\xi \ne 0} |\mat A\vec\xi| / |\vec\xi|$ is the matrix norm induced by the Euclidean norm $|\cdot|$ of $\R^d$.
     \end{lemma}
     \begin{itemize}
         \item In $d = 1$: $\mat A = h$, and we recover the powers $h^{-\frac12}$, $h^{\frac12}$, $h^{\frac32}$.
@@ -279,11 +282,12 @@
 \end{frame}
 
 \begin{frame}{Size and shape of an element}
-    \begin{columns}[c]
+    \begin{columns}[c,onlytextwidth]
         \begin{column}{.42\textwidth}
             \begin{definition}
+                \vspace{-\abovedisplayskip}
                 \begin{align*}
-                    h_K    & = \operatorname{diam}(K),                              \\
+                    h_K    & = \operatorname{diam}(K),                                    \\
                     \rho_K & = \sup\{\operatorname{diam}(B) : B \text{ ball} \subset K\}, \\
                     \mu_K  & = \rho_K / h_K \in (0,1].
                 \end{align*}
@@ -299,8 +303,8 @@
         \quad $\displaystyle \|\mat A\| \le \frac{h_K}{\rho_{\widehat K}}, \qquad \|\mat A^{-1}\| \le \frac{h_{\widehat K}}{\rho_K}$.
     \end{lemma}
     \begin{proofsteps}[Proof]
-        Any $\vec\xi$ with $|\vec\xi| = \rho_{\widehat K}$ is $\widehat x - \widehat y$ with $\widehat x, \widehat y \in \overline{\widehat K}$ (on a ball inside $\widehat K$). Then
-        $\mat A\vec\xi = F(\widehat x) - F(\widehat y)$ is a difference of two points of $\overline K$: \ $|\mat A \vec \xi| \le h_K$.
+        Any $\vec\xi$ with $|\vec\xi| = \rho_{\widehat K}$ is $\widehat x - \widehat y$ with $\widehat x, \widehat y \in \overline{\widehat K}$ (on a ball inside $\widehat K$).\\
+        Then $\mat A\vec\xi = F(\widehat x) - F(\widehat y)$ is a difference of two points of $\overline K$: \ $|\mat A \vec \xi| \le h_K$.
     \end{proofsteps}
 \end{frame}
 
@@ -314,7 +318,7 @@
     \begin{align*}
         [v - \mathcal I_K v]_{H^1(K)}
          & \le \|\mat A^{-1}\|\, |\det\mat A|^{\frac12}\, [\widehat v - \mathcal I_{\widehat K}\widehat v]_{H^1(\widehat K)}
-        \le \widehat C\, \|\mat A^{-1}\|\, |\det\mat A|^{\frac12}\, [\widehat v]_{H^2(\widehat K)}                      \\
+        \le \widehat C\, \|\mat A^{-1}\|\, |\det\mat A|^{\frac12}\, [\widehat v]_{H^2(\widehat K)}                           \\
          & \le \widehat C\, \|\mat A^{-1}\|\, \|\mat A\|^2\, [v]_{H^2(K)}
         \le \widehat C\, \frac{h_{\widehat K}}{\rho_K} \Big(\frac{h_K}{\rho_{\widehat K}}\Big)^2 [v]_{H^2(K)} .
     \end{align*}
@@ -345,23 +349,23 @@
     \end{lemma}
     This is all we used in the two examples (Step 0). Therefore:
     \begin{theorem}[Local interpolation error]
-        If the reference estimate (Step 2) holds on $\widehat K$, the estimates of the previous slide hold for \alert{every} element affine equivalent to the reference one, in any dimension.
+        If the reference estimate (Step 2) holds on $\widehat K$, the estimates of the previous slide\\ hold for \alert{every} element affine equivalent to the reference one, in any dimension.
     \end{theorem}
 \end{frame}
 
 \begin{frame}{The estimate on the reference element}
     \begin{lemma}[Bramble--Hilbert]
-        Let $\Omega \subset \R^d$ be bounded and star-shaped with respect to a ball.
-        If $F: H^2(\Omega) \to \R$ is linear, continuous and vanishes on the polynomials of degree $\le 1$, then
-        \quad $|F(v)| \le C\, \|D^2 v\|_{L^2(\Omega)}$.
+        Let $\Omega \subset \R^d$ be bounded and star-shaped with respect to a ball.\\
+        If $F: H^2(\Omega) \to \R$ is linear, continuous and vanishes on the polynomials\\
+        of degree $\le 1$, then \quad $|F(v)| \le C\, \|D^2 v\|_{L^2(\Omega)}$.
     \end{lemma}
     This is the rigorous version of the first idea. Apply it to the error $E(\widehat v) = \widehat v - \mathcal I_{\widehat K} \widehat v$:
     \begin{itemize}
-        \item $E$ is continuous from $H^2(\widehat K)$ to $H^1(\widehat K)$ \ (for $d \le 3$, functions of $H^2$ are continuous);
+        \item $E$ is continuous from $H^2(\widehat K)$ to $H^1(\widehat K)$\\ (for $d \le 3$, functions of $H^2$ are continuous);
         \item $E(p) = 0$ for all polynomials of degree $\le 1$, because $\mathcal I_{\widehat K} p = p$.
     \end{itemize}
     Hence \ $\|E(\widehat v)\|_{H^1(\widehat K)} \le \widehat C\, [\widehat v]_{H^2(\widehat K)}$: the reference estimate holds for linear elements.
-    \takeaway{If the interpolant does not change polynomials of degree $1$, the error only sees $D^2 v$.}
+    \takeaway{If the interpolant does not change polynomials of degree $1$,\\ the error only sees $D^2 v$.}
 \end{frame}
 
 \begin{frame}{Other norms and other elements}
@@ -375,10 +379,10 @@
         \]
     \end{theorem}
     \begin{itemize}
-        \item Under the reference-estimate hypothesis: error of order $h_K^{m-k}$ in $H^k$ \ (for $\mu_K$ bounded below).
-        \item \textbf{Warning:} derivatives as degrees of freedom (Hermite elements, Session 6). The affine image in $(a,b)$ of $\widehat N(\widehat v) = \widehat v'(0)$ is
+        \item Under the reference-estimate hypothesis: error of order $h_K^{m-k}$ in $H^k$ \ \mbox{(for $\mu_K$ bounded below).}
+        \item \textbf{Warning:} derivatives as degrees of freedom (Hermite elements, Session 6).\\ The affine image in $(a,b)$ of $\widehat N(\widehat v) = \widehat v'(0)$ is
               $N(v) = (b-a)\, v'(a)$, not the natural $v'(a)$.
-        \item A general result using Bramble--Hilbert on each element covers these elements under the hypotheses on the next slide.
+        \item A general result using Bramble--Hilbert on each element\\ covers these elements under the hypotheses on the next slide.
     \end{itemize}
 \end{frame}
 
@@ -399,21 +403,21 @@
         [v-\mathcal I_Kv]_{W^{j,p}(K)}
         \le C\big(d,m,p,\ell,h_K/\rho_{*,K},\sigma_K\big)\,h_K^{m-j}[v]_{W^{m,p}(K)}.
     \]
-    \takeaway{A uniform bound requires both controlled element shapes and uniformly bounded rescaled interpolants.}
+    \takeaway{A uniform bound requires both controlled element shapes\\ and uniformly bounded rescaled interpolants.}
 \end{frame}
 
 \begin{frame}{Summary and practice}
     \begin{itemize}
-        \item Two examples: linear interval and linear triangle. Nodal basis, interpolant, degrees of freedom.
+        \item Two examples: linear interval and linear triangle.\\ Nodal basis, interpolant, degrees of freedom.
         \item Finite element $= (K, \mathcal P, \mathcal N)$; \ $N_i(\psi_j) = \delta_{ij}$; \ $\mathcal I_K v = \sum_i N_i(v)\psi_i$; \ $\mathcal I_K p = p$ in $\mathcal P$.
-        \item Local error: reference element $+$ affine map. Three steps: go, estimate, come back.
+        \item Local error: reference element $+$ affine map.\\ Three steps: go, estimate, come back.
         \item Linear elements: \ $\|v - \mathcal I_K v\|_{L^2(K)} \le C h_K^2 [v]_{H^2(K)}$, \ $[v - \mathcal I_K v]_{H^1(K)} \le \frac{C}{\mu_K} h_K [v]_{H^2(K)}$.
     \end{itemize}
     \bigskip
     \textbf{Practice.} Exercises 2.1--2.4:
     \begin{itemize}
         \item 2.1: nodal basis of the Hermite cubics.
-        \item 2.2: $\|v\|_{L^\infty(T)} \le C(m,h_T/\rho_T) h_T^{-2} \|v\|_{L^1(T)}$ for degree-$m$ polynomials (go to the reference triangle).
+        \item 2.2: $\|v\|_{L^\infty(T)} \le C(m,h_T/\rho_T) h_T^{-2} \|v\|_{L^1(T)}$ for degree-$m$ polynomials \mbox{(go to the reference triangle).}
         \item 2.3: linear element on $(a,b)$; $\mathcal I_K p = p$ for $p \in \mathcal P$.
         \item 2.4: linear Lagrange basis on a triangle; local stiffness matrix.
     \end{itemize}
