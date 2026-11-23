@@ -70,6 +70,23 @@
     \end{itemize}
 \end{frame}
 
+\begin{frame}{A fourth-order problem: the Euler--Bernoulli beam}
+    A beam occupies $(a,b)$ and bends under a transverse load $f$. Its deflection $u$ solves
+    \[
+        \frac{\diff^2}{\diff x^2} \Big( EI\, \frac{\diff^2 u}{\diff x^2} \Big) = f \quad \text{in } (a,b),
+        \qquad EI > 0 \text{: flexural rigidity.}
+    \]
+    Slope $u'$, bending moment $EI u''$, shear force $(EI u'')'$. \alert{Two conditions at each end:}
+    \begin{center}
+        \scalebox{.85}{\subimport{../../lectures/finite-elements/d-1/beam/figures/}{end-conditions.tex}}
+    \end{center}
+    \begin{itemize}
+        \item Weak formulation in $V \subset H^2(a,b)$: \ $\int_a^b EI u'' v'' = \int_a^b f v$ \ for all $v \in V$.
+        \item Conditions on $u$ and $u'$ are \alert{essential} (imposed in $V$);\\ those on $u''$ and $(EI u'')'$ are \alert{natural}.
+    \end{itemize}
+    \takeaway{$V_h \subset H^2(a,b)$ needs $C^1$ piece-wise polynomials.}
+\end{frame}
+
 \begin{frame}{Hermite cubics}
     \small
     Goal: a \alert{$C^1$} global interpolant (needed e.g.\ for fourth-order problems posed in $H^2$).

@@ -1,0 +1,109 @@
+\section{A fourth-order problem: the Euler--Bernoulli beam}
+\label{sec:Euler-Bernoulli beam}
+
+The problems we have discretised so far are of second order: their weak formulations are posed in subspaces of $H^1$, and continuous piece-wise polynomials are enough.
+Before constructing smoother elements, we present the classical problem that requires them.
+
+\paragraph{The model}
+Consider a slender beam that, at rest, occupies the interval $(a,b)$, and that bends under a transverse load $f$ (a force per unit length).
+Let $u(x)$ be the \emph{deflection}, i.e. the transverse displacement of the point $x$.
+The Euler--Bernoulli theory assumes that the deflection is small, and that the cross-sections of the beam remain plane and perpendicular to its axis.
+Then the curvature of the axis is approximately $u''$, and the beam stores the elastic energy $\frac 1 2 \int_a^b EI |u''|^2$, where $E$ is Young's modulus of the material and $I$ is the second moment of area of the cross-section.
+The product $EI > 0$ is the \emph{flexural rigidity}, and it may depend on $x$.
+At equilibrium, $u$ minimises the total energy
+\begin{equation*}
+    J(v) = \frac 1 2 \int_a^b EI |v''|^2 - \int_a^b f v,
+\end{equation*}
+and the Euler--Lagrange equation of this functional is the \emph{Euler--Bernoulli beam equation}
+\begin{equation}
+    \label{eq:Euler-Bernoulli beam}
+    \frac{\diff^2}{\diff x^2} \left( EI \frac{\diff^2 u}{\diff x^2} \right) = f \qquad \text{in } (a,b).
+\end{equation}
+If $EI$ is constant we can include it in $f$, and we recover the simplified equation $\frac{\diff^4 u}{\diff x^4} = f$.
+Four quantities have a mechanical meaning: the deflection $u$, the slope $u'$, the bending moment $EI u''$, and the shear force $(EI u'')'$ (the signs of the last two depend on the convention).
+
+\paragraph{End conditions}
+A fourth-order equation needs four boundary conditions: two at each end of the beam.
+To find out which ones are admissible, we multiply \eqref{eq:Euler-Bernoulli beam} by a smooth function $v$ and integrate by parts twice:
+\begin{equation}
+    \label{eq:beam integration by parts}
+    \int_a^b (EI u'')'' v = \int_a^b EI u'' v'' + \Big[ (EI u'')' v \Big]_a^b - \Big[ EI u'' v' \Big]_a^b .
+\end{equation}
+The boundary terms pair the shear force with the deflection, and the bending moment with the slope.
+At each end $c \in \{a, b\}$ we make one choice in each pair: either the support fixes the deflection (resp. the slope), or it exerts no force (resp. no moment).
+This gives four types of end, represented in \Cref{fig:beam end conditions}:
+\begin{itemize}
+    \item \emph{Clamped}: $u(c) = 0$ and $u'(c) = 0$. A wall fixes the position and the slope of the end.
+    \item \emph{Simply supported}: $u(c) = 0$ and $u''(c) = 0$. A hinge fixes the position of the end, but lets it rotate.
+    \item \emph{Sliding}: $u'(c) = 0$ and $(EI u'')'(c) = 0$. A guide fixes the slope of the end, but lets it slide.
+    \item \emph{Free}: $u''(c) = 0$ and $(EI u'')'(c) = 0$. Nothing acts on the end.
+\end{itemize}
+\begin{figure}[H]
+    \centering
+    \subimport{figures/}{end-conditions.tex}
+    \caption{The four end conditions of a beam: position at rest (dashed) and deflected beam (blue)}
+    \label{fig:beam end conditions}
+\end{figure}
+The two ends can be of different types: a beam clamped at $a$ and free at $b$ is a \emph{cantilever}.
+
+As in second-order problems, there are two kinds of conditions: compare the Dirichlet condition of \Cref{ex:Galerkin Laplace d=1} with the Neumann condition of \Cref{ex:Galerkin Helmholtz d=1}.
+The conditions on $u$ and $u'$ are \emph{essential}: we impose them on the space of the weak formulation, and hence on the test functions $v$.
+The conditions on $u''$ and $(EI u'')'$ are \emph{natural}: we do not impose them on the space, and they follow from the weak formulation.
+In both cases the boundary terms of \eqref{eq:beam integration by parts} vanish.
+
+\paragraph{Weak formulation}
+In $d = 1$ we have the continuous embedding $H^2(a,b) \subset C^1([a,b])$. Therefore, the essential conditions make sense in $H^2(a,b)$, and
+\begin{equation*}
+    V = \{ v \in H^2(a,b) : v \text{ satisfies the essential conditions at } a \text{ and at } b \}
+\end{equation*}
+is a closed subspace. For example:
+\begin{itemize}
+    \item if both ends are clamped, $V = H_0^2(a,b) = \{ v \in H^2(a,b) : v(a) = v(b) = v'(a) = v'(b) = 0 \}$;
+    \item if both ends are simply supported, $V = H^2(a,b) \cap H_0^1(a,b)$;
+    \item for the cantilever, $V = \{ v \in H^2(a,b) : v(a) = v'(a) = 0 \}$.
+\end{itemize}
+Due to \eqref{eq:beam integration by parts}, a smooth solution of \eqref{eq:Euler-Bernoulli beam} with these end conditions satisfies the \emph{weak formulation}: \mbox{find $u \in V$} such that
+\begin{equation}
+    \label{eq:beam weak}
+    \int_a^b EI u'' v'' = \int_a^b f v, \qquad \forall v \in V.
+\end{equation}
+Conversely, if a solution of \eqref{eq:beam weak} is smooth we use \eqref{eq:beam integration by parts} again: taking $v \in C_c^\infty(a,b)$ we recover \eqref{eq:Euler-Bernoulli beam}, and then taking any $v \in V$ we recover the natural conditions.
+
+\paragraph{Well-posedness}
+Problem \eqref{eq:beam weak} is of the form \eqref{eq:Galerkin elliptic variational}.
+If $EI$ is bounded, its bilinear form is continuous in $H^2(a,b)$, but it vanishes when $u = v$ is an affine function.
+Hence, it can only be coercive in $V$ if the essential conditions rule out the affine functions.
+\begin{lemma}[Well-posedness of the beam problem]
+    \label{lem:beam well-posed}
+    Assume that $EI \in L^\infty(a,b)$, $EI \ge \kappa > 0$, and $f \in L^2(a,b)$.
+    If the only affine function in $V$ is $0$, then \eqref{eq:beam weak} has a unique solution.
+\end{lemma}
+\begin{proof}
+    The essential conditions are some of $v(a) = 0$, $v'(a) = 0$, $v(b) = 0$, and $v'(b) = 0$.
+    The only affine function that satisfies them is $0$ in three cases: we impose $v = 0$ at both ends, we impose $v = 0$ and $v' = 0$ at the same end, or we impose $v = 0$ at one end and $v' = 0$ at the other one.
+    In all of them, for every $v \in V$ there exist $c, \xi \in [a,b]$ such that $v(c) = 0$ and $v'(\xi) = 0$ (in the first case $\xi$ is given by Rolle's theorem).
+    Hence, for all $x \in [a,b]$,
+    \begin{equation*}
+        |v'(x)| = \left| \int_\xi^x v'' \right| \le (b-a)^{\frac 1 2} \| v'' \|_{L^2(a,b)},
+        \qquad
+        |v(x)| = \left| \int_c^x v' \right| \le (b-a)^{\frac 3 2} \| v'' \|_{L^2(a,b)}.
+    \end{equation*}
+    Therefore $\| v \|_{H^2(a,b)} \le C \| v'' \|_{L^2(a,b)}$, and the bilinear form is coercive:
+    \begin{equation*}
+        \int_a^b EI |v''|^2 \ge \kappa \| v'' \|_{L^2(a,b)}^2 \ge \frac{\kappa}{C^2} \| v \|_{H^2(a,b)}^2, \qquad \forall v \in V.
+    \end{equation*}
+    We conclude by \namedCref{thm:Lax-Milgram}.
+\end{proof}
+\begin{remark}[Rigid motions]
+    The affine functions are the rigid motions of the beam (translations and small rotations), and they store no elastic energy.
+    The hypothesis of \Cref{lem:beam well-posed} means that the supports prevent them.
+    It fails, for example, if both ends are free, where $V = H^2(a,b)$, or if one end is simply supported and the other one is free, where the beam can rotate around the hinge.
+    In these cases, if $u$ is a solution then so is $u + v$ for every affine $v \in V$, and a solution can only exist if $\int_a^b f v = 0$ for all of them.
+    This is the situation of Laplace's equation with Neumann boundary conditions, where the constants play the same role.
+\end{remark}
+
+\paragraph{Conforming discretisation}
+To apply Galerkin's method and \namedCref{lem:cea} we need finite-dimensional spaces $V_h \subset V \subset H^2(a,b)$.
+The continuous piece-wise polynomials that we have used so far are not enough: applying \Cref{thm:H1 glueing} to a piece-wise polynomial and to its derivative, we see that it is in $H^2(a,b)$ if and only if it is in $C^1([a,b])$.
+Moreover, the essential conditions are imposed on the values of $u$ and $u'$ at the end points.
+Both facts lead us to elements whose degrees of freedom are the values of the function and of its derivative at the nodes.

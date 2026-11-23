@@ -123,6 +123,7 @@ We have for $j \in \{0, 1, 2\}$ that
      & \le C h_{\mathcal T}^{4-j}[v]_{H^4 (a,b)}.
 \end{align*}
 Using Céa's lemma as in \Cref{ex:Galerkin Laplace piecewise linear Cea}, the $H^1$ estimate yields a convergence rate $h_{\mathcal T}^3$ for the Galerkin approximation.
+For the beam problem \eqref{eq:beam weak}, which is posed in $H^2$, the estimates with $j \in \{0, 1, 2\}$ yield the rate $h_{\mathcal T}^2$ in $H^2(a,b)$.
 
 \paragraph*{Nodal interpretation}
 There are two types of nodal functions
@@ -247,6 +248,7 @@ The resulting matrices are banded: the entry $(i,j)$ is non-zero only if $\varph
 
 Dirichlet boundary conditions $u(a) = u(b) = 0$ only affect the degrees of freedom of $v_0$ and $v_{N+1}$, so we remove the rows and columns $0$ and $2(N+1)$. The degrees of freedom of $w_0$ and $w_{N+1}$ remain free.
 If we also impose $u'(a) = u'(b) = 0$ (as for a clamped beam) we also remove the rows and columns $1$ and $2(N+1)+1$.
+In general, each essential end condition of \Cref{sec:Euler-Bernoulli beam} removes the row and the column of its degree of freedom, and the natural conditions need no change.
 
 \begin{remark}[Gaussian quadrature]
     The integrands $\theta_\alpha \theta_\beta$ are polynomials of degree $6$.
