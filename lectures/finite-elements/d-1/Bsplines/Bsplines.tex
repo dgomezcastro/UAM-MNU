@@ -101,3 +101,22 @@ When discussing the cubic B-splines basis people usually refer to the space $\ma
     \caption{Clamped B-splines of degree 3 with breakpoints $-0.3,1.1,1.4,2.0$; each endpoint occurs four times in the full knot vector.}
     \label{fig:Bspline cubic basis}
 \end{figure}
+
+\subsection*{Exercises}
+\begin{exercises}
+    \ex Let $b_0$ be the characteristic function of $[0,1)$ and $b_p(x) = \int_{x-1}^x b_{p-1}(s) \diff s$ for $p \ge 1$, as in the construction of the B-splines on a uniform mesh.
+    \begin{enumerate}[label=\roman*)]
+        \item Compute $b_1$ and $b_2$. Check that $b_2$ is a polynomial of degree $2$ in each interval $(i, i+1)$, that $b_2 \in C^1(\mathbb R)$, and that $\supp b_2 = [0,3]$.
+        \item Check that $\sum_{i \in \mathbb Z} b_2(x - i) = 1$ for all $x \in \mathbb R$.
+        \item Only three of the functions $b_2(x - i)$ do not vanish in $(0,1)$. Check that, with the change of variables $y = 2x - 1$, they are the shape functions $\psi_1, \psi_2, \psi_3$ of the quadratic B-spline element.
+    \end{enumerate}
+
+    \ex Let $p \ge 1$, $\mathcal P = \mathbb R_p[x]$, and let $\mathcal T$ be the sub-division of $(a,b)$ given by \mbox{$a = x_0 < \cdots < x_N = b$}.
+    \begin{enumerate}[label=\roman*)]
+        \item Prove that $\dim \big( \mathcal P_{\mathcal T} \cap C^{p-1}([a,b]) \big) = N + p$.
+              \emph{Hint}: if two polynomials of degree $p$ and their derivatives up to order $p-1$ coincide at $x_k$, then their difference is a multiple of $(x - x_k)^p$.
+        \item On a uniform mesh, check that exactly $N + p$ of the functions $b_{p,i,h}$ do not vanish in $(a,b)$.
+        \item Let $p = 2$. Justify that $\mathcal P_{\mathcal T} \cap C^1([a,b]) \subset H^2(a,b)$, so we can use the quadratic B-splines for a conforming discretisation of the beam problem \eqref{eq:beam weak}.
+              Compare the dimension of this space with that of the space of Hermite cubics on the same sub-division.
+    \end{enumerate}
+\end{exercises}

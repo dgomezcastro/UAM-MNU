@@ -65,7 +65,7 @@
       <td>Finite-elements in d=1</td>
       <td>Chapter 3</td>
       <td><a href="lectures/finite-elements/d-1/Hermite/Hermite.ipynb">Hermite.ipynb</a> <br> <a href="lectures/finite-elements/d-1/Bsplines/Bsplines.ipynb">Bsplines.ipynb</a></td>
-      <td>3.1</td>
+      <td>3.1-3.5</td>
     </tr>
     <tr>
       <td>7</td>

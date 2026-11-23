@@ -97,8 +97,9 @@ Notice that $\mathcal I_{\mathcal T} u(x_j) = u(x_j)$ and $\frac{d \mathcal I_{\
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.45\textwidth]{Hermite_interval_v.pdf}
-    \includegraphics[width=.45\textwidth]{Hermite_interval_w.pdf}
+    \includegraphics[width=.3\textwidth]{Hermite_interval_v.pdf}
+    \qquad
+    \includegraphics[width=.3\textwidth]{Hermite_interval_w.pdf}
     \caption{$C^1$-basis functions on a sub-division of $(0,0.5)$ based on Hermite cubics}
     \label{fig:Hermite cubics basis functions}
 \end{figure}
@@ -259,5 +260,14 @@ In general, each essential end condition of \Cref{sec:Euler-Bernoulli beam} remo
 
 \subsection*{Exercises}
 \begin{exercises}
-    \ex Solve the simplified beam equation $\frac{\diff^4 u}{\diff x^4} = f$ in $\Omega=(-1,1)$ using different boundary conditions on $u$ and $u'$ at $x = \pm 1$. Write first the weak formulation in $H^2(-1,1)$.
+    \ex Consider the simplified beam equation $\frac{\diff^4 u}{\diff x^4} = f$ in $\Omega=(-1,1)$.
+    For each of the following end conditions (see \Cref{sec:Euler-Bernoulli beam}), write the energy space $V \subset H^2(-1,1)$ and the weak formulation,
+    and write a program that solves the problem using Hermite cubics.
+    \begin{enumerate}[label=\roman*)]
+        \item Both ends are clamped: $u(-1) = u'(-1) = 0$ and $u(1) = u'(1) = 0$.
+        \item Both ends are simply supported: $u(-1) = u''(-1) = 0$ and $u(1) = u''(1) = 0$.
+        \item The beam is a cantilever, clamped at $x = -1$ and free at $x = 1$: \\ $u(-1) = u'(-1) = 0$ and $u''(1) = u'''(1) = 0$.
+    \end{enumerate}
+    Which rows and columns of the matrix do you remove in each case?
+    Test your programs with $f = 1$: the solutions are polynomials of degree $4$, and their largest values are $\frac 1 {24}$, $\frac 5 {24}$, and $2$, respectively.
 \end{exercises}

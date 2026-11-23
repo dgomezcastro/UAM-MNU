@@ -17,6 +17,7 @@ Clearly, $E(P) = 0$ for any linear function $P$, i.e. for all polynomials in $\m
 It is also easy to see that the piece-wise linear interpolator maps $C^0 ([0,1]) \to H^1(0,1)$.
 
 \begin{remark}[Computing stiffness and mass matrices via Gaussian quadrature]
+    \label{rem:FEM d=1 Gaussian quadrature}
     For second-order problems with constant coefficients the computation of the stiffness and mass matrices involves integrating
     \begin{equation*}
         \int_{x_k}^{x_{k+1}} \frac{\diff^r \varphi_j}{\diff x^r} \frac{\diff^s \varphi_i}{\diff x^s}
@@ -36,6 +37,84 @@ It is also easy to see that the piece-wise linear interpolator maps $C^0 ([0,1])
         \end{aligned}
     \end{equation*}
 \end{remark}
+
+\subsection*{Exercises}
+\begin{exercises}
+    \ex[Neumann boundary conditions]
+    \label{ex:FEM d=1 linear Neumann}
+    Let $f \in C([-1,1])$ and consider Helmholtz's equation with Neumann boundary conditions
+    \begin{equation*}
+        -u'' + u = f \text{ in } (-1,1), \qquad u'(-1) = u'(1) = 0.
+    \end{equation*}
+    \begin{enumerate}[label=\roman*)]
+        \item Check that the weak formulation is: find $u \in H^1(-1,1)$ such that
+              \begin{equation*}
+                  \int_{-1}^1 u' v' + \int_{-1}^1 u v = \int_{-1}^1 f v, \qquad \forall v \in H^1(-1,1).
+              \end{equation*}
+        \item Consider the uniform mesh $x_i = -1 + ih$, $i = 0, \dots, N$, with $h = \frac 2 N$, and the basis $\varphi_0, \dots, \varphi_N$ of \Cref{ex:piece-wise linear in d=1}.
+              Use the Gaussian quadrature of \Cref{rem:FEM d=1 Gaussian quadrature} in each interval $(x_k, x_{k+1})$ to construct the mass matrix $\mat M$ and the stiffness matrix $\mat K$, with entries \mbox{$M_{ij} = \int_{-1}^1 \varphi_j \varphi_i$} and \mbox{$K_{ij} = \int_{-1}^1 \varphi_j' \varphi_i'$}.
+              Check that
+              \begin{equation*}
+                  \mat M = \frac h 6
+                  \begin{pmatrix}
+                      2 & 1      &        &   \\
+                      1 & 4      & \ddots &   \\
+                        & \ddots & 4      & 1 \\
+                        &        & 1      & 2
+                  \end{pmatrix},
+                  \qquad
+                  \mat K = \frac 1 h
+                  \begin{pmatrix}
+                      1  & -1     &        &    \\
+                      -1 & 2      & \ddots &    \\
+                         & \ddots & 2      & -1 \\
+                         &        & -1     & 1
+                  \end{pmatrix},
+              \end{equation*}
+              and that the Galerkin approximation $u_h = \sum_{j=0}^N U_j \varphi_j$ is given by
+              \begin{equation*}
+                  (\mat K + \mat M) \vec u = \vec b, \qquad \text{where } b_i = \int_{-1}^1 f \varphi_i.
+              \end{equation*}
+        \item In general, we cannot compute $b_i$ exactly, and we approximate $\int_{-1}^1 f \varphi_i$ by the same Gaussian quadrature in each interval. Let $\tilde b_i$ be the result.
+              Check that, if $f \in C^4([-1,1])$, the error introduced is at most of order $h^4$:
+              \begin{equation*}
+                  | b_i - \tilde b_i | \le C h^4 \left( \| f''' \|_{L^\infty(-1,1)} + \| f^{(4)} \|_{L^\infty(-1,1)} \right),
+              \end{equation*}
+              where $C$ does not depend on $h$, $i$, or $f$.
+              \emph{Hint}: the quadrature is exact in $\mathbb R_3[x]$, so in each interval we can subtract from $f \varphi_i$ its Taylor polynomial of degree $3$ at the mid-point.
+
+              Let $\tilde u_h$ be the function obtained by solving the system with $\tilde{\vec b}$ instead of $\vec b$.
+              Deduce that $\| u_h - \tilde u_h \|_{H^1(-1,1)}$ is at most of order $h^3$.
+              Hence, this variational crime (see \Cref{lem:Strang first lemma}) does not change the order of convergence.
+        \item Write a short program that solves the problem for a general $f$.
+              To test it, compute the convergence error graph for \mbox{$f(x) = (1 + \pi^2) \cos(\pi x)$}, for which \mbox{$u(x) = \cos(\pi x)$}.
+    \end{enumerate}
+
+    \ex[Robin boundary conditions]
+    Let $f \in C([-1,1])$ and $\alpha > 0$, and consider Laplace's equation with \emph{Robin} boundary conditions
+    \begin{equation*}
+        -u'' = f \text{ in } (-1,1), \qquad -u'(-1) + \alpha u(-1) = 0, \qquad u'(1) + \alpha u(1) = 0.
+    \end{equation*}
+    \begin{enumerate}[label=\roman*)]
+        \item Check that the weak formulation is: find $u \in H^1(-1,1)$ such that
+              \begin{equation*}
+                  \int_{-1}^1 u' v' + \alpha \big( u(-1) v(-1) + u(1) v(1) \big) = \int_{-1}^1 f v, \qquad \forall v \in H^1(-1,1).
+              \end{equation*}
+        \item The bilinear form does not contain the term $\int_{-1}^1 u v$, so its coercivity in $H^1(-1,1)$ is not immediate.
+              The following version of Poincaré's inequality states that
+              \begin{equation*}
+                  \| v \|_{L^2(-1,1)}^2 \le 4 \left( \| v' \|_{L^2(-1,1)}^2 + |v(-1)|^2 \right), \qquad \forall v \in H^1(-1,1).
+              \end{equation*}
+              Prove it, and apply \namedCref{thm:Lax-Milgram} to the weak formulation.
+        \item With the mesh and the basis of \Cref{ex:FEM d=1 linear Neumann}, check that the Galerkin approximation is given by the solution of $(\mat K + \alpha \mat R) \vec u = \vec b$, where the only non-zero entries of $\mat R$ are $R_{00} = R_{NN} = 1$.
+        \item Adapt your program to this problem.
+              Test it with
+              \begin{equation*}
+                  f(x) = \frac{\pi^2}{4} \cos \Big( \frac{\pi x}{2} \Big), \qquad \text{for which} \qquad u(x) = \cos \Big( \frac{\pi x}{2} \Big) + \frac{\pi}{2\alpha}.
+              \end{equation*}
+              What do you observe when $\alpha \to \infty$, and when $\alpha \to 0$? Explain it.
+    \end{enumerate}
+\end{exercises}
 
 \section{Lagrange's elements}
 
